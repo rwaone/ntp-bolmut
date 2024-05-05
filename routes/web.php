@@ -29,6 +29,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Locale
     Route::get('setlocale/{locale}', SetLocaleController::class)->name('setlocale');
 
+    //Entry
+    
+
     // User
     Route::resource('users', UserController::class);
     // Permission
