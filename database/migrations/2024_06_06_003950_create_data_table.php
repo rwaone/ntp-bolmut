@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kabupatens', function (Blueprint $table) {
+        Schema::create('data', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('name');
+            $table->foreignId('response_id');
+            $table->foreignId('quality_id');
+            $table->bigInteger('price');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kabupatens');
+        Schema::dropIfExists('data');
     }
 };

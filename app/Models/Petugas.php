@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Petugas extends Model
 {
     use HasFactory;
+    
+    protected $guarded = ['id'];
+    protected $load = ['responses'];
+
+    public function responses(){
+        return $this->hasMany(Response::class);
+    }
+
 }

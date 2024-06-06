@@ -2,18 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Sample;
 use App\Models\Kecamatan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Kabupaten extends Model
+class Desa extends Model
 {
     use HasFactory;
     
     protected $guarded = ['id'];
-    protected $load = ['kecamatan'];
+    protected $load = ['sample'];
+    protected $with = ['kecamatan'];
+
+    public function sample(){
+        return $this->hasMany(Sample::class);
+    }
 
     public function kecamatan(){
-        return $this->hasMany(Kecamatan::class);
+        return $this->belongsTo(Kecamatan::class);
     }
 }

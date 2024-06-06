@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('commodities', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
+            $table->foreignId('group_id');
+            $table->string('name');
+            $table->decimal('min_change', 3, 2);
+            $table->decimal('max_change', 3, 2);
             $table->timestamps();
         });
     }

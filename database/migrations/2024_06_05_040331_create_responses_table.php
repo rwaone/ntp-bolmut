@@ -13,14 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('qualities', function (Blueprint $table) {
+        Schema::create('responses', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->foreignId('commodity_id');
-            $table->string('name');
-            $table->bigInteger('min_price');
-            $table->bigInteger('max_price');
-            $table->string('status');
+            $table->string('month');
+            $table->year('year');
+            $table->foreignId('document_id');
+            $table->foreignId('petugas_id');
+            $table->date('enumeration_date');
+            $table->foreignId('pengawas_id');
+            $table->date('review_date');
+            $table->foreignId('sample_id');
+            $table->text('commodities');
+            $table->text('notes');
             $table->string('created_by');
             $table->string('reviewed_by');
             $table->timestamps();
@@ -34,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('qualities');
+        Schema::dropIfExists('responses');
     }
 };

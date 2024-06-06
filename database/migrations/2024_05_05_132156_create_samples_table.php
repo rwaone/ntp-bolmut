@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('samples', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('desa_id');
+            $table->string('respondent_name');
             $table->timestamps();
         });
     }
