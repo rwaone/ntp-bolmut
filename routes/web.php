@@ -1,16 +1,25 @@
 <?php
 
-use App\Http\Controllers\ChartController;
+use App\Models\Sample;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppsController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChartController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\SampleController;
+use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QualityController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\WidgetsController;
+use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\SetLocaleController;
 use App\Http\Controllers\ComponentsController;
 use App\Http\Controllers\PermissionController;
@@ -29,8 +38,22 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Locale
     Route::get('setlocale/{locale}', SetLocaleController::class)->name('setlocale');
 
-    //Entry
-    
+    // Wilayah Kabupaten Kecamatan Desa
+    Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
+    // Sample
+    Route::resource('samples', SampleController::class);
+    // Petugas
+    Route::resource('petugas', PetugasController::class);
+    // Documents
+    Route::resource('documents', DocumentController::class);
+    // Sections
+    Route::resource('sections', SectionController::class);
+    // Group
+    Route::resource('groups', GroupController::class);
+    // Commodities
+    Route::resource('commodities', CommodityController::class);
+    // Qualities
+    Route::resource('qualities', QualityController::class);
 
     // User
     Route::resource('users', UserController::class);

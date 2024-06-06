@@ -32,8 +32,97 @@
             <li>
                 <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('entry*')) ? 'active' : '' }}">
                     <span class="flex items-center">
-                        <iconify-icon class=" nav-icon" icon="gg:loadbar-doc"></iconify-icon>
+                        <iconify-icon class=" nav-icon" icon="material-symbols:keyboard-external-input"></iconify-icon>
                         <span>{{ __('Entri Data') }}</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('entry*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="mdi:print-preview"></iconify-icon>
+                        <span>{{ __('Pemeriksaan Data') }}</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('analysis*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="icon-park-outline:analysis"></iconify-icon>
+                        <span>{{ __('Analisis Data') }}</span>
+                    </span>
+                </a>
+            </li>
+            <li class="sidebar-menu-title">{{ __('MASTER') }}</li>
+            <!-- Wilayah -->
+            <li>
+                <a href="{{ route('wilayah.index') }}" class="navItem {{ (request()->is('wilayah*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="oui:vis-map-region"></iconify-icon>
+                        <span>{{ __('Wilayah') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Sample -->
+            <li>
+                <a href="{{ route('samples.index') }}" class="navItem {{ (request()->is('samples*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="mdi:person-multiple"></iconify-icon>
+                        <span>{{ __('Sample') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Petugas -->
+            <li>
+                <a href="{{ route('petugas.index') }}" class="navItem {{ (request()->is('petugas*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="fluent:person-note-16-filled"></iconify-icon>
+                        <span>{{ __('Petugas') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Dokumen -->
+            <li>
+                <a href="{{ route('documents.index') }}" class="navItem {{ (request()->is('documents*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="oui:documents"></iconify-icon>
+                        <span>{{ __('Document') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Section -->
+            <li>
+                <a href="{{ route('sections.index') }}" class="navItem {{ (request()->is('sections*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="uis:web-section-alt"></iconify-icon>
+                        <span>{{ __('Section') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Group -->
+            <li>
+                <a href="{{ route('groups.index') }}" class="navItem {{ (request()->is('groups*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="fa6-solid:layer-group"></iconify-icon>
+                        <span>{{ __('Group') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Komoditas -->
+            <li>
+                <a href="{{ route('commodities.index') }}" class="navItem {{ (request()->is('commodities*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="ph:plant-fill"></iconify-icon>
+                        <span>{{ __('Komoditas') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Quality -->
+            <li>
+                <a href="{{ route('qualities.index') }}" class="navItem {{ (request()->is('qualities*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="carbon:rule-data-quality"></iconify-icon>
+                        <span>{{ __('Kualitas') }}</span>
                     </span>
                 </a>
             </li>
