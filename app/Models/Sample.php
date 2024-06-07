@@ -10,4 +10,9 @@ class Sample extends Model
     use HasFactory;
     
     protected $guarded = ['id'];
+    protected $with = ['document'];
+    
+    public function document(){
+        return $this->belongsTo(Document::class);
+    }
 }

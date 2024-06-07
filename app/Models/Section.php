@@ -18,7 +18,7 @@ class Section extends Model
         return $this->hasMany(Group::class);
     }
 
-    public function section(){
+    public function document(){
         return $this->belongsTo(Document::class);
     }
 }
