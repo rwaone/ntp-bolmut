@@ -15,7 +15,93 @@ class CommodityController extends Controller
      */
     public function index()
     {
-        //
+        $breadcrumbsItems = [
+            [
+                'name' => 'Komoditas',
+                'url' => '/commodities',
+                'active' => true
+            ],
+        ];
+
+        $tableData = [
+            [
+                'id' => 1,
+                'age' => 82,
+                'first_name' => "Dorelle",
+                'last_name' => "Harling",
+                'email' => "dharling0@rediff.com",
+                'gender' => "Female",
+                'phone' => "232(152)707-0110",
+                'ccupation' => "Financial Advisor"
+            ],
+            [
+                'id' => 2,
+                'age' => 89,
+                'first_name' => "Bendicty",
+                'last_name' => "Llewellin",
+                'email' => "bllewellin1@example.com",
+                'gender' => "Male",
+                'phone' => "420(169)218-1769",
+                'ccupation' => "Marketing Assistant"
+            ],
+            [
+                'id' => 3,
+                'age' => 28,
+                'first_name' => "Remy",
+                'last_name' => "Carbry",
+                'email' => "rcarbry2@prlog.org",
+                'gender' => "Polygender",
+                'phone' => "86(958)204-4491",
+                'ccupation' => "Mechanical Systems Engineer"
+            ],
+            [
+                'id' => 4,
+                'age' => 20,
+                'first_name' => "Bernardo",
+                'last_name' => "Hacun",
+                'email' => "bhacun3@xinhuanet.com",
+                'gender' => "Male",
+                'phone' => "86(974)709-5254",
+                'ccupation' => "Research Assistant IV"
+            ],
+            [
+                'id' => 5,
+                'age' => 2,
+                'first_name' => "Emelia",
+                'last_name' => "Garstang",
+                'email' => "egarstang4@miitbeian.gov.cn",
+                'gender' => "Female",
+                'phone' => "55(644)175-6748",
+                'ccupation' => "Business Systems Development Analyst"
+            ],
+            [
+                'id' => 6,
+                'age' => 98,
+                'first_name' => "Dian",
+                'last_name' => "Dopson",
+                'email' => "ddopson5@examiner.com",
+                'gender' => "Female",
+                'phone' => "51(186)560-8480",
+                'ccupation' => "Cost Accountant"
+            ],
+            [
+                'id' => 7,
+                'age' => 17,
+                'first_name' => "Coretta",
+                'last_name' => "Ponter",
+                'email' => "cponter6@loc.gov",
+                'gender' => "Female",
+                'phone' => "1(941)734-6255",
+                'ccupation' => "Budget/Accounting Analyst II"
+            ]
+        ];
+
+        return view('commodity.index', [
+            'pageTitle' => 'Komoditas ',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'tableData' => $tableData,
+        ]);
+    
     }
 
     /**
