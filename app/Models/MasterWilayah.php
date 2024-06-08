@@ -10,4 +10,5 @@ class MasterWilayah extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'master_wilayah';
+    protected $primarKey = 'iddesa';
 }
