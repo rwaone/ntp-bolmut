@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // Wilayah Kabupaten Kecamatan Desa
     Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
+    Route::get('wilayah-edit/{id}', [WilayahController::class, 'edit'])->name('wilayah.edit');
     // Sample
     Route::resource('samples', SampleController::class);
     // Petugas
