@@ -13,7 +13,7 @@
                     role="tablist">
                     <li class="nav-item flex-grow text-center" role="presentation">
 
-                        <button
+                        {{-- <button
                             class="btn inline-flex justify-center btn-white dark:bg-slate-700 dark:text-slate-300 m-1 active"
                             id="pills-list-tab" data-bs-toggle="pill" data-bs-target="#pills-list" role="tab"
                             aria-controls="pills-list" aria-selected="false">
@@ -32,7 +32,7 @@
                                     icon="heroicons-outline:view-grid"></iconify-icon>
                                 <span>Grid View</span>
                             </span>
-                        </button>
+                        </button> --}}
 
                     </li>
                 </ul>
@@ -64,19 +64,23 @@
                                             <thead class="bg-slate-200 dark:bg-slate-700">
                                                 <tr>
                                                     <th scope="col" class="table-th ">
-                                                        NAME
+                                                        ID Desa
+                                                    </th>
+
+                                                    <th scope="col" class="table-th ">
+                                                        Desa
                                                     </th>
                                                     <th scope="col" class="table-th ">
-                                                        START DATE
+                                                        Status Pemerintahan
                                                     </th>
                                                     <th scope="col" class="table-th ">
-                                                        END DATE
+                                                        Kecamatan
                                                     </th>
                                                     <th scope="col" class="table-th ">
-                                                        ASSIGNED
+                                                        Kabupaten/Kota
                                                     </th>
                                                     <th scope="col" class="table-th ">
-                                                        STATUS
+                                                        Provinsi
                                                     </th>
                                                     <th scope="col" class="table-th ">
                                                         ACTION
@@ -89,53 +93,44 @@
                                                     <tr class="even:bg-slate-50 dark:even:bg-slate-700">
                                                         <td class="table-td">
                                                             <div
-                                                                class="flex space-x-3 items-center text-left rtl:space-x-reverse">
-                                                                <div class="flex-none">
-                                                                    <div
-                                                                        class="h-10 w-10 rounded-full text-sm bg-[#E0EAFF] dark:bg-slate-700 flex flex-col items-center justify-center font-medium -tracking-[1px]">
-                                                                        Ma
-                                                                    </div>
-                                                                </div>
-                                                                <div
-                                                                    class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                                    {{ $wilayah->stat_pem . ' ' . $wilayah->desa }}
-                                                                </div>
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ $wilayah->iddesa }}
                                                             </div>
-                                                        </td>
-                                                        <td class="table-td">
-                                                            <span class="block date-text">2022-10-03</span>
-                                                        </td>
-                                                        <td class="table-td">
-                                                            <span class="block date-text">2022-10-10</span>
+
                                                         </td>
                                                         <td class="table-td">
                                                             <div
-                                                                class="flex justify-start -space-x-1.5 rtl:space-x-reverse">
-                                                                <div class="h-6 w-6 rounded-full ring-1 ring-slate-100">
-                                                                    <img src="images/post/c1.png" alt="Image"
-                                                                        class="w-full h-full rounded-full">
-                                                                </div>
-                                                                <div class="h-6 w-6 rounded-full ring-1 ring-slate-100">
-                                                                    <img src="images/post/c2.png" alt="Image"
-                                                                        class="w-full h-full rounded-full">
-                                                                </div>
-                                                                <div class="h-6 w-6 rounded-full ring-1 ring-slate-100">
-                                                                    <img src="images/post/c3.png" alt="Image"
-                                                                        class="w-full h-full rounded-full">
-                                                                </div>
-                                                                <div
-                                                                    class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-300 text-xs ring-2 ring-slate-100 dark:ring-slate-700 rounded-full h-6 w-6 flex flex-col justify-center items-center">
-                                                                    +2
-                                                                </div>
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ '[' . $wilayah->kode_desa . '] ' . $wilayah->desa }}
                                                             </div>
                                                         </td>
                                                         <td class="table-td">
                                                             <div
-                                                                class="w-full bg-slate-100 h-2 rounded-xl overflow-hidden">
-                                                                <div class="bg-primary-500 progress-bar h-full rounded-xl"
-                                                                    style="width: 0%"></div>
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ $wilayah->stat_pem }}
                                                             </div>
                                                         </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ '[' . $wilayah->kode_kec . '] ' . $wilayah->kec }}
+                                                            </div>
+                                                        </td>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ '[' . $wilayah->kode_kabkot . '] ' . $wilayah->kabkot }}
+                                                            </div>
+                                                        </td>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ '[' . $wilayah->kode_prov . '] ' . $wilayah->prov }}
+                                                            </div>
+                                                        </td>
+
                                                         <td class="table-td">
                                                             <div class="dropstart relative">
                                                                 <button class="inline-flex justify-center items-center"
@@ -154,8 +149,7 @@
                                                                             <span>View</span></a>
                                                                     </li>
                                                                     <li>
-                                                                        <a href="#" data-bs-toggle="modal"
-                                                                            data-bs-target="#editModal"
+                                                                        <a href={{ url('wilayah-edit/' . $wilayah->iddesa) }}
                                                                             class="hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
                                                                             <iconify-icon
                                                                                 icon="clarity:note-edit-line"></iconify-icon>
@@ -185,13 +179,14 @@
                                         <input type="text"
                                             class="form-control !inline-block border max-w-[50px] px-2 py-2 text-center mr-2 "
                                             value="1">
-                                        <span>Page 1 of 1</span>
+                                        <span>Page {{ $master_wilayah->currentPage() }} of
+                                            {{ $master_wilayah->lastPage() }}</span>
                                     </div>
                                 </div>
                                 <div class="card-text h-full space-y-10">
                                     <ul class="list-none">
                                         <li class="inline-block">
-                                            <a href="#"
+                                            <a href="{{ $master_wilayah->previousPageUrl() }}"
                                                 class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 relative top-[2px] pl-2">
@@ -214,7 +209,7 @@
                                                 2</a>
                                         </li>
                                         <li class="inline-block">
-                                            <a href="#"
+                                            <a href="{{ $master_wilayah->nextPageUrl() }}"
                                                 class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 relative top-[2px]">
