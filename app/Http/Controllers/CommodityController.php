@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Commodity;
 use App\Http\Requests\StoreCommodityRequest;
 use App\Http\Requests\UpdateCommodityRequest;
+use App\Models\Group;
 
 class CommodityController extends Controller
 {
@@ -16,6 +17,21 @@ class CommodityController extends Controller
     public function index()
     {
         //
+        $data = Commodity::all();
+        $forGroupId = Group::all();
+        $breadcrumbsItems = [
+            [
+                'name' => 'Master Komoditas',
+                'url' => '/komoditas',
+                'active' => true
+            ],
+        ];
+        return view('master/komoditas/index', [
+            'pageTitle' => 'Master Komoditas',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'data' => $data,
+            'forGroupId' => $forGroupId,
+        ]);
     }
 
     /**
@@ -37,6 +53,15 @@ class CommodityController extends Controller
     public function store(StoreCommodityRequest $request)
     {
         //
+        $validated = $request->validate($request->rules());
+        try {
+            //code...
+            $storeData = Commodity::create($validated);
+            return response()->json(['Berhasil']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json($th);
+        }
     }
 
     /**

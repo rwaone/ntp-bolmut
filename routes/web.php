@@ -51,7 +51,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Group
     Route::resource('groups', GroupController::class);
     // Commodities
-    Route::resource('commodities', CommodityController::class);
+    // Route::resource('commodities', CommodityController::class);
+    Route::get('/komoditas', [CommodityController::class, 'index'])->middleware(['auth', 'verified'])->name('komoditas.index');
+    Route::post('/komoditas/store', [CommodityController::class, 'store'])->middleware(['auth', 'verified'])->name('komoditas.store');
     // Qualities
     Route::resource('qualities', QualityController::class);
 

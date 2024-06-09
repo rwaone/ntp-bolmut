@@ -110,7 +110,7 @@
             </li>
             <!-- Komoditas -->
             <li>
-                <a href="{{ route('commodities.index') }}" class="navItem {{ (request()->is('commodities*')) ? 'active' : '' }}">
+                <a href="{{ route('komoditas.index') }}" class="navItem {{ (request()->is('komoditas*')) ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="ph:plant-fill"></iconify-icon>
                         <span>{{ __('Komoditas') }}</span>
