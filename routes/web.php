@@ -24,6 +24,7 @@ use App\Http\Controllers\SetLocaleController;
 use App\Http\Controllers\ComponentsController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DatabaseBackupController;
+use App\Http\Controllers\DesaController;
 use App\Http\Controllers\GeneralSettingController;
 
 require __DIR__ . '/auth.php';
@@ -39,6 +40,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('setlocale/{locale}', SetLocaleController::class)->name('setlocale');
 
     // Wilayah Kabupaten Kecamatan Desa
+    Route::get('wilayah/desa', [DesaController::class, 'index'])->name('wilayah.desa.index');
     Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
     Route::get('wilayah-edit/{id}', [WilayahController::class, 'edit'])->name('wilayah.edit');
     // Sample
