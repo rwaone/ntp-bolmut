@@ -6,6 +6,7 @@ use App\Models\Commodity;
 use App\Http\Requests\StoreCommodityRequest;
 use App\Http\Requests\UpdateCommodityRequest;
 use App\Models\Group;
+use Exception;
 
 class CommodityController extends Controller
 {
@@ -56,12 +57,27 @@ class CommodityController extends Controller
         $validated = $request->validate($request->rules());
         try {
             //code...
-            $storeData = Commodity::create($validated);
-            return response()->json(['Berhasil']);
+            if ($validated['id']) {
+                $target = Commodity::find($validated['id']);
+                if ($target) {
+                    $target->update([
+                        'code' => $validated['code'],
+                        'group_id' => $validated['group_id'],
+                        'name' => $validated['name'],
+                        'min_change' => $validated['min_change'],
+                        'max_change' => $validated['max_change']
+                    ]);
+                } else {
+                    return response()->json(['Gagal Update']);
+                }
+            } else $storeData = Commodity::create($validated);
+            // $html = view('master/komoditas/index', compact('data'))->render();
+            $data = Commodity::get();
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json($th);
         }
+        return view('master/komoditas/data-table-komoditas', compact('data'))->render();
     }
 
     /**
@@ -96,6 +112,17 @@ class CommodityController extends Controller
     public function update(UpdateCommodityRequest $request, Commodity $commodity)
     {
         //
+    }
+    public function fetch(String $id)
+    {
+        try {
+            //code...
+            $data = Commodity::where('id', $id)->first();
+        } catch (\Throwable $th) {
+            //throw $th;
+            throw new Exception("Tidak ditemukan", 500);
+        }
+        return response()->json($data);
     }
 
     /**

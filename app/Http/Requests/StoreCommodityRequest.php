@@ -25,6 +25,7 @@ class StoreCommodityRequest extends FormRequest
     {
         return [
             //
+            'id' => ['integer'],
             'name' => ['string', 'required'],
             'code' => ['string', 'required'],
             'group_id' => ['integer', 'required'],
