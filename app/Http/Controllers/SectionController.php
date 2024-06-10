@@ -15,7 +15,19 @@ class SectionController extends Controller
      */
     public function index()
     {
-        //
+        $sections = Section::all();
+        $breadcrumbsItems = [
+            [
+                'name' => 'Master Bagian',
+                'url' => '/sections',
+                'active' => true
+            ],
+        ];
+        return view('master/komoditas/index', [
+            'pageTitle' => 'Master Komoditas',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'sections' => $sections,
+        ]);
     }
 
     /**
