@@ -27,6 +27,8 @@ class WilayahController extends Controller
     public function edit($id)
     {
         $master_wilayah = MasterWilayah::where('iddesa', $id)->first();
+        $kecamatan = MasterWilayah::select('kec', 'kode_kec')->groupBy('kec', 'kode_kec')->get();
+        $desa = MasterWilayah::select('desa', 'kode_desa')->groupBy('desa', 'kode_desa')->get();
         $breadcrumbsItems = [
             [
                 'name' => 'Ubah Master Wilayah',
@@ -38,7 +40,9 @@ class WilayahController extends Controller
         return view('master/wilayah-ubah', [
             'pageTitle' => 'Ubah Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
-            'wilayah' => $master_wilayah
+            'wilayah' => $master_wilayah,
+            'kecamatan' => $kecamatan,
+            // 'desa' => $desa
         ]);
     }
 }
