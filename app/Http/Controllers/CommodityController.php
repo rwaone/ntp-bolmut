@@ -19,7 +19,9 @@ class CommodityController extends Controller
     public function index()
     {
         //
-        $data = Commodity::all();
+        $query = Commodity::query();
+        $countData = $query->count();
+        $data = Commodity::paginate(10, ['*'], 'page', 1);
         $forGroupId = Group::all();
         $breadcrumbsItems = [
             [
@@ -32,6 +34,7 @@ class CommodityController extends Controller
             'pageTitle' => 'Master Komoditas',
             'breadcrumbItems' => $breadcrumbsItems,
             'data' => $data,
+            'countData' => $countData,
             'forGroupId' => $forGroupId,
         ]);
     }
@@ -103,6 +106,12 @@ class CommodityController extends Controller
     public function search(Request $request)
     {
         $query = Commodity::query();
+
+        if ($request->paginated) $paginated = $request->paginated;
+        else $paginated = 10;
+        if ($request->currentPage) $currentPage = $request->currentPage;
+        else $currentPage = 1;
+
         if (!empty($request->value)) {
             $filter = $request->value;
             $query->orWhere('commodities.name', 'like', '%' . $filter . '%');
@@ -113,9 +122,9 @@ class CommodityController extends Controller
             $query->orWhere('max_change', 'like', '%' . $filter . '%');
             $query->orWhere('commodities.updated_at', 'like', '%' . $filter . '%');
         }
-        $data = $query->get([
-            'commodities.*'
-        ]);
+        $countData = $query->count();
+        $query->select(['commodities.*']);
+        $data = $query->paginate($paginated, ['*'], 'page', $currentPage);
         return view('master/komoditas/data-table-komoditas', compact('data'))->render();
     }
 

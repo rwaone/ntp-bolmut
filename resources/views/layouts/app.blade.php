@@ -11,7 +11,7 @@
     {{-- Scripts --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     @vite(['resources/css/app.scss', 'resources/js/custom/store.js'])
-    {{ $head }}
+   
 </head>
 
 <body class="font-inter dashcode-app" id="body_class">
