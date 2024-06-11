@@ -55,11 +55,6 @@ class PetugasController extends Controller
          // Validate the request data
          $validatedData = $request->validated();
 
-         // Remove the id field if it's present
-        if (isset($validatedData['id'])) {
-            unset($validatedData['id']);
-        }
-
          try {
             // Create a new Petugas record
             $petugas = Petugas::create($validatedData);
@@ -116,13 +111,42 @@ class PetugasController extends Controller
      * @param  \App\Models\Petugas  $petugas
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePetugasRequest $request, Petugas $petugas)
+    public function update(UpdatePetugasRequest $request, $id)
     {
-        // Validate the request data
-        $validatedData = $request->validated();
-        $petugas->update($validatedData);
-    
-        return response()->json(['message' => 'Petugas updated successfully.']);
+        $method = $request->method();
+
+        if ($request->isMethod('PUT')) {
+            try {
+                // Validate the request data
+                $validatedData = $request->validated();
+
+                // Find the petugas record or throw an exception
+                $petugas = Petugas::findOrFail($id);
+
+                // Check if the data is validated
+                if ($validatedData) {
+                    // Update the petugas record
+                    $petugas->update($validatedData);
+
+                    return response()->json([
+                        'message' => 'Petugas updated successfully',
+                        'data' => $petugas
+                    ], 201);
+                } else {
+                    // Return an error response if data is not validated
+                    return response()->json(['error' => 'Invalid data provided.']);
+                }
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                // Handle the case when the petugas record is not found
+                return response()->json(['error' => 'Petugas not found.'], 404);
+            } catch (\Exception $e) {
+                // Log the exception message or details
+                \Log::error('Error updating petugas: ' . $e->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'An error occurred while updating the petugas.'], 500);
+            }
+        }
     }
 
     /**

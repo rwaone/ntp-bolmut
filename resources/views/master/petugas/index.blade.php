@@ -94,11 +94,17 @@
             const dismissModalElement = document.querySelector('[data-bs-dismiss="modal"]');
             const errorElements = document.querySelectorAll('.error-message');
             const modalTitle = document.getElementById('modalTitle');
-            const method = 'PUT';
+            let method = 'POST';
+            let isEditMode = false;
+
             //reset form if modal closed
             dismissModalElement.addEventListener('click', () => {
                 form.reset();
                 setModalTitle('create');
+                const existingIdField = form.querySelector('input[name="id"]');
+                if (existingIdField) {
+                    existingIdField.remove();
+                }
             });
 
             form.addEventListener('submit', function(event) {
@@ -108,11 +114,15 @@
                 });
                 //Clear errors
                 const formData = new FormData(form);
+                // console.log(formData.get('name'));
                 const url = method === 'PUT' ? `/petugas/${formData.get('id')}` : '/petugas';
-                console.log(method, url);
+                if (method === 'PUT') {
+                    formData.append('_method', 'PUT');
+                }
+
 
                 axios({
-                        method: method,
+                        method: 'POST',
                         url: url,
                         data: formData,
                     })
@@ -120,10 +130,11 @@
                         // Handle the successful response
                         axios.get('/petugas/table')
                             .then(function(tableResponse) {
-                                console.log(tableResponse.data);
+                                // console.log(response.data);
                                 // Update the table container with the new table data
                                 tableContainer.innerHTML = tableResponse.data;
                                 form.reset();
+                                attachEditBtnListeners();
                             })
                             .catch(function(error) {
                                 console.error('Error fetching table data:', error);
@@ -161,13 +172,20 @@
                 }
             }
 
-            // Event listener for opening the edit modal
+            function attachEditBtnListeners() {
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        setModalTitle('edit');
+                        populateFormFields(btn.dataset.id);
+                    });
+                });
+            }
+
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    // console.log('Edit button clicked:', btn.dataset.id);
                     setModalTitle('edit');
-                    // Populate the form fields with the record data
                     populateFormFields(btn.dataset.id);
-                    console.log(btn.dataset.id);
                 });
             });
 
@@ -175,24 +193,43 @@
             function setModalTitle(action) {
                 if (action === 'edit') {
                     modalTitle.textContent = 'Edit Petugas';
-                    // method = 'PUT';
+                    method = 'PUT';
                 } else {
                     modalTitle.textContent = 'Tambah Petugas';
-                    // method = 'POST';
+                    method = 'POST';
                 }
             }
 
             function populateFormFields(id) {
                 // Make an AJAX request to fetch the record data
+                // Remove any existing id input field
+
                 axios.get(`/petugas/${id}/edit`)
                     .then(response => {
                         const data = response.data;
-                        // console.log(data);
+                        // Create and append the id input field
+                        const idField = document.createElement('input');
+                        idField.type = 'hidden';
+                        idField.name = 'id';
+                        idField.value = data.id;
+                        form.appendChild(idField);
                         // Populate the form fields with the record data
-                        form.elements.id.value = data.id;
-                        form.elements.nip.value = data.nip;
-                        form.elements.name.value = data.name;
-                        form.elements.jabatan.value = data.jabatan;
+                        const formData = new FormData();
+
+                        formData.append('id', data.id);
+                        formData.append('nip', data.nip);
+                        formData.append('name', data.name);
+                        formData.append('jabatan', data.jabatan);
+
+                        // console.log('FormData:', formData); // Log the FormData object
+
+                        for (const [key, value] of formData.entries()) {
+                            const input = form.elements[key];
+                            if (input) {
+                                input.value = value;
+                                // console.log(`Field ${key}: ${value}`); // Log the form field values
+                            }
+                        }
                         // ... (populate other form fields)
                     })
                     .catch(error => {

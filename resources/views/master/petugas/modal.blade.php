@@ -28,10 +28,9 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-6 space-y-4">
-                    <form id="form-petugas" enctype="multipart/form-data">
+                    <form id="form-petugas">
                         @csrf
                         <div class="label-area mb-3">
-                            <input type="hidden" name="id" id="id-field" value="">
                             <label for="name" class="form-label">Nama</label>
                             <input id="name" name="name" type="text" class="form-control"
                                 placeholder="Nama Petugas">
