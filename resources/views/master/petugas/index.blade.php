@@ -93,21 +93,29 @@
             const tableContainer = document.getElementById('tableContainer');
             const dismissModalElement = document.querySelector('[data-bs-dismiss="modal"]');
             const errorElements = document.querySelectorAll('.error-message');
+            const modalTitle = document.getElementById('modalTitle');
+            const method = 'PUT';
             //reset form if modal closed
             dismissModalElement.addEventListener('click', () => {
                 form.reset();
+                setModalTitle('create');
             });
 
             form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission behavior
-                //Clear errors
                 errorElements.forEach(function(element) {
                     element.innerHTML = '';
                 });
+                //Clear errors
                 const formData = new FormData(form);
-                // Clear previous errors
+                const url = method === 'PUT' ? `/petugas/${formData.get('id')}` : '/petugas';
+                console.log(method, url);
 
-                axios.post('/petugas', formData)
+                axios({
+                        method: method,
+                        url: url,
+                        data: formData,
+                    })
                     .then(function(response) {
                         // Handle the successful response
                         axios.get('/petugas/table')
@@ -136,23 +144,62 @@
                         }
                     });
             });
-        });
 
-        function displayErrors(errors) {
-            for (const field in errors) {
-                const errorMessages = errors[field];
-                const errorElement = document.getElementById(`${field}-error`);
+            function displayErrors(errors) {
+                for (const field in errors) {
+                    const errorMessages = errors[field];
+                    const errorElement = document.getElementById(`${field}-error`);
 
-                if (errorElement) {
-                    let errorHtml = '';
-                    errorMessages.forEach(function(message) {
-                        errorHtml +=
-                            `<p class="mt-2 text-sm text-red-600 dark:text-red-500"> ${message} </p>`;
-                    });
-                    errorElement.innerHTML = errorHtml;
+                    if (errorElement) {
+                        let errorHtml = '';
+                        errorMessages.forEach(function(message) {
+                            errorHtml +=
+                                `<p class="mt-2 text-sm text-red-600 dark:text-red-500"> ${message} </p>`;
+                        });
+                        errorElement.innerHTML = errorHtml;
+                    }
                 }
             }
-        }
+
+            // Event listener for opening the edit modal
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setModalTitle('edit');
+                    // Populate the form fields with the record data
+                    populateFormFields(btn.dataset.id);
+                    console.log(btn.dataset.id);
+                });
+            });
+
+            // Function to set the modal title
+            function setModalTitle(action) {
+                if (action === 'edit') {
+                    modalTitle.textContent = 'Edit Petugas';
+                    // method = 'PUT';
+                } else {
+                    modalTitle.textContent = 'Tambah Petugas';
+                    // method = 'POST';
+                }
+            }
+
+            function populateFormFields(id) {
+                // Make an AJAX request to fetch the record data
+                axios.get(`/petugas/${id}/edit`)
+                    .then(response => {
+                        const data = response.data;
+                        // console.log(data);
+                        // Populate the form fields with the record data
+                        form.elements.id.value = data.id;
+                        form.elements.nip.value = data.nip;
+                        form.elements.name.value = data.name;
+                        form.elements.jabatan.value = data.jabatan;
+                        // ... (populate other form fields)
+                    })
+                    .catch(error => {
+                        console.error('Error fetching record data:', error);
+                    });
+            }
+        });
     </script>
 
 

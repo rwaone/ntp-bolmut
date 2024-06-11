@@ -7,6 +7,7 @@ use App\Http\Requests\StorePetugasRequest;
 use App\Http\Requests\UpdatePetugasRequest;
 use Illuminate\Support\Facades\Log;
 
+
 class PetugasController extends Controller
 {
     /**
@@ -54,6 +55,11 @@ class PetugasController extends Controller
          // Validate the request data
          $validatedData = $request->validated();
 
+         // Remove the id field if it's present
+        if (isset($validatedData['id'])) {
+            unset($validatedData['id']);
+        }
+
          try {
             // Create a new Petugas record
             $petugas = Petugas::create($validatedData);
@@ -92,9 +98,15 @@ class PetugasController extends Controller
      * @param  \App\Models\Petugas  $petugas
      * @return \Illuminate\Http\Response
      */
-    public function edit(Petugas $petugas)
+    public function edit($id)
     {
-        //
+        $petugas = Petugas::find($id);
+    
+        if ($petugas) {
+            return response()->json($petugas);
+        } else {
+            return response()->json(['message' => 'Petugas not found'], 404);
+        }
     }
 
     /**
@@ -106,7 +118,11 @@ class PetugasController extends Controller
      */
     public function update(UpdatePetugasRequest $request, Petugas $petugas)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validated();
+        $petugas->update($validatedData);
+    
+        return response()->json(['message' => 'Petugas updated successfully.']);
     }
 
     /**
