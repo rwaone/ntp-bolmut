@@ -40,9 +40,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('setlocale/{locale}', SetLocaleController::class)->name('setlocale');
 
     // Wilayah Kabupaten Kecamatan Desa
-    Route::get('wilayah/desa', [DesaController::class, 'index'])->name('wilayah.desa.index');
+    Route::get('master/wilayah/desa', [DesaController::class, 'index'])->name('wilayah.desa.index');
+    Route::get('master/wilayah/desa/create', [DesaController::class, 'create'])->name('wilayah.desa.create');
+    Route::post('master/wilayah/desa/store', [DesaController::class, 'store'])->name('wilayah.desa.store');
+    Route::get('master/wilayah/desa/edit/{id}', [DesaController::class, 'edit'])->name('wilayah.desa.edit');
+    
     Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
-    Route::get('wilayah-edit/{id}', [WilayahController::class, 'edit'])->name('wilayah.edit');
+    // Route::get('wilayah-edit/{id}', [WilayahController::class, 'edit'])->name('wilayah.edit');
     // Sample
     Route::resource('samples', SampleController::class);
     // Petugas

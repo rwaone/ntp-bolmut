@@ -4,7 +4,10 @@
         <x-breadcrumb :page-title="$pageTitle" :breadcrumb-items="$breadcrumbItems" />
         {{-- </div> --}}
 
-        {{$master_wilayah}}
+        <p>
+
+            {{-- {{$master_wilayah}} --}}
+        </p>
         <div class="md:flex justify-between items-center">
             <div>
                 Master Wilayah
@@ -43,16 +46,16 @@
                         <span>On Going</span>
                     </span>
                 </button>
-                <button class="btn inline-flex justify-center btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 ">
+                <a href="{{url('master/wilayah/desa/create')}}" class="btn inline-flex justify-center btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 ">
                     <span class="flex items-center">
                         <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2" icon="ph:plus-bold"></iconify-icon>
                         <span>Tambah Wilayah</span>
                     </span>
-                </button>
+                </a>
             </div>
         </div>
 
-        {{-- <div class="tab-content mt-6" id="pills-tabContent">
+        <div class="tab-content mt-6" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
                 <div class="tab-content">
                     <div class="card">
@@ -102,21 +105,23 @@
                                                         <td class="table-td">
                                                             <div
                                                                 class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                                {{ '[' . $wilayah->kode_desa . '] ' . $wilayah->desa }}
+                                                                {{ '[' . $wilayah->code . '] ' . $wilayah->name }}
                                                             </div>
                                                         </td>
+
                                                         <td class="table-td">
                                                             <div
-                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                                {{ $wilayah->stat_pem }}
+                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                            {{ $wilayah->stat_pem }}
                                                             </div>
-                                                        </td>
-                                                        <td class="table-td">
-                                                            <div
+                                                            </td>
+                                                            <td class="table-td">
+                                                                <div
                                                                 class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
                                                                 {{ '[' . $wilayah->kode_kec . '] ' . $wilayah->kec }}
-                                                            </div>
-                                                        </td>
+                                                                </div>
+                                                                </td>
+                                                            
                                                         </td>
                                                         <td class="table-td">
                                                             <div
@@ -128,9 +133,9 @@
                                                         <td class="table-td">
                                                             <div
                                                                 class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                                {{ '[' . $wilayah->kode_prov . '] ' . $wilayah->prov }}
+                                                                {{ '[7100] SULAWESI UTARA' }}
                                                             </div>
-                                                        </td>
+                                                        </td> 
 
                                                         <td class="table-td">
                                                             <div class="dropstart relative">
@@ -150,7 +155,7 @@
                                                                             <span>View</span></a>
                                                                     </li>
                                                                     <li>
-                                                                        <a href={{ url('wilayah-edit/' . $wilayah->code) }}
+                                                                        <a href={{ url('master/wilayah/desa/edit/' . $wilayah->id) }}
                                                                             class="hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
                                                                             <iconify-icon
                                                                                 icon="clarity:note-edit-line"></iconify-icon>
@@ -185,40 +190,7 @@
                                     </div>
                                 </div>
                                 <div class="card-text h-full space-y-10">
-                                    <ul class="list-none">
-                                        <li class="inline-block">
-                                            <a href="{{ $master_wilayah->previousPageUrl() }}"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 relative top-[2px] pl-2">
-                                                <iconify-icon
-                                                    icon="material-symbols:arrow-back-ios-rounded"></iconify-icon>
-                                            </a>
-                                        </li>
-                                        <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 p-active">
-                                                1</a>
-                                        </li>
-                                        <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 ">
-                                                2</a>
-                                        </li>
-                                        <li class="inline-block">
-                                            <a href="{{ $master_wilayah->nextPageUrl() }}"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 relative top-[2px]">
-                                                <iconify-icon
-                                                    icon="material-symbols:arrow-forward-ios-rounded"></iconify-icon>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                    {{$master_wilayah}}
                                 </div>
                             </div>
                         </div>
@@ -435,7 +407,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
             id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">

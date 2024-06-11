@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Desa;
 use App\Http\Requests\StoreDesaRequest;
 use App\Http\Requests\UpdateDesaRequest;
+use App\Models\Kecamatan;
+use Illuminate\Support\Facades\DB;
 
 class DesaController extends Controller
 {
@@ -15,7 +17,16 @@ class DesaController extends Controller
      */
     public function index()
     {
-        $master_wilayah = Desa::paginate(10);
+        $master_wilayah = Desa::join('kecamatans', 'desas.kecamatan_id', 'kecamatans.id')
+            ->join('kabupatens', 'kecamatans.kabupaten_id', 'kabupatens.id')
+            ->select(
+                'desas.*',
+                'kecamatans.code as kode_kec',
+                'kecamatans.name as kec',
+                'kabupatens.code as kode_kabkot',
+                'kabupatens.name as kabkot'
+            )
+            ->paginate(10);
         // $master_wilayah = Desa::join('kecamatans','kecamatans.id','desas.kecamatan_id')
         // ->join('kabupatens','kabupatens.id','kecamatans.kabupaten_id')
         // ->paginate(10);
@@ -27,32 +38,37 @@ class DesaController extends Controller
             ],
         ];
 
-        return view('master/wilayah', [
+        return view('master/wilayah/desa/index', [
             'pageTitle' => 'Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
-            'master_wilayah' => $master_wilayah
+            'master_wilayah'=>$master_wilayah
+
         ]);
     }
     public function edit($id)
     {
-        // $master_wilayah = MasterWilayah::where('iddesa', $id)->first();
-        // $kecamatan = MasterWilayah::select('kec', 'kode_kec')->groupBy('kec', 'kode_kec')->get();
-        // $desa = MasterWilayah::select('desa', 'kode_desa')->groupBy('desa', 'kode_desa')->get();
-        // $breadcrumbsItems = [
-        //     [
-        //         'name' => 'Ubah Master Wilayah',
-        //         'url' => '/wilayah/ubah',
-        //         'active' => true
-        //     ],
-        // ];
+       
+        $kecamatans = Kecamatan::all();
+        
+        $master_wilayah = Desa::where('desas.id',$id)
+        ->join('kecamatans','desas.kecamatan_id','kecamatans.id')
+        ->join('kabupatens','kecamatans.kabupaten_id','kabupatens.id')
+        ->select('desas.*','kecamatans.id as id_kec','kecamatans.code as kode_kec','kecamatans.name as kec','kabupatens.id as id_kabkot','kabupatens.code as kode_kabkot','kabupatens.name as kabkot')
+        ->first();
+        $breadcrumbsItems = [
+            [
+                'name' => 'Master Wilayah',
+                'url' => '/wilayah',
+                'active' => true
+            ],
+        ];
 
-        // return view('master/wilayah-ubah', [
-        //     'pageTitle' => 'Ubah Master Wilayah',
-        //     'breadcrumbItems' => $breadcrumbsItems,
-        //     'wilayah' => $master_wilayah,
-        //     'kecamatan' => $kecamatan,
-        //     // 'desa' => $desa
-        // ]);
+        return view('master/wilayah/desa/edit', [
+            'pageTitle' => 'Master Wilayah',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'kecamatans' => $kecamatans,
+            'master_wilayah' => $master_wilayah,
+        ]);
     }
 
     /**
@@ -62,7 +78,21 @@ class DesaController extends Controller
      */
     public function create()
     {
-        //
+      
+        $kecamatans = Kecamatan::all();
+        $breadcrumbsItems = [
+            [
+                'name' => 'Master Wilayah',
+                'url' => '/wilayah',
+                'active' => true
+            ],
+        ];
+
+        return view('master/wilayah/desa/create', [
+            'pageTitle' => 'Master Wilayah',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'kecamatans' => $kecamatans
+        ]);
     }
 
     /**
@@ -73,7 +103,51 @@ class DesaController extends Controller
      */
     public function store(StoreDesaRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+
+        if (isset($validatedData['kecamatan_id'])) {
+            try {
+                //code...
+                $desa = [
+                    'kecamatan_id' => $validatedData['kecamatan_id'],
+                    'code' => $validatedData['desa_code'],
+                    'name' => $validatedData['desa_name'],
+                    'stat_pem' => $validatedData['stat_pem'],
+                ];
+                DB::beginTransaction();
+                Desa::create($desa);
+                DB::commit();
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+        } else {
+            // insert new kecamatan\
+            try {
+                //code...
+                $kecamatanData = [
+                    'code' => $validatedData['kecamatan_code'],
+                    'name' => $validatedData['kecamatan_name'],
+                    'kabupaten_id' => 1
+
+                ];
+                DB::beginTransaction();
+                $kecamatan = Kecamatan::create($kecamatanData);
+                $desa = [
+                    'kecamatan_id' => $kecamatan->id,
+                    'code' => $validatedData['desa_code'],
+                    'name' => $validatedData['desa_name'],
+                    'stat_pem' => $validatedData['stat_pem'],
+                ];
+                Desa::create($desa);
+                DB::commit();
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+        }
+
+        return redirect('master/wilayah/desa',302)->with('message','berhasil menambahkan wilayah baru');
     }
 
     /**
@@ -93,7 +167,7 @@ class DesaController extends Controller
      * @param  \App\Models\Desa  $desa
      * @return \Illuminate\Http\Response
      */
- 
+
 
     /**
      * Update the specified resource in storage.
