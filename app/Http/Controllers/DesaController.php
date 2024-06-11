@@ -41,20 +41,20 @@ class DesaController extends Controller
         return view('master/wilayah/desa/index', [
             'pageTitle' => 'Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
-            'master_wilayah'=>$master_wilayah
+            'master_wilayah' => $master_wilayah
 
         ]);
     }
     public function edit($id)
     {
-       
+
         $kecamatans = Kecamatan::all();
-        
-        $master_wilayah = Desa::where('desas.id',$id)
-        ->join('kecamatans','desas.kecamatan_id','kecamatans.id')
-        ->join('kabupatens','kecamatans.kabupaten_id','kabupatens.id')
-        ->select('desas.*','kecamatans.id as id_kec','kecamatans.code as kode_kec','kecamatans.name as kec','kabupatens.id as id_kabkot','kabupatens.code as kode_kabkot','kabupatens.name as kabkot')
-        ->first();
+
+        $master_wilayah = Desa::where('desas.id', $id)
+            ->join('kecamatans', 'desas.kecamatan_id', 'kecamatans.id')
+            ->join('kabupatens', 'kecamatans.kabupaten_id', 'kabupatens.id')
+            ->select('desas.*', 'kecamatans.id as id_kec', 'kecamatans.code as kode_kec', 'kecamatans.name as kec', 'kabupatens.id as id_kabkot', 'kabupatens.code as kode_kabkot', 'kabupatens.name as kabkot')
+            ->first();
         $breadcrumbsItems = [
             [
                 'name' => 'Master Wilayah',
@@ -78,7 +78,7 @@ class DesaController extends Controller
      */
     public function create()
     {
-      
+
         $kecamatans = Kecamatan::all();
         $breadcrumbsItems = [
             [
@@ -147,7 +147,7 @@ class DesaController extends Controller
             }
         }
 
-        return redirect('master/wilayah/desa',302)->with('message','berhasil menambahkan wilayah baru');
+        return redirect('master/wilayah/desa', 302)->with('message', 'berhasil menambahkan wilayah baru');
     }
 
     /**
@@ -176,11 +176,40 @@ class DesaController extends Controller
      * @param  \App\Models\Desa  $desa
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDesaRequest $request, Desa $desa)
+    public function update(UpdateDesaRequest $request)
     {
-        //
-    }
+        $validatedData = $request->validated();
+        //code...
 
+
+        // insert new kecamatan\
+        try {
+            //code...
+            $desa_data = [
+                'kecamatan_id' => $validatedData['kecamatan_id'],
+                'code' => $validatedData['desa_code'],
+                'name' => $validatedData['desa_name'],
+                'stat_pem' => $validatedData['stat_pem'],
+            ];
+
+
+            $kecamatan_data = [
+                'code' => $validatedData['kecamatan_code'],
+                'name' => $validatedData['kecamatan_name'],
+
+            ];
+            DB::beginTransaction();
+            Kecamatan::where('id', $validatedData['kecamatan_id'])->update($kecamatan_data);
+
+            Desa::where('id', $validatedData['desa_id'])->update($desa_data);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
+        return response()->json([]);
+    }
     /**
      * Remove the specified resource from storage.
      *

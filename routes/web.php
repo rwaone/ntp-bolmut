@@ -44,7 +44,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('master/wilayah/desa/create', [DesaController::class, 'create'])->name('wilayah.desa.create');
     Route::post('master/wilayah/desa/store', [DesaController::class, 'store'])->name('wilayah.desa.store');
     Route::get('master/wilayah/desa/edit/{id}', [DesaController::class, 'edit'])->name('wilayah.desa.edit');
-    
+    Route::patch('master/wilayah/desa/update', [DesaController::class, 'update'])->name('wilayah.desa.update');
+
     Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
     // Route::get('wilayah-edit/{id}', [WilayahController::class, 'edit'])->name('wilayah.edit');
     // Sample
