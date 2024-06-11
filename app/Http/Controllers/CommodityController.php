@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCommodityRequest;
 use App\Http\Requests\UpdateCommodityRequest;
 use App\Models\Group;
 use Exception;
+use Illuminate\Http\Request;
 
 class CommodityController extends Controller
 {
@@ -67,16 +68,54 @@ class CommodityController extends Controller
                         'min_change' => $validated['min_change'],
                         'max_change' => $validated['max_change']
                     ]);
+                    $message = 'Berhasil mengedit data komoditas';
                 } else {
-                    return response()->json(['Gagal Update']);
+                    return response()->json([
+                        'message' => 'Tidak ada data tersebut',
+                    ], 500);
                 }
-            } else $storeData = Commodity::create($validated);
-            // $html = view('master/komoditas/index', compact('data'))->render();
-            $data = Commodity::get();
+            } else {
+                unset($validated['id']);
+                $storeData = Commodity::create($validated);
+                $message = 'Berhasil menambahkan komoditas baru';
+            }
+            $html = $this->fetchData($request);
+            return response()->json([
+                'message' => $message,
+                'html' => $html,
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json($th);
+            return response()->json([
+                'message' => 'Gagal Menambah/Mengedit Data',
+                'error' => $th->getMessage(),
+            ], 500);
         }
+    }
+
+    public function fetchData()
+    {
+        $query = Commodity::query();
+        $data = $query->get();
+        return view('master/komoditas/data-table-komoditas', compact('data'))->render();
+    }
+
+    public function search(Request $request)
+    {
+        $query = Commodity::query();
+        if (!empty($request->value)) {
+            $filter = $request->value;
+            $query->orWhere('commodities.name', 'like', '%' . $filter . '%');
+            $query->orWhere('code', 'like', '%' . $filter . '%');
+            $query->join('groups', 'groups.id', '=', 'commodities.group_id');
+            $query->orWhere('groups.name', 'like', '%' . $filter . '%');
+            $query->orWhere('min_change', 'like', '%' . $filter . '%');
+            $query->orWhere('max_change', 'like', '%' . $filter . '%');
+            $query->orWhere('commodities.updated_at', 'like', '%' . $filter . '%');
+        }
+        $data = $query->get([
+            'commodities.*'
+        ]);
         return view('master/komoditas/data-table-komoditas', compact('data'))->render();
     }
 
@@ -131,8 +170,19 @@ class CommodityController extends Controller
      * @param  \App\Models\Commodity  $commodity
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Commodity $commodity)
+    public function destroy(String $id)
     {
         //
+        $data = Commodity::find($id);
+        if ($data) {
+            try {
+                //code...
+                $data->delete();
+            } catch (\Throwable $th) {
+                //throw $th;
+                throw new Exception("Gagal Menghapus Data", 500);
+            }
+        }
+        return $this->fetchData($id);
     }
 }

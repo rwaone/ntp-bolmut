@@ -16,8 +16,10 @@
             </div>
             <div class="flex flex-wrap">
 
-                <button class="btn inline-flex justify-center btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 "
-                    data-bs-toggle="modal" data-bs-target="#modalCreate">
+                <span class="flex items-center">
+                    <input id="komoditas-search" name="search" type="text" class="form-control" placeholder="Cari Komoditas">
+                </span>
+                <button class="btn inline-flex justify-center btn-sm btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 " data-bs-toggle="modal" data-bs-target="#modalCreate">
                     <span class="flex items-center">
                         <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2" icon="ph:plus-bold"></iconify-icon>
                         <span>Tambah Komoditas</span>
@@ -25,8 +27,7 @@
                 </button>
             </div>
         </div>
-
-        <div class="tab-content mt-3" id="pills-tabContent">
+        <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
                 <div class="tab-content">
                     <div class="card">
@@ -39,46 +40,32 @@
                                 </div>
                             </div>
                             <div class=" flex flex-wrap items-center justify-between space-x-2 py-4">
-                                <div>
-                                    <div class="text-sm font-medium text-slate-600 dark:text-slate-300">Go
-                                        <input type="text"
-                                            class="form-control !inline-block border max-w-[50px] px-2 py-2 text-center mr-2 "
-                                            value="1">
-                                        <span>Page 1 of 1</span>
+                                <div class="flex">
+                                    <div class="flex-1 text-sm font-medium text-slate-600 dark:text-slate-300">
+                                        <span>Menampilkan<span class="mx-1" id="currentPages"></span>dari<span class="mx-1" id="totalPages"></span></span>
                                     </div>
+                                    <select type="text" name="showData" id="showData" class="ml-4 flex-none text-center">
+                                        <option value="10" selected>10</option>
+                                        <option value="20">20</option>
+                                        <option value="40">40</option>
+                                        <option value="50">50</option>
+                                    </select>
                                 </div>
                                 <div class="card-text h-full space-y-10">
                                     <ul class="list-none">
                                         <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 relative top-[2px] pl-2">
-                                                <iconify-icon
-                                                    icon="material-symbols:arrow-back-ios-rounded"></iconify-icon>
+                                                <iconify-icon icon="material-symbols:arrow-back-ios-rounded"></iconify-icon>
                                             </a>
                                         </li>
+                                        <span id="paginationButton"></span>
                                         <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 p-active">
-                                                1</a>
-                                        </li>
-                                        <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 ">
-                                                2</a>
-                                        </li>
-                                        <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 relative top-[2px]">
-                                                <iconify-icon
-                                                    icon="material-symbols:arrow-forward-ios-rounded"></iconify-icon>
+                                                <iconify-icon icon="material-symbols:arrow-forward-ios-rounded"></iconify-icon>
                                             </a>
                                         </li>
                                     </ul>
@@ -89,7 +76,18 @@
                 </div>
             </div>
         </div>
-
+        <!-- <li class="inline-block">
+            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
+                                        duration-300 p-active">
+                1</a>
+        </li>
+        <li class="inline-block">
+            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
+                                        duration-300 ">
+                2</a>
+        </li> -->
 
         @include('master.komoditas.modal')
     </div>
@@ -102,12 +100,10 @@
             let data = $('#form-create').serialize();
             $.ajax({
                 type: 'POST',
-                url: '{{ route('komoditas.store') }}',
+                url: 'komoditas/store',
                 data: data,
                 success: (result) => {
-                    // console.log(result)
-                    $('#data-table-komoditas').html(result)
-                    // $('#modalCreate').modal('hide')
+                    $('#data-table-komoditas').html(result.html)
                     $('#form-create')[0].reset();
                     $('[data-bs-dismiss="modal"]').click();
                 },
@@ -133,11 +129,88 @@
                 }
             })
         }
-        $(document).ready(() => {
+        $('#button-delete').on('click', (e) => {
+            e.preventDefault();
+            $.ajax({
+                type: 'DELETE',
+                url: 'komoditas/delete/' + $('#hidden-id').val(),
+                data: {
+                    _token: '{{csrf_token()}}'
+                },
+                success: (result) => {
+                    $('#data-table-komoditas').html(result.html)
+                    $('#form-create')[0].reset();
+                    $('[data-bs-dismiss="modal"]').click();
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            })
+        })
+        let tbody = document.querySelector('tbody')
+        let rowsLength = tbody.rows.length
+        let totalPages = Math.ceil(rowsLength / 10)
+        $('#totalPages').text(rowsLength)
+        $('#currentPages').text(rowsLength)
+        const generatePagination = () => {
+            const pagination = document.getElementById('paginationButton')
+            pagination.innerHTML = ''
+            for (let index = 1; index <= totalPages; index++) {
+                const li = document.createElement('li')
+                const a = document.createElement('a');
+                li.classList.add('inline-block')
+                a.textContent = index
+                a.classList.add('flex', 'items-center', 'justify-center', 'w-6', 'h-6', 'bg-slate-100', 'dark:bg-slate-700', 'dark:hover:bg-black-500', 'text-slate-800', 'dark:text-white', 'rounded', 'mx-1', 'hover:bg-black-500', 'hover:text-white', 'text-sm', 'font-Inter', 'font-medium', 'transition-all', 'duration-300');
+                if (index === 1) a.classList.add('p-active')
+                li.appendChild(a);
+                pagination.appendChild(li)
+            }
+        }
+        generatePagination()
+        $('document').ready(() => {
             $('[data-bs-dismiss="modal"]').on('click', () => {
                 $('#form-create')[0].reset();
             })
         })
+        const fetchData = () => {
+            let data = document.getElementById('komoditas-search').value;
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'GET',
+                    url: 'komoditas/search',
+                    data: {
+                        value: data
+                    },
+                    success: function(response) {
+                        resolve(response);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        reject(errorThrown);
+                    },
+                })
+            })
+        }
+
+        const debounce = (func, delay = 400) => {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+        const delayedFetchData = debounce(async () => {
+            let fetchedData = await fetchData()
+            updateList(fetchedData)
+        })
+        document.getElementById('komoditas-search').addEventListener('input', (e) => {
+            let data = e.target.value
+            delayedFetchData()
+        })
+        const updateList = (data) => {
+            $('#data-table-komoditas').html(data)
+        }
         // document.getElementById('button-create').addEventListener('click', (e) => {
         //     e.preventdefault();
         //     let data = document.getElementById('form-create').serialize();
