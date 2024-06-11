@@ -82,7 +82,8 @@ class CommodityController extends Controller
                 $storeData = Commodity::create($validated);
                 $message = 'Berhasil menambahkan komoditas baru';
             }
-            $html = $this->fetchData($request);
+            // $html = $this->fetchData($request);
+            $html = $this->search($request);
             return response()->json([
                 'message' => $message,
                 'html' => $html,

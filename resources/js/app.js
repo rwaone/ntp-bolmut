@@ -3,6 +3,8 @@ import "./bootstrap";
 import jQuery from "jquery";
 window.$ = jQuery;
 window.jQuery = jQuery;
+// window.$ = window.jQuery = jQuery.noConflict(true);
+// console.log('jQuery version:', $.fn.jquery);
 
 import "tw-elements";
 

@@ -96,14 +96,22 @@
     @push('scripts')
     @endpush
     <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
         $('#button-create').on('click', (e) => {
             e.preventDefault();
             let data = $('#form-create').serialize();
+            let addedData = new URLSearchParams({
+                value: data,
+                currentPage: currentPage,
+                paginated: paginated,
+            })
+            const combinedData = `${data}&${addedData}`
             $.ajax({
                 type: 'POST',
                 url: 'komoditas/store',
-                data: data,
-                success: (result) => {
+                // data: data,
+                data: combinedData,
+                success: async (result) => {
                     $('#data-table-komoditas').html(result.html)
                     $('#form-create')[0].reset();
                     $('[data-bs-dismiss="modal"]').click();
@@ -282,9 +290,6 @@
                     $('#data-table-komoditas').html(html)
                     generatePagination(currentPage)
                     activatePagination('not first init')
-                    // console.log(currentPage)
-                    // list[currentPage].querySelector('a').classList.add('p-active')
-                    // list[currentPage].querySelector('a').classList.add('p-active')
                     document.getElementById('currentPages').textContent = document.querySelector(
                             'tbody')
                         .rows.length
@@ -350,5 +355,6 @@
         const updateList = (data) => {
             $('#data-table-komoditas').html(data)
         }
+    })
     </script>
 </x-app-layout>
