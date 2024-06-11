@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Sample
     Route::resource('samples', SampleController::class);
     // Petugas
+    Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
     Route::resource('petugas', PetugasController::class);
     // Documents
     Route::resource('documents', DocumentController::class);

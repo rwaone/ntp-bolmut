@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Petugas;
 use App\Http\Requests\StorePetugasRequest;
 use App\Http\Requests\UpdatePetugasRequest;
+use Illuminate\Support\Facades\Log;
 
 class PetugasController extends Controller
 {
@@ -15,7 +16,21 @@ class PetugasController extends Controller
      */
     public function index()
     {
-        //
+        $officers = Petugas::all();
+        // dd($officers);
+        $breadcrumbsItems = [
+            [
+                'name' => 'Petugas',
+                'url' => '/petugas',
+                'active' => true
+            ],
+        ];
+
+        return response()->view('master/petugas/index', [
+            'pageTitle' => 'Master Petugas',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'officers' => $officers,
+        ]);
     }
 
     /**
@@ -36,7 +51,28 @@ class PetugasController extends Controller
      */
     public function store(StorePetugasRequest $request)
     {
-        //
+         // Validate the request data
+         $validatedData = $request->validated();
+
+         try {
+            // Create a new Petugas record
+            $petugas = Petugas::create($validatedData);
+
+            // Return a response
+            return response()->json([
+                'message' => 'Petugas created successfully',
+                'data' => $petugas
+            ], 201);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error creating Petugas: ' . $e->getMessage());
+
+            // Return an error response
+            return response()->json([
+                'message' => 'An error occurred while creating the Petugas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -82,5 +118,12 @@ class PetugasController extends Controller
     public function destroy(Petugas $petugas)
     {
         //
+    }
+
+    public function getTableData()
+    {
+        $officers = Petugas::all();
+        // dd($officers);
+        return view('master.petugas.data-table', compact('officers'))->render();
     }
 }
