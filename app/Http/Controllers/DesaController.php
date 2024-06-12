@@ -218,6 +218,12 @@ class DesaController extends Controller
      */
     public function destroy(Desa $desa)
     {
-        //
+        $desa->delete();
+        return response()->json($desa, 200);
+    }
+
+    public function fetch_by_kecamatan(Kecamatan $kecamatan) {
+        $desas = Desa::where('kecamatan_id',$kecamatan->id)->get();
+        return response()->json($desas, 200);
     }
 }

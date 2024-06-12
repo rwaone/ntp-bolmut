@@ -3,12 +3,12 @@
         {{-- <div> --}}
         <x-breadcrumb :page-title="$pageTitle" :breadcrumb-items="$breadcrumbItems" />
         {{-- </div> --}}
-        <div class="flex items-center space-x-2">
-
-
-            <a href="/master/wilayah/desa" id="desa-edit-back" class="p-2 bg-white text-bold"><iconify-icon
-                    icon="material-symbols:keyboard-arrow-left"></iconify-icon>KEMBALI</a>
-        </div>
+        <a href="/master/wilayah" id="desa-edit-back"
+        class="btn inline-flex justify-center btn-dark rounded-[25px]"> <span class="flex items-center">
+            <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2"
+                icon="material-symbols:keyboard-arrow-left"></iconify-icon>
+            <span>Kembali</span> </span>
+    </a>
         <div class="relative bg-white rounded-lg shadow dark:bg-slate-700">
             <!-- Modal header -->
 
@@ -112,7 +112,7 @@
             editDesaSubmitButton.addEventListener('click', async function() {
                 editDesaSubmitButton.textContent = "Loading...";
                 const formData = new FormData(form);
-                const response = await axios.patch('/master/wilayah/desa/update', formData, {
+                const response = await axios.patch('/master/wilayah/update', formData, {
                     headers: {
                         "Content-Type": "application/json"
                     },

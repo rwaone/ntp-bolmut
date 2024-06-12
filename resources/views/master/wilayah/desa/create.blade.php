@@ -3,12 +3,18 @@
         {{-- <div> --}}
         <x-breadcrumb :page-title="$pageTitle" :breadcrumb-items="$breadcrumbItems" />
         {{-- </div> --}}
+       
+        <a href="/master/wilayah" id="desa-edit-back"
+            class="btn inline-flex justify-center btn-dark rounded-[25px]"> <span class="flex items-center">
+                <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2"
+                    icon="material-symbols:keyboard-arrow-left"></iconify-icon>
+                <span>Kembali</span> </span>
+        </a>
         <div class="relative bg-white rounded-lg shadow dark:bg-slate-700">
             <!-- Modal header -->
-
             <!-- Modal body -->
             <div class="p-6 space-y-4">
-                <form class="flex flex-col space-y-3" method="POST" action="{{ url('master/wilayah/desa/store') }}">
+                <form class="flex flex-col space-y-3" method="POST" action="{{ url('master/wilayah/store') }}">
                     @csrf
                     <div class="input-area">
                         <label for="default-picker" class=" form-label">ID Desa</label>
