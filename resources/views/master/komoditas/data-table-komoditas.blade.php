@@ -40,7 +40,7 @@
                     {{ $value->code }}
                 </td>
                 <td class="table-td">
-                    {{ $value->group_id }}
+                    {{ $value->group->name }}
                 </td>
                 <td class="table-td">
                     {{ $value->min_change }}
