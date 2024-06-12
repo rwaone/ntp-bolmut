@@ -157,7 +157,11 @@ class PetugasController extends Controller
      */
     public function destroy(Petugas $petugas)
     {
-        //
+        $petugas->delete();
+
+        return response()->json([
+            'message' => 'Petugas deleted successfully.'
+        ], 200);
     }
 
     public function getTableData()

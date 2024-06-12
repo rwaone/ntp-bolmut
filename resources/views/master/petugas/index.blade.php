@@ -92,10 +92,48 @@
             const modal = document.getElementById('modalCreate');
             const tableContainer = document.getElementById('tableContainer');
             const dismissModalElement = document.querySelector('[data-bs-dismiss="modal"]');
+            const dismissModalDelete = document.getElementById('closeModalDelete');
             const errorElements = document.querySelectorAll('.error-message');
-            const modalTitle = document.getElementById('modalTitle');
+            const deleteButtons = document.querySelectorAll('.delete-btn');
             let method = 'POST';
-            let isEditMode = false;
+            const deleteModal = document.getElementById('modalDelete');
+            const confirmDeleteButton = deleteModal.querySelector('#button-delete');
+
+            deleteModal.addEventListener('show.bs.modal', (event) => {
+                const button = event.relatedTarget;
+                const itemId = button.getAttribute('data-id');
+                confirmDeleteButton.dataset.id = itemId;
+                // console.log(itemId);
+            });
+
+            confirmDeleteButton.addEventListener('click', () => {
+                const itemId = confirmDeleteButton.dataset.id;
+                deleteItem(itemId);
+            });
+
+            function deleteItem(petugas) {
+                // Send an Axios DELETE request to delete the item
+                axios.delete(`/petugas/${petugas}`)
+                    .then(function(response) {
+                        // Handle the successful response
+                        axios.get('/petugas/table')
+                            .then(function(tableResponse) {
+                                // console.log(response.data);
+                                // Update the table container with the new table data
+                                tableContainer.innerHTML = tableResponse.data;
+                            })
+                            .catch(function(error) {
+                                console.error('Error fetching table data:', error);
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Error deleting item:', error);
+                    });
+                // If the element exists, trigger a click event on it
+                if (dismissModalDelete) {
+                    dismissModalDelete.click();
+                }
+            }
 
             //reset form if modal closed
             dismissModalElement.addEventListener('click', () => {

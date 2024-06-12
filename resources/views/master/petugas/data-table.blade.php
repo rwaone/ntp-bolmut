@@ -55,7 +55,7 @@
                             data-bs-toggle="modal" data-bs-target="#modalCreate">
                             <iconify-icon icon="uil:pen"></iconify-icon>
                         </a>
-                        <a title="Delete Data" class="update-pen" onclick="update({{ $value->id }})"
+                        <a title="Delete Data" class="update-pen delete-btn" data-id="{{ $value->id }}"
                             data-bs-toggle="modal" data-bs-target="#modalDelete">
                             <iconify-icon style="color: red" icon="mdi:delete"></iconify-icon>
                         </a>
