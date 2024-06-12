@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Section;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 
@@ -15,7 +16,21 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+        $sections = Section::all();
+        $groups = Group::all();
+        $breadcrumbsItems = [
+            [
+                'name' => 'Master Grup',
+                'url' => '/groups',
+                'active' => true
+            ],
+        ];
+        return view('group.index', [
+            'pageTitle' => 'Master Grup',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'groups' => $groups,
+            'sections' => $sections,
+        ]);
     }
 
     /**
@@ -36,7 +51,10 @@ class GroupController extends Controller
      */
     public function store(StoreGroupRequest $request)
     {
-        //
+        $validated = $request->validate($request->rules());
+        if(Group::create($validated)){
+            return redirect('groups')->with('notif',  'Data telah berhasil disimpan!');
+        }
     }
 
     /**
@@ -46,8 +64,13 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Group $group)
-    {
-        //
+    {        
+        try {
+            $data = $group;
+        } catch (\Throwable $th) {
+            throw new Exception("Tidak ditemukan", 500);
+        }
+        return response()->json($data);
     }
 
     /**
@@ -70,7 +93,10 @@ class GroupController extends Controller
      */
     public function update(UpdateGroupRequest $request, Group $group)
     {
-        //
+        $validated = $request->validate($request->rules());
+        if($group->update($validated)){
+            return redirect('groups')->with('notif',  'Data telah berhasil disimpan!');
+        }
     }
 
     /**
@@ -81,6 +107,9 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+        if($group->delete())
+        {
+            return redirect('groups')->with('notif',  'Data berhasil dihapus!');
+        }
     }
 }

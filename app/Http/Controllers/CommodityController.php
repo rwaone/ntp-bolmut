@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Commodity;
 use App\Http\Requests\StoreCommodityRequest;
 use App\Http\Requests\UpdateCommodityRequest;
+use App\Models\Group;
+use Exception;
+use Illuminate\Http\Request;
 
 class CommodityController extends Controller
 {
@@ -15,93 +18,25 @@ class CommodityController extends Controller
      */
     public function index()
     {
+        //
+        $query = Commodity::query();
+        $countData = $query->count();
+        $data = Commodity::paginate(10, ['*'], 'page', 1);
+        $forGroupId = Group::all();
         $breadcrumbsItems = [
             [
-                'name' => 'Komoditas',
-                'url' => '/commodities',
+                'name' => 'Master Komoditas',
+                'url' => '/komoditas',
                 'active' => true
             ],
         ];
-
-        $tableData = [
-            [
-                'id' => 1,
-                'age' => 82,
-                'first_name' => "Dorelle",
-                'last_name' => "Harling",
-                'email' => "dharling0@rediff.com",
-                'gender' => "Female",
-                'phone' => "232(152)707-0110",
-                'ccupation' => "Financial Advisor"
-            ],
-            [
-                'id' => 2,
-                'age' => 89,
-                'first_name' => "Bendicty",
-                'last_name' => "Llewellin",
-                'email' => "bllewellin1@example.com",
-                'gender' => "Male",
-                'phone' => "420(169)218-1769",
-                'ccupation' => "Marketing Assistant"
-            ],
-            [
-                'id' => 3,
-                'age' => 28,
-                'first_name' => "Remy",
-                'last_name' => "Carbry",
-                'email' => "rcarbry2@prlog.org",
-                'gender' => "Polygender",
-                'phone' => "86(958)204-4491",
-                'ccupation' => "Mechanical Systems Engineer"
-            ],
-            [
-                'id' => 4,
-                'age' => 20,
-                'first_name' => "Bernardo",
-                'last_name' => "Hacun",
-                'email' => "bhacun3@xinhuanet.com",
-                'gender' => "Male",
-                'phone' => "86(974)709-5254",
-                'ccupation' => "Research Assistant IV"
-            ],
-            [
-                'id' => 5,
-                'age' => 2,
-                'first_name' => "Emelia",
-                'last_name' => "Garstang",
-                'email' => "egarstang4@miitbeian.gov.cn",
-                'gender' => "Female",
-                'phone' => "55(644)175-6748",
-                'ccupation' => "Business Systems Development Analyst"
-            ],
-            [
-                'id' => 6,
-                'age' => 98,
-                'first_name' => "Dian",
-                'last_name' => "Dopson",
-                'email' => "ddopson5@examiner.com",
-                'gender' => "Female",
-                'phone' => "51(186)560-8480",
-                'ccupation' => "Cost Accountant"
-            ],
-            [
-                'id' => 7,
-                'age' => 17,
-                'first_name' => "Coretta",
-                'last_name' => "Ponter",
-                'email' => "cponter6@loc.gov",
-                'gender' => "Female",
-                'phone' => "1(941)734-6255",
-                'ccupation' => "Budget/Accounting Analyst II"
-            ]
-        ];
-
-        return view('commodity.index', [
-            'pageTitle' => 'Komoditas ',
+        return view('master/komoditas/index', [
+            'pageTitle' => 'Master Komoditas',
             'breadcrumbItems' => $breadcrumbsItems,
-            'tableData' => $tableData,
+            'data' => $data,
+            'countData' => $countData,
+            'forGroupId' => $forGroupId,
         ]);
-    
     }
 
     /**
@@ -123,6 +58,74 @@ class CommodityController extends Controller
     public function store(StoreCommodityRequest $request)
     {
         //
+        $validated = $request->validate($request->rules());
+        try {
+            //code...
+            if ($validated['id']) {
+                $target = Commodity::find($validated['id']);
+                if ($target) {
+                    $target->update([
+                        'code' => $validated['code'],
+                        'group_id' => $validated['group_id'],
+                        'name' => $validated['name'],
+                        'min_change' => $validated['min_change'],
+                        'max_change' => $validated['max_change']
+                    ]);
+                    $message = 'Berhasil mengedit data komoditas';
+                } else {
+                    return response()->json([
+                        'message' => 'Tidak ada data tersebut',
+                    ], 500);
+                }
+            } else {
+                unset($validated['id']);
+                $storeData = Commodity::create($validated);
+                $message = 'Berhasil menambahkan komoditas baru';
+            }
+            $html = $this->fetchData($request);
+            return response()->json([
+                'message' => $message,
+                'html' => $html,
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => 'Gagal Menambah/Mengedit Data',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function fetchData()
+    {
+        $query = Commodity::query();
+        $data = $query->get();
+        return view('master/komoditas/data-table-komoditas', compact('data'))->render();
+    }
+
+    public function search(Request $request)
+    {
+        $query = Commodity::query();
+
+        if ($request->paginated) $paginated = $request->paginated;
+        else $paginated = 10;
+        if ($request->currentPage) $currentPage = $request->currentPage;
+        else $currentPage = 1;
+
+        if (!empty($request->value)) {
+            $filter = $request->value;
+            $query->orWhere('commodities.name', 'like', '%' . $filter . '%');
+            $query->orWhere('code', 'like', '%' . $filter . '%');
+            $query->join('groups', 'groups.id', '=', 'commodities.group_id');
+            $query->orWhere('groups.name', 'like', '%' . $filter . '%');
+            $query->orWhere('min_change', 'like', '%' . $filter . '%');
+            $query->orWhere('max_change', 'like', '%' . $filter . '%');
+            $query->orWhere('commodities.updated_at', 'like', '%' . $filter . '%');
+        }
+        $countData = $query->count();
+        $query->select(['commodities.*']);
+        $data = $query->paginate($paginated, ['*'], 'page', $currentPage);
+        return view('master/komoditas/data-table-komoditas', compact('data'))->render();
     }
 
     /**
@@ -158,6 +161,17 @@ class CommodityController extends Controller
     {
         //
     }
+    public function fetch(String $id)
+    {
+        try {
+            //code...
+            $data = Commodity::where('id', $id)->first();
+        } catch (\Throwable $th) {
+            //throw $th;
+            throw new Exception("Tidak ditemukan", 500);
+        }
+        return response()->json($data);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -165,8 +179,19 @@ class CommodityController extends Controller
      * @param  \App\Models\Commodity  $commodity
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Commodity $commodity)
+    public function destroy(String $id)
     {
         //
+        $data = Commodity::find($id);
+        if ($data) {
+            try {
+                //code...
+                $data->delete();
+            } catch (\Throwable $th) {
+                //throw $th;
+                throw new Exception("Gagal Menghapus Data", 500);
+            }
+        }
+        return $this->fetchData($id);
     }
 }

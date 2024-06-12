@@ -51,7 +51,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Group
     Route::resource('groups', GroupController::class);
     // Commodities
-    Route::resource('commodities', CommodityController::class);
+    // Route::resource('commodities', CommodityController::class);
+    Route::get('/komoditas', [CommodityController::class, 'index'])->name('komoditas.index');
+    Route::get('/komoditas/search', [CommodityController::class, 'search'])->name('komoditas.search');
+    Route::post('/komoditas/store', [CommodityController::class, 'store'])->name('komoditas.store');
+    Route::get('/komoditas/fetch/{id}', [CommodityController::class, 'fetch'])->name('komoditas.fetch');
+    Route::delete('/komoditas/delete/{id}', [CommodityController::class, 'destroy'])->name('komoditas.destroy');
     // Qualities
     Route::resource('qualities', QualityController::class);
 

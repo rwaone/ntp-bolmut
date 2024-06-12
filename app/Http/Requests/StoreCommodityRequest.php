@@ -13,7 +13,7 @@ class StoreCommodityRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,12 @@ class StoreCommodityRequest extends FormRequest
     {
         return [
             //
+            'id' => ['nullable', 'integer'],
+            'name' => ['string', 'required'],
+            'code' => ['string', 'required'],
+            'group_id' => ['integer', 'required'],
+            'min_change' => ['string', 'required'],
+            'max_change' => ['string', 'required'],
         ];
     }
 }
