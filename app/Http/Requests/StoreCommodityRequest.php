@@ -26,11 +26,31 @@ class StoreCommodityRequest extends FormRequest
         return [
             //
             'id' => ['nullable', 'integer'],
-            'name' => ['string', 'required'],
-            'code' => ['string', 'required'],
-            'group_id' => ['integer', 'required'],
-            'min_change' => ['string', 'required'],
-            'max_change' => ['string', 'required'],
+            'name' => ['required','string'],
+            'code' => ['required','string'],
+            'group_id' => ['required','integer'],
+            'min_change' => [
+                'required',
+                'regex:/^\d{1,3}(\.\d{1,2})?$/',
+                'numeric',
+            ],
+            'max_change' => [
+                'required',
+                'regex:/^\d{1,3}(\.\d{1,2})?$/',
+                'numeric',
+            ],
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'name.required' => 'Nama tidak boleh kosong.',
+            'code.required' => 'Kode tidak boleh kosong.',
+            'group_id.required' => 'Kelompok Komoditas tidak boleh kosong.',
+            'min_change.required' => 'Isian tidak boleh kosong.',
+            'min_change.regex' => 'Isian tidak sesuai format.',
+            'max_change.required' => 'Isian tidak boleh kosong.',
+            'max_change.regex' => 'Isian tidak sesuai format.',
         ];
     }
 }

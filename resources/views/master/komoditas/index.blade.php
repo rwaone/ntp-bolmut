@@ -96,32 +96,11 @@
     @push('scripts')
     @endpush
     <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-        $('#button-create').on('click', (e) => {
-            e.preventDefault();
-            let data = $('#form-create').serialize();
-            let addedData = new URLSearchParams({
-                value: data,
-                currentPage: currentPage,
-                paginated: paginated,
-            })
-            const combinedData = `${data}&${addedData}`
-            $.ajax({
-                type: 'POST',
-                url: 'komoditas/store',
-                // data: data,
-                data: combinedData,
-                success: async (result) => {
-                    $('#data-table-komoditas').html(result.html)
-                    $('#form-create')[0].reset();
-                    $('[data-bs-dismiss="modal"]').click();
-                },
-                error: (error) => {
-                    console.error(error)
-                }
-            })
-        })
         const update = (value) => {
+            const errorMessageList = document.querySelectorAll('.error-message')
+            errorMessageList.forEach((error) => {
+                error.textContent = ''
+            })
             $.ajax({
                 type: 'GET',
                 url: 'komoditas/fetch/' + value,
@@ -134,227 +113,315 @@
                     $('#max_change').val(result.max_change);
                 },
                 error: (error) => {
-                    console.error(error)
-                }
-            })
-        }
-        $('#button-delete').on('click', (e) => {
-            e.preventDefault();
-            $.ajax({
-                type: 'DELETE',
-                url: 'komoditas/delete/' + $('#hidden-id').val(),
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: (result) => {
-                    $('#data-table-komoditas').html(result.html)
-                    $('#form-create')[0].reset();
-                    $('[data-bs-dismiss="modal"]').click();
-                },
-                error: (error) => {
-                    console.error(error);
-                }
-            })
-        })
-        var tbody = document.querySelector('tbody')
-        var rowsLength = tbody.rows.length
-        var totalPages = Math.ceil({{ Js::from($countData) }} / 10)
-        var list, currentPage, paginated, beforePage, showTheData
-        document.getElementById('totalPages').textContent = {{ Js::from($countData) }}
-        document.getElementById('currentPages').textContent = rowsLength
-        const fetchData = () => {
-            let data = document.getElementById('komoditas-search').value;
-            return new Promise((resolve, reject) => {
-                $.ajax({
-                    type: 'GET',
-                    url: 'komoditas/search',
-                    data: {
-                        value: data,
-                        currentPage: currentPage,
-                        paginated: paginated,
-                    },
-                    success: function(response) {
-                        resolve(response);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        reject(errorThrown);
-                    },
-                })
-            })
-        }
-        const debounce = (func, delay = 400) => {
-            let timeoutId;
-            return function(...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => {
-                    func.apply(this, args);
-                }, delay);
-            };
-        }
-        const delayedFetchData = debounce(async () => {
-            let fetchedData = await fetchData()
-            updateList(fetchedData)
-        })
-        const visiblePages = (curPage = 1) => {
-            let pages = []
-            let total = Number(totalPages)
-            let current = Number(curPage)
-            if (total <= 6) {
-                for (let i = 1; i <= total; i++) {
-                    pages.push(i);
-                }
-            } else {
-                let threeMax = total - 2
-                if (current <= 3 || current >= threeMax) {
-                    for (let i = 1; i <= 3; i++) pages.push(i)
-                    if (current <= 3) {
-                        if (current == 3) {
-                            pages.push(4)
-                        }
-                        pages.push('...')
-                    }
-                    if (current > 3 && current < threeMax) {
-                        if (!(current - 1 == 3)) {
-                            if (!(current - 2 == 3)) pages.push('...')
-                            pages.push(current - 1)
-                        }
-                        pages.push(current)
-                        if (!(current + 1 == threeMax)) {
-                            pages.push(current + 1)
-                            if (!(current + 2 == threeMax)) pages.push('...')
-                        }
-                    }
-                    if (current >= threeMax) {
-                        if (current == threeMax) {
-                            pages.push('...')
-                            pages.push(threeMax - 1)
-                        } else {
-                            pages.push('...')
-                        }
-                    }
-                    for (let i = threeMax; i <= total; i++) pages.push(i)
-                } else {
-                    let firstPart = current - 2
-                    let lastPart = current + 2
-                    // console.log({
-                    //     current,
-                    //     firstPart,
-                    //     lastPart
-                    // })
-                    pages.push('...')
-                    for (let i = firstPart; i <= lastPart; i++) pages.push(i)
-                    pages.push('...')
-                }
-            }
-            // console.log(curPage, totalPages, pages)
-            return pages;
-        }
-        const changePage = (before, node, index) => {
-            let current = before
-            let lasted = visiblePages(before).length
-            // if (node < 1 || node > totalPages.value) return
-            if (node == '...') {
-                if (index == 1) {
-                    node = Math.ceil(current / 2)
-                } else if (index == lasted) {
-                    let tempMid = current + 4
-                    node = Math.ceil((current + tempMid) / 2)
-                } else node = Math.ceil(totalPages / 2)
-            }
-            return node
-        }
-        const attachEventListener = () => {
-            list = document.getElementById('paginationList').querySelectorAll('li')
-            list.forEach((node, index) => {
-                node.addEventListener('click', async (e, aIndex) => {
-                    e.stopImmediatePropagation()
-                    e.preventDefault()
-                    currentPage = node.getAttribute('data-page')
-                    // console.log(currentPage)
-                    list.forEach((node) => {
-                        node.querySelector('a').classList.remove('p-active')
+                    console.log(error.responseJSON.errors)
+                    let errors = error.responseJSON.errors
+                    Object.keys(errors).forEach((error) => {
+                        let errorElement = document.getElementById(`error-${error}`)
+                        if (errorElement) errorElement.textContent = errors[error][
+                            0
+                        ]
                     })
-                    if (!beforePage) beforePage = 1
-                    if (currentPage == 'prev') {
-                        currentPage = beforePage - 1
-                        if (currentPage == 0) return
-                    } else if (currentPage == 'next') {
-                        currentPage = beforePage + 1
-                        if (beforePage == totalPages) return
-                    } else {
-                        currentPage = changePage(beforePage, currentPage, index)
+                }
+            })
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            var tbody = document.querySelector('tbody')
+            var rowsLength = tbody.rows.length
+            var totalPages = Math.ceil({{ Js::from($countData) }} / 10)
+            var list, currentPage, paginated, beforePage, showTheData
+            $('#button-create').on('click', (e) => {
+                e.preventDefault();
+                let data = $('#form-create').serialize();
+                document.getElementById('paginationList').querySelectorAll('li').forEach((node) => {
+                    if (node.querySelector('a').classList.contains('p-active')) currentPage =
+                        node.getAttribute('data-page')
+                })
+                paginated = document.getElementById('showData').value
+                let addedData = new URLSearchParams({
+                    value: document.getElementById('komoditas-search').value,
+                    currentPage: currentPage,
+                    paginated: paginated,
+                })
+                const combinedData = `${data}&${addedData}`
+                const errorMessageList = document.querySelectorAll('.error-message')
+                errorMessageList.forEach((error) => {
+                    error.textContent = ''
+                })
+                $.ajax({
+                    type: 'POST',
+                    url: 'komoditas/store',
+                    // data: data,
+                    data: combinedData,
+                    success: async (result) => {
+                        // console.log(result.html.original.html)
+                        $('#data-table-komoditas').html(result.html.original.html)
+                        $('#form-create')[0].reset();
+                        $('[data-bs-dismiss="modal"]').click();
+                        document.getElementById('totalPages').textContent = result.html.original
+                            .countData
+                        document.getElementById('currentPages').textContent = document
+                            .querySelector('tbody').rows.length
+                        generatePagination(currentPage)
+                        activatePagination('not first init')
+                    },
+                    error: (error) => {
+                        console.log(error.responseJSON.errors)
+                        let errors = error.responseJSON.errors
+                        Object.keys(errors).forEach((error) => {
+                            let errorElement = document.getElementById(`error-${error}`)
+                            if (errorElement) errorElement.textContent = errors[error][
+                                0
+                            ]
+                        })
                     }
-                    paginated = document.getElementById('showData').value
-                    beforePage = currentPage
-                    let html = await fetchData()
-                    $('#data-table-komoditas').html(html)
-                    generatePagination(currentPage)
-                    activatePagination('not first init')
-                    document.getElementById('currentPages').textContent = document.querySelector(
-                            'tbody')
-                        .rows.length
                 })
             })
-        }
-        const generatePagination = (curPage) => {
-            const pagination = document.getElementById('paginationButton')
-            pagination.innerHTML = ''
-            const allPages = visiblePages(curPage)
-            // for (let index = 1; index <= totalPages; index++) {
-            allPages.forEach((index) => {
-                const li = document.createElement('li')
-                const a = document.createElement('a');
-                li.classList.add('inline-block', 'li-pointer')
-                li.setAttribute('data-page', index)
-                a.textContent = index
-                a.classList.add('flex', 'items-center', 'justify-center', 'w-6', 'h-6', 'bg-slate-100',
-                    'dark:bg-slate-700', 'dark:hover:bg-black-500', 'text-slate-800', 'dark:text-white',
-                    'rounded',
-                    'mx-1', 'hover:bg-black-500', 'hover:text-white', 'text-sm', 'font-Inter',
-                    'font-medium',
-                    'transition-all', 'duration-300');
-                // if (index === 1) a.classList.add('p-active')
-                li.appendChild(a);
-                pagination.appendChild(li)
-            })
-            attachEventListener()
-        }
 
-        const activatePagination = (value) => {
-            list.forEach((node) => {
-                if (value) {
-                    let nodes = node.getAttribute('data-page')
-                    if (nodes == currentPage) {
-                        node.querySelector('a').classList.add('p-active')
+            $('#button-delete').on('click', (e) => {
+                e.preventDefault();
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'komoditas/delete/' + $('#hidden-id').val(),
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: async (result) => {
+                        let html = await fetchData()
+                        $('#data-table-komoditas').html(html.html)
+                        $('#form-create')[0].reset();
+                        $('[data-bs-dismiss="modal"]').click();
+                        document.getElementById('totalPages').textContent = html.countData
+                        document.getElementById('currentPages').textContent = document
+                            .querySelector('tbody').rows.length
+                        generatePagination(currentPage)
+                        activatePagination('not first init')
+                    },
+                    error: (error) => {
+                        console.error(error);
                     }
-                } else {
-                    if (node.getAttribute('data-page') == 1) node.querySelector('a').classList.add('p-active')
-                }
-            })   
-        }
-        generatePagination()
-        activatePagination()
-        //previously place for list
-
-        showTheData = document.getElementById('showData')
-        showTheData.addEventListener('change', async (e) => {
-            paginated = document.getElementById('showData').value
-            let html = await fetchData()
-            $('#data-table-komoditas').html(html)
-            document.getElementById('currentPages').textContent = document.querySelector('tbody').rows.length
-        })
-        $('document').ready(() => {
-            $('[data-bs-dismiss="modal"]').on('click', () => {
-                $('#form-create')[0].reset();
+                })
             })
+
+            document.getElementById('totalPages').textContent = {{ Js::from($countData) }}
+            document.getElementById('currentPages').textContent = rowsLength
+            const fetchData = (cP, p) => {
+                let data = document.getElementById('komoditas-search').value;
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'komoditas/search',
+                        data: {
+                            value: data,
+                            currentPage: cP,
+                            paginated: p,
+                        },
+                        success: function(response) {
+                            resolve(response);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            reject(errorThrown);
+                        },
+                    })
+                })
+            }
+            window.fetchForPagination = fetchData
+            const delayedFetchData = debounce(async () => {
+                currentPage = 1
+                let fetchedData = await fetchData()
+                updateList(fetchedData)
+                document.getElementById('totalPages').textContent = fetchedData.countData
+                generatePagination(currentPage)
+                activatePagination()
+                document.getElementById('currentPages').textContent = document
+                    .querySelector('tbody').rows.length
+            })
+            //THE ORIGINAL OF PAGINATION
+
+            // const visiblePages = (curPage = 1) => {
+            //     let pages = []
+            //     let total = Number(totalPages)
+            //     let current = Number(curPage)
+            //     if (total <= 6) {
+            //         for (let i = 1; i <= total; i++) {
+            //             pages.push(i);
+            //         }
+            //     } else {
+            //         let threeMax = total - 2
+            //         if (current <= 3 || current >= threeMax) {
+            //             for (let i = 1; i <= 3; i++) pages.push(i)
+            //             if (current <= 3) {
+            //                 if (current == 3) {
+            //                     pages.push(4)
+            //                 }
+            //                 pages.push('...')
+            //             }
+            //             if (current > 3 && current < threeMax) {
+            //                 if (!(current - 1 == 3)) {
+            //                     if (!(current - 2 == 3)) pages.push('...')
+            //                     pages.push(current - 1)
+            //                 }
+            //                 pages.push(current)
+            //                 if (!(current + 1 == threeMax)) {
+            //                     pages.push(current + 1)
+            //                     if (!(current + 2 == threeMax)) pages.push('...')
+            //                 }
+            //             }
+            //             if (current >= threeMax) {
+            //                 if (current == threeMax) {
+            //                     pages.push('...')
+            //                     pages.push(threeMax - 1)
+            //                 } else {
+            //                     pages.push('...')
+            //                 }
+            //             }
+            //             for (let i = threeMax; i <= total; i++) pages.push(i)
+            //         } else {
+            //             let firstPart = current - 2
+            //             let lastPart = current + 2
+            //             // console.log({
+            //             //     current,
+            //             //     firstPart,
+            //             //     lastPart
+            //             // })
+            //             pages.push('...')
+            //             for (let i = firstPart; i <= lastPart; i++) pages.push(i)
+            //             pages.push('...')
+            //         }
+            //     }
+            //     // console.log(curPage, totalPages, pages)
+            //     return pages;
+            // }
+            // const changePage = (before, node, index) => {
+            //     let current = before
+            //     let lasted = visiblePages(before).length
+            //     // if (node < 1 || node > totalPages.value) return
+            //     if (node == '...') {
+            //         if (index == 1) {
+            //             node = Math.ceil(current / 2)
+            //         } else if (index == lasted) {
+            //             let tempMid = current + 4
+            //             node = Math.ceil((current + tempMid) / 2)
+            //         } else node = Math.ceil(totalPages / 2)
+            //     }
+            //     return node
+            // }
+            // const attachEventListener = () => {
+            //     list = document.getElementById('paginationList').querySelectorAll('li')
+            //     list.forEach((node, index) => {
+            //         node.addEventListener('click', async (e, aIndex) => {
+            //             e.stopImmediatePropagation()
+            //             e.preventDefault()
+            //             currentPage = node.getAttribute('data-page')
+            //             // console.log(currentPage)
+            //             list.forEach((node) => {
+            //                 node.querySelector('a').classList.remove('p-active')
+            //             })
+            //             if (!beforePage) beforePage = 1
+            //             if (currentPage == 'prev') {
+            //                 currentPage = beforePage - 1
+            //                 if (currentPage == 0) return
+            //             } else if (currentPage == 'next') {
+            //                 currentPage = beforePage + 1
+            //                 if (beforePage == totalPages) return
+            //             } else {
+            //                 currentPage = changePage(beforePage, currentPage, index)
+            //             }
+            //             paginated = document.getElementById('showData').value
+            //             beforePage = currentPage
+            //             let html = await fetchData()
+            //             $('#data-table-komoditas').html(html.html)
+            //             generatePagination(currentPage)
+            //             activatePagination('not first init')
+            //             document.getElementById('currentPages').textContent = document
+            //                 .querySelector(
+            //                     'tbody')
+            //                 .rows.length
+            //         })
+            //     })
+            // }
+            // const generatePagination = (curPage) => {
+            //     const pagination = document.getElementById('paginationButton')
+            //     pagination.innerHTML = ''
+            //     let force = false
+            //     if (curPage) {
+            //         totalPages = Math.ceil(Number(document.getElementById('totalPages').textContent) / Number(
+            //             document
+            //             .getElementById('showData').value))
+            //         if (curPage > totalPages) {
+            //             curPage = totalPages
+            //             force = true
+            //         }
+            //     }
+            //     const allPages = visiblePages(curPage)
+            //     allPages.forEach((index) => {
+            //         const li = document.createElement('li')
+            //         const a = document.createElement('a');
+            //         li.classList.add('inline-block', 'li-pointer')
+            //         li.setAttribute('data-page', index)
+            //         a.textContent = index
+            //         a.classList.add('flex', 'items-center', 'justify-center', 'w-6', 'h-6',
+            //             'bg-slate-100',
+            //             'dark:bg-slate-700', 'dark:hover:bg-black-500', 'text-slate-800',
+            //             'dark:text-white',
+            //             'rounded',
+            //             'mx-1', 'hover:bg-black-500', 'hover:text-white', 'text-sm', 'font-Inter',
+            //             'font-medium',
+            //             'transition-all', 'duration-300');
+            //         // if (index === 1) a.classList.add('p-active')
+            //         li.appendChild(a);
+            //         pagination.appendChild(li)
+            //     })
+            //     attachEventListener()
+            //     if (force) {
+            //         document.getElementById('paginationList').querySelectorAll('li').forEach((node) => {
+            //             if (node.getAttribute('data-page') == Number(curPage)) node.click()
+            //         })
+            //     }
+            // }
+            // const activatePagination = (value) => {
+            //     list.forEach((node) => {
+            //         if (value) {
+            //             let nodes = node.getAttribute('data-page')
+            //             if (nodes == currentPage) {
+            //                 node.querySelector('a').classList.add('p-active')
+            //             }
+            //         } else {
+            //             if (node.getAttribute('data-page') == 1) node.querySelector('a').classList.add(
+            //                 'p-active')
+            //         }
+            //     })
+            // }
+            generatePagination(currentPage = null)
+            activatePagination()
+            //previously place for list
+
+            showTheData = document.getElementById('showData')
+            showTheData.addEventListener('change', async (e) => {
+                document.getElementById('paginationList').querySelectorAll('li').forEach((node) => {
+                    if (node.querySelector('a').classList.contains('p-active')) currentPage =
+                        node.getAttribute('data-page')
+                })
+                paginated = document.getElementById('showData').value
+                let html = await fetchData(currentPage, paginated)
+                $('#data-table-komoditas').html(html.html)
+                document.getElementById('totalPages').textContent = html.countData
+                document.getElementById('currentPages').textContent = document
+                    .querySelector('tbody').rows.length
+                generatePagination(currentPage)
+                activatePagination('not first init')
+            })
+            $('document').ready(() => {
+                $('[data-bs-dismiss="modal"]').on('click', () => {
+                    $('#form-create')[0].reset();
+                })
+            })
+            document.getElementById('komoditas-search').addEventListener('input', (e) => {
+                let data = e.target.value
+                delayedFetchData()
+            })
+            const updateList = (data) => {
+                $('#data-table-komoditas').html(data.html)
+            }
         })
-        document.getElementById('komoditas-search').addEventListener('input', (e) => {
-            let data = e.target.value
-            delayedFetchData()
-        })
-        const updateList = (data) => {
-            $('#data-table-komoditas').html(data)
-        }
-    })
     </script>
 </x-app-layout>
