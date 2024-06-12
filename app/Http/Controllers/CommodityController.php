@@ -59,6 +59,7 @@ class CommodityController extends Controller
     {
         //
         $validated = $request->validate($request->rules());
+        // dd($request);
         try {
             //code...
             if ($validated['id']) {
@@ -82,7 +83,9 @@ class CommodityController extends Controller
                 $storeData = Commodity::create($validated);
                 $message = 'Berhasil menambahkan komoditas baru';
             }
-            $html = $this->fetchData($request);
+            // $html = $this->fetchData($request);
+            // dd($message);
+            $html = $this->search($request);
             return response()->json([
                 'message' => $message,
                 'html' => $html,
@@ -106,11 +109,12 @@ class CommodityController extends Controller
     public function search(Request $request)
     {
         $query = Commodity::query();
-
+        // dd($request);
         if ($request->paginated) $paginated = $request->paginated;
         else $paginated = 10;
         if ($request->currentPage) $currentPage = $request->currentPage;
         else $currentPage = 1;
+        // dd($paginated, $currentPage);
 
         if (!empty($request->value)) {
             $filter = $request->value;
@@ -125,7 +129,11 @@ class CommodityController extends Controller
         $countData = $query->count();
         $query->select(['commodities.*']);
         $data = $query->paginate($paginated, ['*'], 'page', $currentPage);
-        return view('master/komoditas/data-table-komoditas', compact('data'))->render();
+        $html = view('master/komoditas/data-table-komoditas', compact('data'))->render(); 
+        return response()->json([
+            'countData' => $countData,
+            'html' => $html,
+        ]);
     }
 
     /**
