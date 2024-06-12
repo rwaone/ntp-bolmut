@@ -6,6 +6,7 @@ use App\Models\Petugas;
 use App\Http\Requests\StorePetugasRequest;
 use App\Http\Requests\UpdatePetugasRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 
 class PetugasController extends Controller
@@ -17,7 +18,8 @@ class PetugasController extends Controller
      */
     public function index()
     {
-        $officers = Petugas::all();
+        $officers = Petugas::paginate(10);
+        $startingIndex = ($officers->currentPage() - 1) * $officers->perPage() + 1;
         // dd($officers);
         $breadcrumbsItems = [
             [
@@ -31,6 +33,11 @@ class PetugasController extends Controller
             'pageTitle' => 'Master Petugas',
             'breadcrumbItems' => $breadcrumbsItems,
             'officers' => $officers,
+            'current_page' => $officers->currentPage(),
+            'last_page' => $officers->lastPage(),
+            'total' => $officers->total(),
+            'per_page' => $officers->perPage(),
+            'startingIndex' => $startingIndex,
         ]);
     }
 
@@ -164,10 +171,24 @@ class PetugasController extends Controller
         ], 200);
     }
 
-    public function getTableData()
+    public function getTableData(Request $request)
     {
-        $officers = Petugas::all();
-        // dd($officers);
-        return view('master.petugas.data-table', compact('officers'))->render();
+        $pageSize = $request->query('size', 10);
+        $searchQuery = $request->query('search', '');
+        $officers = Petugas::where('name', 'like', "%$searchQuery%")
+                    ->orWhere('nip', 'like', "%$searchQuery%")
+                    ->orWhere('jabatan', 'like', "%$searchQuery%")
+                    ->paginate($pageSize);
+
+        $startingIndex = ($officers->currentPage() - 1) * $officers->perPage() + 1;
+
+        return response()->json([
+            'html' => view('master.petugas.data-table', compact('officers', 'startingIndex'))->render(),
+            'data' => $officers->items(),
+            'current_page' => $officers->currentPage(),
+            'last_page' => $officers->lastPage(),
+            'total' => $officers->total(),
+            'per_page' => $officers->perPage(),
+        ]);
     }
 }

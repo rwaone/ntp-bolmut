@@ -27,7 +27,7 @@
             @foreach ($officers as $key => $value)
                 <tr class="even:bg-slate-50 dark:even:bg-slate-700">
                     <td class="table-td">
-                        {{ $key + 1 }}
+                        {{ $startingIndex + $key }}
                     </td>
                     <td class="table-td">
                         <div class="flex space-x-3 items-center text-left rtl:space-x-reverse">

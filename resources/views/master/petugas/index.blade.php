@@ -44,30 +44,27 @@
                                                 class="mx-1" id="totalPages"></span></span>
                                     </div>
                                     <select type="text" name="showData" id="showData"
-                                        class="ml-4 text-sm flex-none text-center">
+                                        class="ml-4 flex-none text-center text-sm font-medium">
                                         <option value="10" selected>10</option>
                                         <option value="20">20</option>
                                         <option value="40">40</option>
                                         <option value="50">50</option>
                                     </select>
                                 </div>
+                                {{-- <div id="paginationContainer"></div> --}}
                                 <div class="card-text h-full space-y-10">
-                                    <ul class="list-none">
-                                        <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 relative top-[2px] pl-2">
+                                    <ul class="list-none" id="paginationList">
+                                        <li class="inline-block" data-page="prev">
+                                            <a href="#" id="prevLink"
+                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800 dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all duration-300 relative top-[2px] pl-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 disabled:dark:hover:bg-slate-700">
                                                 <iconify-icon
                                                     icon="material-symbols:arrow-back-ios-rounded"></iconify-icon>
                                             </a>
                                         </li>
                                         <span id="paginationButton"></span>
-                                        <li class="inline-block">
-                                            <a href="#"
-                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 relative top-[2px]">
+                                        <li class="inline-block" data-page="next">
+                                            <a href="#" id="nextLink"
+                                                class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800 dark:text-white rounded mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all duration-300 relative top-[2px] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 disabled:dark:hover:bg-slate-700">
                                                 <iconify-icon
                                                     icon="material-symbols:arrow-forward-ios-rounded"></iconify-icon>
                                             </a>
@@ -96,184 +93,338 @@
             const errorElements = document.querySelectorAll('.error-message');
             const deleteButtons = document.querySelectorAll('.delete-btn');
             let method = 'POST';
+            let pageSize = 10; // Initial page size
             const deleteModal = document.getElementById('modalDelete');
             const confirmDeleteButton = deleteModal.querySelector('#button-delete');
+            const paginationData = {
+                data: @json($officers),
+                current_page: @json($current_page),
+                last_page: @json($last_page),
+                total: @json($total),
+                per_page: @json($per_page),
+            };
+        }
 
-            deleteModal.addEventListener('show.bs.modal', (event) => {
-                const button = event.relatedTarget;
-                const itemId = button.getAttribute('data-id');
-                confirmDeleteButton.dataset.id = itemId;
-                // console.log(itemId);
+        renderPagination(paginationData);
+
+        const searchInput = document.getElementById('komoditas-search');
+        const debouncedSearch = debounce(function() {
+            fetchAndRenderData(1, pageSize, searchInput.value);
+        }, 300); // Adjust the delay (300ms) as needed
+
+        searchInput.addEventListener('input', debouncedSearch);
+
+        const showDataSelect = document.getElementById('showData'); showDataSelect.addEventListener('change',
+            function() {
+                pageSize = parseInt(this.value);
+                fetchAndRenderData(1, pageSize);
             });
 
-            confirmDeleteButton.addEventListener('click', () => {
-                const itemId = confirmDeleteButton.dataset.id;
-                deleteItem(itemId);
-            });
+        deleteModal.addEventListener('show.bs.modal', (event) => {
+            const button = event.relatedTarget;
+            const itemId = button.getAttribute('data-id');
+            confirmDeleteButton.dataset.id = itemId;
+            // console.log(itemId);
+        });
 
-            function deleteItem(petugas) {
-                // Send an Axios DELETE request to delete the item
-                axios.delete(`/petugas/${petugas}`)
-                    .then(function(response) {
-                        // Handle the successful response
-                        axios.get('/petugas/table')
-                            .then(function(tableResponse) {
-                                // console.log(response.data);
-                                // Update the table container with the new table data
-                                tableContainer.innerHTML = tableResponse.data;
-                            })
-                            .catch(function(error) {
-                                console.error('Error fetching table data:', error);
-                            });
-                    })
-                    .catch(error => {
-                        console.error('Error deleting item:', error);
-                    });
-                // If the element exists, trigger a click event on it
-                if (dismissModalDelete) {
-                    dismissModalDelete.click();
-                }
-            }
+        confirmDeleteButton.addEventListener('click', () => {
+            const itemId = confirmDeleteButton.dataset.id;
+            deleteItem(itemId);
+        });
 
-            //reset form if modal closed
-            dismissModalElement.addEventListener('click', () => {
-                form.reset();
-                setModalTitle('create');
-                const existingIdField = form.querySelector('input[name="id"]');
-                if (existingIdField) {
-                    existingIdField.remove();
-                }
-            });
+        function deleteItem(petugas) {
+            // Send an Axios DELETE request to delete the item
+            axios.delete(`/petugas/${petugas}`)
+                .then(function(response) {
+                    // Handle the successful response
+                    axios.get(`/petugas/table?page=${paginationData.current_page}&size=${pageSize}`)
+                        .then(function(tableResponse) {
+                            // Update the table container with the new table data
+                            tableContainer.innerHTML = tableResponse.data.html;
 
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission behavior
-                errorElements.forEach(function(element) {
-                    element.innerHTML = '';
-                });
-                //Clear errors
-                const formData = new FormData(form);
-                // console.log(formData.get('name'));
-                const url = method === 'PUT' ? `/petugas/${formData.get('id')}` : '/petugas';
-                if (method === 'PUT') {
-                    formData.append('_method', 'PUT');
-                }
+                            // Update the pagination data
+                            paginationData.data = tableResponse.data.data;
+                            paginationData.current_page = tableResponse.data.current_page;
+                            paginationData.last_page = tableResponse.data.last_page;
+                            paginationData.total = tableResponse.data.total;
+                            paginationData.per_page = tableResponse.data.per_page;
 
-
-                axios({
-                        method: 'POST',
-                        url: url,
-                        data: formData,
-                    })
-                    .then(function(response) {
-                        // Handle the successful response
-                        axios.get('/petugas/table')
-                            .then(function(tableResponse) {
-                                // console.log(response.data);
-                                // Update the table container with the new table data
-                                tableContainer.innerHTML = tableResponse.data;
-                                form.reset();
+                            // Check if the current page is now empty
+                            if (paginationData.data.length === 0 && paginationData.current_page >
+                                1) {
+                                // Navigate to the previous page
+                                fetchAndRenderData(paginationData.current_page - 1, pageSize);
+                            } else {
+                                // Render the pagination links
+                                renderPagination(paginationData);
                                 attachEditBtnListeners();
-                            })
-                            .catch(function(error) {
-                                console.error('Error fetching table data:', error);
-                            });
-                        // If the element exists, trigger a click event on it
-                        if (dismissModalElement) {
-                            dismissModalElement.click();
-                        }
-                    })
-                    .catch(function(error) {
-                        // Handle the error
-                        if (error.response.status === 422) {
-                            // Validation errors
-                            const errors = error.response.data.errors;
-                            displayErrors(errors);
-                        } else {
-                            console.error(error);
-                        }
-                    });
-            });
-
-            function displayErrors(errors) {
-                for (const field in errors) {
-                    const errorMessages = errors[field];
-                    const errorElement = document.getElementById(`${field}-error`);
-
-                    if (errorElement) {
-                        let errorHtml = '';
-                        errorMessages.forEach(function(message) {
-                            errorHtml +=
-                                `<p class="mt-2 text-sm text-red-600 dark:text-red-500"> ${message} </p>`;
+                            }
+                        })
+                        .catch(function(error) {
+                            console.error('Error fetching table data:', error);
                         });
-                        errorElement.innerHTML = errorHtml;
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                });
+
+            // If the element exists, trigger a click event on it
+            if (dismissModalDelete) {
+                dismissModalDelete.click();
+            }
+        }
+
+        //reset form if modal closed
+        dismissModalElement.addEventListener('click', () => {
+            form.reset();
+            setModalTitle('create');
+            const existingIdField = form.querySelector('input[name="id"]');
+            if (existingIdField) {
+                existingIdField.remove();
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            errorElements.forEach(function(element) {
+                element.innerHTML = '';
+            });
+            //Clear errors
+            const formData = new FormData(form);
+            // console.log(formData.get('name'));
+            const url = method === 'PUT' ? `/petugas/${formData.get('id')}` : '/petugas';
+            if (method === 'PUT') {
+                formData.append('_method', 'PUT');
+            }
+
+
+            axios({
+                    method: 'POST',
+                    url: url,
+                    data: formData,
+                })
+                .then(function(response) {
+                    // Handle the successful response
+                    form.reset();
+                    fetchAndRenderData(paginationData.current_page);
+                    // If the element exists, trigger a click event on it
+                    if (dismissModalElement) {
+                        dismissModalElement.click();
                     }
+                })
+                .catch(function(error) {
+                    // Handle the error
+                    if (error.response.status === 422) {
+                        // Validation errors
+                        const errors = error.response.data.errors;
+                        displayErrors(errors);
+                    } else {
+                        console.error(error);
+                    }
+                });
+        });
+
+        function displayErrors(errors) {
+            for (const field in errors) {
+                const errorMessages = errors[field];
+                const errorElement = document.getElementById(`${field}-error`);
+
+                if (errorElement) {
+                    let errorHtml = '';
+                    errorMessages.forEach(function(message) {
+                        errorHtml +=
+                            `<p class="mt-2 text-sm text-red-600 dark:text-red-500"> ${message} </p>`;
+                    });
+                    errorElement.innerHTML = errorHtml;
                 }
             }
+        }
 
-            function attachEditBtnListeners() {
-                document.querySelectorAll('.edit-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        setModalTitle('edit');
-                        populateFormFields(btn.dataset.id);
-                    });
-                });
-            }
-
+        function attachEditBtnListeners() {
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // console.log('Edit button clicked:', btn.dataset.id);
                     setModalTitle('edit');
                     populateFormFields(btn.dataset.id);
                 });
             });
+        }
 
-            // Function to set the modal title
-            function setModalTitle(action) {
-                if (action === 'edit') {
-                    modalTitle.textContent = 'Edit Petugas';
-                    method = 'PUT';
-                } else {
-                    modalTitle.textContent = 'Tambah Petugas';
-                    method = 'POST';
-                }
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // console.log('Edit button clicked:', btn.dataset.id);
+                setModalTitle('edit');
+                populateFormFields(btn.dataset.id);
+            });
+        });
+
+        // Function to set the modal title
+        function setModalTitle(action) {
+            if (action === 'edit') {
+                modalTitle.textContent = 'Edit Petugas';
+                method = 'PUT';
+            } else {
+                modalTitle.textContent = 'Tambah Petugas';
+                method = 'POST';
             }
+        }
 
-            function populateFormFields(id) {
-                // Make an AJAX request to fetch the record data
-                // Remove any existing id input field
+        function populateFormFields(id) {
+            // Make an AJAX request to fetch the record data
+            // Remove any existing id input field
 
-                axios.get(`/petugas/${id}/edit`)
-                    .then(response => {
-                        const data = response.data;
-                        // Create and append the id input field
-                        const idField = document.createElement('input');
-                        idField.type = 'hidden';
-                        idField.name = 'id';
-                        idField.value = data.id;
-                        form.appendChild(idField);
-                        // Populate the form fields with the record data
-                        const formData = new FormData();
+            axios.get(`/petugas/${id}/edit`)
+                .then(response => {
+                    const data = response.data;
+                    // Create and append the id input field
+                    const idField = document.createElement('input');
+                    idField.type = 'hidden';
+                    idField.name = 'id';
+                    idField.value = data.id;
+                    form.appendChild(idField);
+                    // Populate the form fields with the record data
+                    const formData = new FormData();
 
-                        formData.append('id', data.id);
-                        formData.append('nip', data.nip);
-                        formData.append('name', data.name);
-                        formData.append('jabatan', data.jabatan);
+                    formData.append('id', data.id);
+                    formData.append('nip', data.nip);
+                    formData.append('name', data.name);
+                    formData.append('jabatan', data.jabatan);
 
-                        // console.log('FormData:', formData); // Log the FormData object
+                    // console.log('FormData:', formData); // Log the FormData object
 
-                        for (const [key, value] of formData.entries()) {
-                            const input = form.elements[key];
-                            if (input) {
-                                input.value = value;
-                                // console.log(`Field ${key}: ${value}`); // Log the form field values
-                            }
+                    for (const [key, value] of formData.entries()) {
+                        const input = form.elements[key];
+                        if (input) {
+                            input.value = value;
+                            // console.log(`Field ${key}: ${value}`); // Log the form field values
                         }
-                        // ... (populate other form fields)
-                    })
-                    .catch(error => {
-                        console.error('Error fetching record data:', error);
-                    });
+                    }
+                    // ... (populate other form fields)
+                })
+                .catch(error => {
+                    console.error('Error fetching record data:', error);
+                });
+        }
+
+        //Handle pagination and search
+        function fetchAndRenderData(page = 1, size = pageSize, searchQuery = '') {
+            axios.get(`/petugas/table?page=${page}&size=${size}&search=${searchQuery}`)
+                .then(function(tableResponse) {
+                    // Update the table container with the new table data
+                    tableContainer.innerHTML = tableResponse.data.html;
+
+                    // Update the pagination data
+                    paginationData.data = tableResponse.data.data;
+                    paginationData.current_page = tableResponse.data.current_page;
+                    paginationData.last_page = tableResponse.data.last_page;
+                    paginationData.total = tableResponse.data.total;
+                    paginationData.per_page = tableResponse.data.per_page;
+
+                    // Render the pagination links
+                    renderPagination(paginationData);
+                    attachEditBtnListeners();
+                })
+                .catch(function(error) {
+                    console.error('Error fetching table data:', error);
+                });
+        }
+
+        function renderPagination(data) {
+            const prevLink = document.getElementById('prevLink');
+            const nextLink = document.getElementById('nextLink');
+            const paginationButton = document.getElementById('paginationButton');
+            const currentPagesSpan = document.getElementById('currentPages');
+            const totalPagesSpan = document.getElementById('totalPages');
+
+
+            // Clear existing page links
+            paginationButton.innerHTML = '';
+
+            // Update current and total pages
+            currentPagesSpan.textContent =
+                `${data.current_page * data.per_page - data.per_page + 1} - ${Math.min(data.current_page * data.per_page, data.total)}`;
+            totalPagesSpan.textContent = data.total;
+
+            // Disable/enable previous link
+            if (data.current_page === 1) {
+                prevLink.classList.add('disabled');
+                prevLink.removeEventListener('click', handlePrevClick);
+            } else {
+                prevLink.classList.remove('disabled');
+                prevLink.addEventListener('click', handlePrevClick);
             }
+
+            // Render page links
+            for (let i = 1; i <= data.last_page; i++) {
+                const pageLink = document.createElement('li');
+                pageLink.classList.add('inline-block');
+
+                const pageLinkAnchor = document.createElement('a');
+                pageLinkAnchor.href = '#';
+                pageLinkAnchor.textContent = i;
+                pageLinkAnchor.classList.add(
+                    'flex',
+                    'items-center',
+                    'justify-center',
+                    'w-6',
+                    'h-6',
+                    'bg-slate-100',
+                    'dark:bg-slate-700',
+                    'dark:hover:bg-black-500',
+                    'text-slate-800',
+                    'dark:text-white',
+                    'rounded',
+                    'mx-1',
+                    'hover:bg-black-500',
+                    'hover:text-white',
+                    'text-sm',
+                    'font-Inter',
+                    'font-medium',
+                    'transition-all',
+                    'duration-300'
+                );
+
+                if (i === data.current_page) {
+                    pageLinkAnchor.classList.add('p-active', 'cursor-not-allowed');
+                } else {
+                    pageLinkAnchor.addEventListener('click', () => handlePaginationClick(i));
+                }
+
+                pageLink.appendChild(pageLinkAnchor);
+                paginationButton.appendChild(pageLink);
+            }
+
+            // Disable/enable next link
+            if (data.current_page === data.last_page) {
+                nextLink.classList.add('disabled');
+                nextLink.removeEventListener('click', handleNextClick);
+            } else {
+                nextLink.classList.remove('disabled');
+                nextLink.addEventListener('click', handleNextClick);
+            }
+        }
+
+        function handlePrevClick() {
+            fetchAndRenderData(paginationData.current_page - 1);
+        }
+
+        function handleNextClick() {
+            fetchAndRenderData(paginationData.current_page + 1);
+        }
+
+        function handlePaginationClick(page) {
+            fetchAndRenderData(page);
+        }
+
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
         });
     </script>
 

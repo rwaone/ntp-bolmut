@@ -40,4 +40,16 @@ class UpdatePetugasRequest extends FormRequest
 
         return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Nama tidak boleh kosong.',
+            'nip.required' => 'NIP tidak boleh kosong.',
+            'jabatan.required' => 'Jabatan tidak boleh kosong.',
+            'name.regex' => 'Isian tidak sesuai format.',
+            'nip.regex' => 'Isian tidak sesuai format.',
+            'nip.size' => 'NIP tidak boleh kurang dari 18 digit'
+        ];
+    }
 }
