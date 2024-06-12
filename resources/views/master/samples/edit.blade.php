@@ -140,9 +140,11 @@
                         "Content-Type": "application/json"
                     },
                 })
-                
+                window.location.reload();
             } catch (error) {
-                console.log({error});
+                console.log({
+                    error
+                });
             } finally {
                 editLoading.classList.add('hidden')
                 editIcon.classList.remove('hidden')
@@ -152,13 +154,17 @@
         })
 
         const editButton = document.querySelectorAll('.edit-sample');
-        editButton.forEach(item=>{
-            console.log({item});
-            item.addEventListener('click',(event)=>{
-                const dataValue = event.currentTarget.data.value;
-                console.log({dataValue});
+        editButton.forEach(item => {
+            console.log({
+                item
             });
-        }) 
+            item.addEventListener('click', (event) => {
+                const dataValue = event.currentTarget.data.value;
+                console.log({
+                    dataValue
+                });
+            });
+        })
 
     });
 </script>
@@ -198,21 +204,11 @@
                     <form id="edit-sample-form" class="flex flex-col space-y-3" method="POST"
                         action="{{ url('master/sample/store') }}">
                         @csrf
-                        <div class="input-area">
-                            <label for="default-picker" class=" form-label">ID Desa</label>
-                            <input id="iddesa" type="text" class="form-control pr-9" placeholder="7107000000"
-                                @readonly(true)>
-                            <div class="relative">
-                                <span id="nameErrorMsg" class="font-Inter text-sm text-danger-500 pt-2 hidden mt-1">This
-                                    is
-                                    valid
-                                    state.</span>
-                            </div>
-                        </div>
+
                         <div class="input-area">
                             <label for="edit-id" class=" form-label">ID</label>
-                            <input id="edit-id" name="id" type="text" class="form-control pr-9" placeholder="7107000000"
-                                @readonly(true)>
+                            <input id="edit-id" name="id" type="text" class="form-control pr-9"
+                                placeholder="7107000000" @readonly(true)>
                             <div class="relative">
                                 <span id="nameErrorMsg" class="font-Inter text-sm text-danger-500 pt-2 hidden mt-1">This
                                     is
@@ -236,8 +232,9 @@
                         </div>
                         <div class="relative w-full">
                             <label for="kecamatan-edit-input" class=" form-label">Kecamatan</label>
-                            <input type="text" id="kecamatan-edit-input" class="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Select an option" autocomplete="off" />
+                            <input type="text" id="kecamatan-edit-input" name="kecamatan_name"
+                                class="w-full p-2 border border-gray-300 rounded" placeholder="Select an option"
+                                autocomplete="off" />
                             <input type="text" id="kecamatan-edit-id" name="kecamatan_id"
                                 class="w-full p-2 border border-gray-300 rounded hidden" />
                             <div id="kecamatan-edit-options"
@@ -251,8 +248,9 @@
                         </div>
                         <div class="relative w-full">
                             <label for="desa-edit-input" class=" form-label">Desa</label>
-                            <input type="text" id="desa-edit-input" class="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Select an option" autocomplete="off" />
+                            <input type="text" id="desa-edit-input" name="desa_name"
+                                class="w-full p-2 border border-gray-300 rounded" placeholder="Select an option"
+                                autocomplete="off" />
                             <input type="text" id="desa-edit-id" name="desa_id"
                                 class="w-full p-2 border border-gray-300 rounded hidden" />
                             <div id="desa-edit-options"
@@ -283,7 +281,7 @@
 
                 <button data-bs-dismiss="modal"
                     class="btn btn-light inline-flex justify-center bg-light-500 text-dark"><iconify-icon
-                         class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
+                        class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
                         icon="material-symbols:cancel"></iconify-icon>Batal</button>
                 <button id="edit-confirm-button"
                     class="btn btn-success inline-flex justify-center bg-green-700 text-white-300">

@@ -3,7 +3,7 @@
         const comboboxInput = document.getElementById('kecamatan-input');
         const comboboxValue = document.getElementById('kecamatan-id');
         const comboboxOptions = document.getElementById('kecamatan-options');
-        const options = comboboxOptions.children;
+        const options = document.querySelectorAll('.kecamatan-create-option');
 
         comboboxInput.addEventListener('focus', () => {
             comboboxOptions.classList.remove('hidden');
@@ -140,9 +140,11 @@
                         "Content-Type": "application/json"
                     },
                 })
-                
+
             } catch (error) {
-                console.log({error});
+                console.log({
+                    error
+                });
             } finally {
                 createLoading.classList.add('hidden')
                 createIcon.classList.remove('hidden')
@@ -223,11 +225,11 @@
                             <div id="kecamatan-options"
                                 class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg hidden">
                                 @foreach ($kecamatans as $kecamatan)
-                                    <div class="p-2 cursor-pointer hover:bg-gray-200" data-value="{{ $kecamatan->id }}">
+                                    <div class="kecamatan-create-option p-2 cursor-pointer hover:bg-gray-200"
+                                        data-value="{{ $kecamatan->id }}">
                                         {{ $kecamatan->name }}</div>
                                 @endforeach
                             </div>
-
                         </div>
                         <div class="relative w-full">
                             <label for="desa-input" class=" form-label">Desa</label>
@@ -263,7 +265,7 @@
 
                 <button data-bs-dismiss="modal"
                     class="btn btn-light inline-flex justify-center bg-light-500 text-dark"><iconify-icon
-                        id="create-icon" class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
+                        class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
                         icon="material-symbols:cancel"></iconify-icon>Batal</button>
                 <button id="create-confirm-button"
                     class="btn btn-success inline-flex justify-center bg-green-700 text-white-300">

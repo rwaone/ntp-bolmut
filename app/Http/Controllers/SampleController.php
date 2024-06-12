@@ -114,11 +114,16 @@ class SampleController extends Controller
         try {
             //code...
             DB::beginTransaction();
-            $newData = $request->validated();
-            $sample = Sample::find($newData->id);
-            
+            $validatedData = $request->validated();
+            $sample = Sample::find($validatedData['id']);
+
+            $newData = [
+                'desa_id' => $validatedData['desa_id'],
+                'respondent_name' => $validatedData['respondent_name'],
+            ];
             $sample->update($newData);
             DB::commit();
+            return response()->json([], 204);
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
@@ -133,6 +138,15 @@ class SampleController extends Controller
      */
     public function destroy(Sample $sample)
     {
-        //
+        try {
+            //code...
+            DB::beginTransaction();
+            $sample->delete();
+            DB::commit();
+            return response()->json([], 204);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

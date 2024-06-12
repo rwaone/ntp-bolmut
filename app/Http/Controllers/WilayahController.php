@@ -18,7 +18,7 @@ class WilayahController extends Controller
             ],
         ];
 
-        return view('master/wilayah', [
+        return view('master/wilayah/index', [
             'pageTitle' => 'Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
             'master_wilayah' => $master_wilayah

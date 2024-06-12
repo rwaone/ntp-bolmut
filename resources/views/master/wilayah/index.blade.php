@@ -9,13 +9,13 @@
             {{-- {{$master_wilayah}} --}}
         </p>
         <div class="md:flex justify-between items-center">
-          
+
             <div class="flex flex-wrap ">
                 <ul class="nav nav-pills flex items-center flex-wrap list-none pl-0 mr-4" id="pills-tabVertical"
                     role="tablist">
                     <li class="nav-item flex-grow text-center" role="presentation">
 
-                    
+
 
                     </li>
                 </ul>
@@ -127,7 +127,7 @@
                                                                 </button>
                                                                 <ul
                                                                     class="dropdown-menu min-w-max absolute text-sm text-slate-700 dark:text-white hidden bg-white dark:bg-slate-700 shadow z-[2] float-left overflow-hidden list-none text-left rounded-lg mt-1 m-0 bg-clip-padding border-none">
-                                                                   
+
                                                                     <li>
                                                                         <a href={{ url('master/wilayah/edit/' . $wilayah->id) }}
                                                                             class="hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
@@ -155,12 +155,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class=" flex flex-wrap items-center justify-between space-x-2 py-4">
+                            <x-table-pagination :paginatedData="$master_wilayah"></x-table-pagination>
 
-                                <div class="card-text h-full space-y-10">
-                                    {{ $master_wilayah }}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -248,11 +244,13 @@
                     try {
                         const desaDeleteId = document.getElementById('desa-delete-id');
                         const response = await axios.delete(`/master/wilayah/${desaDeleteId.textContent}`);
-                        
-                        
-                        } catch (error) {
-                            console.log({error});
-                        } finally {
+
+
+                    } catch (error) {
+                        console.log({
+                            error
+                        });
+                    } finally {
                         hapusLoading.classList.add('hidden');
                         $('[data-bs-dismiss=modal]').click();
                         window.location.reload();

@@ -38,7 +38,7 @@ class DesaController extends Controller
             ],
         ];
 
-        return view('master/wilayah/desa/index', [
+        return view('master/wilayah/index', [
             'pageTitle' => 'Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
             'master_wilayah' => $master_wilayah
@@ -63,7 +63,7 @@ class DesaController extends Controller
             ],
         ];
 
-        return view('master/wilayah/desa/edit', [
+        return view('master/wilayah/edit', [
             'pageTitle' => 'Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
             'kecamatans' => $kecamatans,
@@ -88,7 +88,7 @@ class DesaController extends Controller
             ],
         ];
 
-        return view('master/wilayah/desa/create', [
+        return view('master/wilayah/create', [
             'pageTitle' => 'Master Wilayah',
             'breadcrumbItems' => $breadcrumbsItems,
             'kecamatans' => $kecamatans
@@ -222,8 +222,9 @@ class DesaController extends Controller
         return response()->json($desa, 200);
     }
 
-    public function fetch_by_kecamatan(Kecamatan $kecamatan) {
-        $desas = Desa::where('kecamatan_id',$kecamatan->id)->get();
+    public function fetch_by_kecamatan(Kecamatan $kecamatan)
+    {
+        $desas = Desa::where('kecamatan_id', $kecamatan->id)->get();
         return response()->json($desas, 200);
     }
 }

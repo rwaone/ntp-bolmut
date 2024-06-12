@@ -3,7 +3,6 @@
         {{-- <div> --}}
         <x-breadcrumb :page-title="$pageTitle" :breadcrumb-items="$breadcrumbItems" />
         {{-- </div> --}}
-{{$samples}}
         <div class="md:flex justify-between items-center">
 
             <div class="flex flex-wrap ">
@@ -126,17 +125,17 @@
                                                                     <li>
                                                                         <a href="#" data-bs-toggle="modal"
                                                                             data-bs-target="#sample-edit-modal"
-                                                                            data-value="{{$sample}}"
-                                                                            class="hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
+                                                                            data-value="{{ $sample }}"
+                                                                            class="sample-edit hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
                                                                             <iconify-icon
                                                                                 icon="clarity:note-edit-line"></iconify-icon>
                                                                             <span>Edit</span></a>
                                                                     </li>
                                                                     <li>
                                                                         <a href="#" data-bs-toggle="modal"
-                                                                            data-bs-target="#desa-delete-confirm"
+                                                                            data-bs-target="#sample-delete-confirm"
                                                                             data-value="{{ $sample->id }}"
-                                                                            class="desa-delete hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
+                                                                            class="sample-delete hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
                                                                             <iconify-icon
                                                                                 icon="fluent:delete-28-regular"></iconify-icon>
                                                                             <span>Delete</span></a>
@@ -150,9 +149,11 @@
                                             </tbody>
                                         </table>
                                     </div>
+
                                 </div>
                             </div>
-                           
+                            <x-table-pagination :paginatedData="$samples"></x-table-pagination>
+
                         </div>
                     </div>
                 </div>
@@ -167,14 +168,14 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                const desaDeleteLinks = document.querySelectorAll(
-                    '.desa-delete'
+                const sampleDeleteLinks = document.querySelectorAll(
+                    '.sample-delete'
                 );
-                desaDeleteLinks.forEach(link => {
+                sampleDeleteLinks.forEach(link => {
                     link.addEventListener('click', function(event) {
                         const dataValue = event.currentTarget.dataset.value;
-                        const desaDeleteId = document.getElementById('desa-delete-id');
-                        desaDeleteId.textContent = dataValue;
+                        const sampleDeleteId = document.getElementById('sample-delete-id');
+                        sampleDeleteId.textContent = dataValue;
 
                     })
                 });
@@ -185,8 +186,9 @@
                     const hapusLoading = document.getElementById('hapus-loading');
                     hapusLoading.classList.remove('hidden');
                     try {
-                        const desaDeleteId = document.getElementById('desa-delete-id');
-                        const response = await axios.delete(`/master/samples/${desaDeleteId.textContent}`);
+                        const sampleDeleteId = document.getElementById('sample-delete-id');
+                        const response = await axios.delete(
+                            `/master/samples/${sampleDeleteId.textContent}`);
 
 
                     } catch (error) {
@@ -199,6 +201,26 @@
                         window.location.reload();
 
                     }
+                })
+
+                // edit
+                const editSampleLinks = document.querySelectorAll('.sample-edit');
+                editSampleLinks.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        const dataValue = JSON.parse(event.currentTarget.dataset.value);
+                        console.log({
+                            dataValue
+                        });
+                        const form = document.getElementById('edit-sample-form');
+                        for (const key in dataValue) {
+                            if (dataValue.hasOwnProperty(key)) {
+                                const input = form.querySelector(`[name="${key}"]`);
+                                if (input) {
+                                    input.value = dataValue[key];
+                                }
+                            }
+                        }
+                    })
                 })
 
             })
