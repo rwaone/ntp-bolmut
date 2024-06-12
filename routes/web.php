@@ -40,16 +40,25 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('setlocale/{locale}', SetLocaleController::class)->name('setlocale');
 
     // Wilayah Kabupaten Kecamatan Desa
-    Route::get('master/wilayah/desa', [DesaController::class, 'index'])->name('wilayah.desa.index');
-    Route::get('master/wilayah/desa/create', [DesaController::class, 'create'])->name('wilayah.desa.create');
-    Route::post('master/wilayah/desa/store', [DesaController::class, 'store'])->name('wilayah.desa.store');
-    Route::get('master/wilayah/desa/edit/{id}', [DesaController::class, 'edit'])->name('wilayah.desa.edit');
-    Route::patch('master/wilayah/desa/update', [DesaController::class, 'update'])->name('wilayah.desa.update');
+    Route::get('master/wilayah', [DesaController::class, 'index'])->name('wilayah.index');
+    Route::get('master/wilayah/create', [DesaController::class, 'create'])->name('wilayah.create');
+    Route::post('master/wilayah/store', [DesaController::class, 'store'])->name('wilayah.store');
+    Route::get('master/wilayah/edit/{id}', [DesaController::class, 'edit'])->name('wilayah.edit');
+    Route::patch('master/wilayah/update', [DesaController::class, 'update'])->name('wilayah.update');
+    Route::delete('master/wilayah/{desa}', [DesaController::class, 'destroy'])->name('wilayah.destroy');
 
-    Route::get('wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
-    // Route::get('wilayah-edit/{id}', [WilayahController::class, 'edit'])->name('wilayah.edit');
-    // Sample
-    Route::resource('samples', SampleController::class);
+    // Sampel
+    Route::get('master/samples', [SampleController::class, 'index'])->name('samples.index');
+    Route::get('master/samples/create', [SampleController::class, 'create'])->name('samples.create');
+    Route::post('master/samples/store', [SampleController::class, 'store'])->name('samples.store');
+    Route::get('master/samples/edit/{sample}', [SampleController::class, 'edit'])->name('samples.edit');
+    Route::patch('master/samples/update', [SampleController::class, 'update'])->name('samples.update');
+    Route::delete('master/samples/{sample}', [SampleController::class, 'destroy'])->name('samples.destroy');
+    
+    // Kecamatan
+    Route::get('master/wilayah/desa/fetch-by-kecamatan/{kecamatan}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
+
+    
     // Petugas
     Route::resource('petugas', PetugasController::class);
     // Documents
