@@ -58,8 +58,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/komoditas/fetch/{id}', [CommodityController::class, 'fetch'])->name('komoditas.fetch');
     Route::delete('/komoditas/delete/{id}', [CommodityController::class, 'destroy'])->name('komoditas.destroy');
     // Qualities
-    Route::resource('qualities', QualityController::class);
-
+    // Route::resource('qualities', QualityController::class);
+    Route::get('/kualitas', [QualityController::class, 'index'])->name('kualitas.index');
+    Route::get('/kualitas/search', [QualityController::class, 'search'])->name('kualitas.search');
+    Route::post('/kualitas/store', [QualityController::class, 'store'])->name('kualitas.store');
+    Route::get('/kualitas/fetch/{id}', [QualityController::class, 'fetch'])->name('kualitas.fetch');
+    Route::delete('/kualitas/delete/{id}', [QualityController::class, 'destroy'])->name('kualitas.destroy');
+    
     // User
     Route::resource('users', UserController::class);
     // Permission

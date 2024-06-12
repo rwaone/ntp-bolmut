@@ -119,7 +119,7 @@
             </li>
             <!-- Quality -->
             <li>
-                <a href="{{ route('qualities.index') }}" class="navItem {{ (request()->is('qualities*')) ? 'active' : '' }}">
+                <a href="{{ route('kualitas.index') }}" class="navItem {{ (request()->is('kualitas*')) ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="carbon:rule-data-quality"></iconify-icon>
                         <span>{{ __('Kualitas') }}</span>

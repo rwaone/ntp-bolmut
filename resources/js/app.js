@@ -179,7 +179,7 @@ const attachEventListener = () => {
             paginated = document.getElementById("showData").value;
             beforePage = currentPage;
             let html = await fetchForPagination(currentPage, paginated);
-            $("#data-table-komoditas").html(html.html);
+            targetView.innerHTML = html.html;
             generatePagination(currentPage);
             activatePagination("not first init");
             document.getElementById("currentPages").textContent =
@@ -261,3 +261,8 @@ const activatePagination = (value) => {
 };
 window.generatePagination = generatePagination;
 window.activatePagination = activatePagination;
+
+const formatNumber = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+window.formatNumber = formatNumber;

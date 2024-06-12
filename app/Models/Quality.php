@@ -10,16 +10,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Quality extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = ['id'];
     protected $load = ['datas'];
     protected $with = ['commodity'];
+    
 
-    public function datas(){
+    public function datas()
+    {
         return $this->hasMany(Data::class);
     }
 
-    public function commodity(){
+    public function commodity()
+    {
         return $this->belongsTo(Commodity::class);
     }
 }

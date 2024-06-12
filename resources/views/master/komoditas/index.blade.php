@@ -225,6 +225,7 @@
                 })
             }
             window.fetchForPagination = fetchData
+            window.targetView = document.getElementById('data-table-komoditas')
             const delayedFetchData = debounce(async () => {
                 currentPage = 1
                 let fetchedData = await fetchData()

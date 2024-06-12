@@ -13,7 +13,7 @@ class StoreQualityRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,21 @@ class StoreQualityRequest extends FormRequest
     {
         return [
             //
+            'id' => ['nullable', 'integer'],
+            'code' => ['required', 'string'],
+            'commodity_id' => ['required', 'integer'],
+            'name' => ['required', 'string'],
+            'min_price' => [
+                'required',
+                // 'regex:/^\d{1,3}(\.\d{1,2})?$/',
+                'numeric',
+            ],
+            'max_price' => [
+                'required',
+                // 'regex:/^\d{1,3}(\.\d{1,2})?$/',
+                'numeric',
+            ],
+            'status' => ['required', 'string'],
         ];
     }
 }
