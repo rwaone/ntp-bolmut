@@ -263,6 +263,7 @@
                             </div>
 
                         </div>
+                        <x-select-search :datas="$documents" name="document"></x-select-search>
                         <div class="relative w-full">
                             <label for="nama-responden" class="form-label">Nama Responden</label>
                             <input type="text" name="respondent_name"

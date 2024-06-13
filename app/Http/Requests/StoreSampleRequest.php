@@ -24,8 +24,9 @@ class StoreSampleRequest extends FormRequest
     public function rules()
     {
         return [
-            'desa_id'=>'required',
-            'respondent_name'=>'required',
+            'desa_id' => 'required',
+            'document_id' => 'required',
+            'respondent_name' => 'required',
         ];
     }
 }

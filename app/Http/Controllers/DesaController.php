@@ -6,6 +6,7 @@ use App\Models\Desa;
 use App\Http\Requests\StoreDesaRequest;
 use App\Http\Requests\UpdateDesaRequest;
 use App\Models\Kecamatan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DesaController extends Controller
@@ -15,9 +16,9 @@ class DesaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $master_wilayah = Desa::join('kecamatans', 'desas.kecamatan_id', 'kecamatans.id')
+        $query = Desa::join('kecamatans', 'desas.kecamatan_id', 'kecamatans.id')
             ->join('kabupatens', 'kecamatans.kabupaten_id', 'kabupatens.id')
             ->select(
                 'desas.*',
@@ -25,11 +26,26 @@ class DesaController extends Controller
                 'kecamatans.name as kec',
                 'kabupatens.code as kode_kabkot',
                 'kabupatens.name as kabkot'
-            )
-            ->paginate(10);
-        // $master_wilayah = Desa::join('kecamatans','kecamatans.id','desas.kecamatan_id')
-        // ->join('kabupatens','kabupatens.id','kecamatans.kabupaten_id')
-        // ->paginate(10);
+            );
+
+            $kecamatan = $request->query('kecamatan_name');
+            $desa = $request->query('desa_name');
+            $stat_pem = $request->query('stat_pem');
+
+            if($kecamatan) {
+                $query->where('kecamatans.name','like','%'.$kecamatan.'%');
+            }
+
+            if($desa) {
+                $query->where('desas.name','like','%'.$desa.'%');
+            }
+            if($stat_pem) {
+                $query->where('desas.stat_pem','like','%'.$stat_pem.'%');
+            }
+
+            $master_wilayah = $query->paginate(10);
+
+
         $breadcrumbsItems = [
             [
                 'name' => 'Master Wilayah',

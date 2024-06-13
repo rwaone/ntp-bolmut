@@ -27,6 +27,7 @@ class UpdateSampleRequest extends FormRequest
             'id'=>'required',
             'respondent_name'=>'required',
             'desa_id'=>'required',
+            'document_id'=>'required',
         ];
     }
 }

@@ -11,5 +11,5 @@ class Sample extends Model
     use HasFactory;
     use HasUuids;
     protected $guarded = ['id'];
-    protected $fillable = ['respondent_name','desa_id'];
+    protected $fillable = ['respondent_name','desa_id','document_id'];
 }

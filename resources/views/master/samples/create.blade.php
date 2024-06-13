@@ -13,12 +13,20 @@
             setTimeout(() => comboboxOptions.classList.add('hidden'), 200);
         });
         const fetchDesaByKecamatan = async (kecamatanId) => {
+            const desaInput = document.getElementById('desa-input');
+            const desaInputLoading = document.getElementById('desa-input-loading');
             try {
+
+                desaInputLoading.classList.remove('hidden');
+                desaInput.value = 'memuat daftar desa ';
+                desaInput.disabled = true;
+                // const response 
                 const {
                     data
                 } = await axios.get(`/master/wilayah/desa/fetch-by-kecamatan/${kecamatanId}`);
 
                 const desaOptionElement = document.getElementById('desa-options');
+
                 desaOptionElement.innerHTML = "";
                 data.forEach(desa => {
                     const desaOption =
@@ -31,6 +39,9 @@
                 });
             } finally {
                 desaAddEvent()
+                desaInputLoading.classList.add('hidden');
+                desaInput.value = '';
+                desaInput.disabled = false;
 
             }
         };
@@ -170,10 +181,10 @@
                 <h3 class="text-xl font-medium dark capitalize">
                     Tambah Sampel </h3>
                 <button type="button"
-                    class="text-slate-400 bg-transparent hover:text-slate-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center
+                    class="text-dark-400 bg-transparent hover:text-slate-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center
                 dark:hover:bg-slate-600 dark:hover"
                     data-bs-dismiss="modal">
-                    <svg aria-hidden="true" class="w-5 h-5" fill="#ffffff" viewbox="0 0 20 20"
+                    <svg aria-hidden="true" class="w-5 h-5" fill="#000" viewbox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10
                         11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -233,20 +244,26 @@
                         </div>
                         <div class="relative w-full">
                             <label for="desa-input" class=" form-label">Desa</label>
-                            <input type="text" id="desa-input" class="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Select an option" autocomplete="off" />
+                            <div class="relative inline-block w-full">
+                                <input type="text" id="desa-input" class="w-full p-2 border border-gray-300 rounded"
+                                    placeholder="Select an option" autocomplete="off" />
+                                <span id="desa-input-loading"
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 hidden">
+
+                                    <iconify-icon class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
+                                        icon="line-md:loading-twotone-loop"></iconify-icon>
+                                </span>
+                            </div>
+
                             <input type="text" id="desa-id" name="desa_id"
                                 class="w-full p-2 border border-gray-300 rounded hidden" />
                             <div id="desa-options"
-                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg hidden">
-                                {{-- @foreach ($desas as $desa)
-                                            <div class="p-2 cursor-pointer hover:bg-gray-200"
-                                                data-value="{{ $desa->id }}">
-                                                {{ $desa->name }}</div>
-                                        @endforeach --}}
+                                class="absolute z-10 w-full max-h-72 overflow-y-auto mt-1 bg-white border border-gray-300 rounded shadow-lg hidden">
+
                             </div>
 
                         </div>
+                        <x-select-search :datas="$documents" name="document"></x-select-search>
                         <div class="relative w-full">
                             <label for="nama-responden" class="form-label">Nama Responden</label>
                             <input type="text" name="respondent_name"

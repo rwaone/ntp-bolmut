@@ -8,7 +8,7 @@
 
             {{-- {{$master_wilayah}} --}}
         </p>
-        <div class="md:flex justify-between items-center">
+        <div class="md:flex justify-end items-center">
 
             <div class="flex flex-wrap ">
                 <ul class="nav nav-pills flex items-center flex-wrap list-none pl-0 mr-4" id="pills-tabVertical"
@@ -19,12 +19,14 @@
 
                     </li>
                 </ul>
-                <button class="btn inline-flex justify-center btn-white dark:bg-slate-700 dark:text-slate-300 m-1 ">
-                    <span class="flex items-center">
-                        <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2" icon="heroicons-outline:filter"></iconify-icon>
-                        <span>On Going</span>
-                    </span>
-                </button>
+                @php
+                 $properties = [
+                    ['value'=>'kecamatan_name','label'=>'Kecamatan'],
+                    ['value'=>'desa_name','label'=>'Desa'],
+                    ['value'=>'stat_pem','label'=>'Status Pemerintahan']];
+                $query = request()->query();   
+                @endphp
+                <x-filter-table :properties="$properties" :query="$query" ></x-filter-table>
                 <a href="{{ url('master/wilayah/create') }}"
                     class="btn inline-flex justify-center btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 ">
                     <span class="flex items-center">
