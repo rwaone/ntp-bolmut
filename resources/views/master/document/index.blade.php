@@ -106,7 +106,7 @@
             renderPagination(paginationData, pageSize, modalTitle, form);
 
             const searchInput = document.getElementById('dokumen-search');
-            const debouncedSearch = debounce(function() {
+            const debouncedSearch = debounceSearch(function() {
                 fetchAndRenderData(1, pageSize, paginationData, modalTitle, form, searchInput.value);
             }, 500); // Adjust the delay (300ms) as needed
 

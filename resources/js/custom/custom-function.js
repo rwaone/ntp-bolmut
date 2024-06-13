@@ -429,7 +429,7 @@ export function fetchAndRenderData(page = 1, size = pageSize, paginationData, mo
         });
 }
 
-export function debounce(func, delay) {
+export function debounceSearch(func, delay) {
     let timeoutId;
     return function (...args) {
         clearTimeout(timeoutId);

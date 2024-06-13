@@ -83,7 +83,7 @@ import {
     handlePrevClick,
     handleNextClick,
     handlePaginationClick,
-    debounce,
+    debounceSearch,
     fetchAndRenderData,
     handleFormSubmit
 } from './custom/custom-function.js';
@@ -97,7 +97,7 @@ window.populateFormFields = populateFormFields;
 window.handlePrevClick = handlePrevClick;
 window.handleNextClick = handleNextClick;
 window.handlePaginationClick = handlePaginationClick;
-window.debounce = debounce;
+window.debounceSearch = debounceSearch;
 window.fetchAndRenderData = fetchAndRenderData;
 window.handleFormSubmit = handleFormSubmit;
 
