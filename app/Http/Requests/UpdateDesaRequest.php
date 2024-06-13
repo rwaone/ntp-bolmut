@@ -13,7 +13,7 @@ class UpdateDesaRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class UpdateDesaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'kecamatan_id' => 'nullable',
+            'kecamatan_code' => 'nullable',
+            'kecamatan_name' => 'nullable',
+            'desa_id' => 'nullable',
+            'desa_code' => 'nullable',
+            'desa_name' => 'nullable',
+            'stat_pem' => 'nullable',
         ];
     }
 }

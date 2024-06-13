@@ -13,7 +13,7 @@ class StoreSampleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreSampleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'desa_id' => 'required',
+            'document_id' => 'required',
+            'respondent_name' => 'required',
         ];
     }
 }

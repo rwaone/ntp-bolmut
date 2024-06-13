@@ -19,11 +19,19 @@ class DatabaseSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        // $this->call([
+        //     PermissionSeeder::class,
+        //     RoleSeeder::class,
+        //     UserSeeder::class,
+        // ]);
         $this->call([
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            KabupatenSeeder::class,
+            KecamatanSeeder::class,
+            DesaSeeder::class,
+            DocumentSeeder::class
         ]);
-
     }
 }

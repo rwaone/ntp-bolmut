@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('desas', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->foreignId('kecamatan_id');
+            $table->integer('kecamatan_id');
             $table->string('name');
+            $table->string('stat_pem');
             $table->timestamps();
         });
     }
