@@ -131,6 +131,12 @@
             var list, currentPage, paginated, beforePage, showTheData
             $('#button-create').on('click', (e) => {
                 e.preventDefault();
+                let min_change = $('#min_change').val()
+                let max_change = $('#max_change').val()
+                min_change = setNumberPrice(min_change)
+                max_change = setNumberPrice(max_change)
+                $('#min_change').val(min_change)
+                $('#max_change').val(max_change)
                 let data = $('#form-create').serialize();
                 document.getElementById('paginationList').querySelectorAll('li').forEach((node) => {
                     if (node.querySelector('a').classList.contains('p-active')) currentPage =
@@ -226,6 +232,7 @@
             }
             window.fetchForPagination = fetchData
             window.targetView = document.getElementById('data-table-komoditas')
+            startObserving(window.targetView)
             const delayedFetchData = debounce(async () => {
                 currentPage = 1
                 let fetchedData = await fetchData()
@@ -423,6 +430,13 @@
             const updateList = (data) => {
                 $('#data-table-komoditas').html(data.html)
             }
+            const changeOnDocument = () => {
+                window.targetView.querySelectorAll('.price-attributes').forEach((node) => {
+                    node.textContent = formatNumber(node.textContent.trim())
+                })
+            }
+            changeOnDocument()
+            window.changeOnDocument = changeOnDocument
         })
     </script>
 </x-app-layout>

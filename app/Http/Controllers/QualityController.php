@@ -123,13 +123,13 @@ class QualityController extends Controller
         else $currentPage = 1;
         // dd($paginated, $currentPage);
 
+        $query->join('users as u', 'u.id', '=', 'qualities.created_by');
+        $query->leftJoin('users as us', 'us.id', '=', 'qualities.reviewed_by');
         if (!empty($request->value)) {
             $filter = $request->value;
             $query->orWhere('qualities.name', 'like', '%' . $filter . '%');
             $query->orWhere('qualities.code', 'like', '%' . $filter . '%');
             $query->join('commodities', 'commodities.id', '=', 'qualities.commodity_id');
-            $query->join('users as u', 'u.id', '=', 'qualities.created_by');
-            $query->leftJoin('users as us', 'us.id', '=', 'qualities.reviewed_by');
             $query->orWhere('u.name', 'like', '%' . $filter . '%');
             $query->orWhere('us.name', 'like', '%' . $filter . '%');
             $query->orWhere('commodities.name', 'like', '%' . $filter . '%');

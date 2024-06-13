@@ -56,13 +56,13 @@
                         <div class="label-area mb-3">
                             <label for="min_change" class="form-label">Perubahan Minimum (%)</label>
                             <input id="min_change" name="min_change" type="text" class="form-control"
-                                placeholder="ex: 1.23">
+                                placeholder="ex: 1,00">
                             <div id="error-min_change" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
                         </div>
                         <div class="label-area mb-3">
                             <label for="max_change" class="form-label">Perubahan Maksimum (%)</label>
                             <input id="max_change" name="max_change" type="text" class="form-control"
-                                placeholder="ex: 1.23">
+                                placeholder="ex: 7,00">
                             <div id="error-max_change" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
                         </div>
                 </div>

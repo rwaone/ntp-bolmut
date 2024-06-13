@@ -59,8 +59,7 @@
                 {{ $value->status }}
             </td>
             <td class="table-td">
-                {{ $value->createdBy }}
-                {{ $value->reviewedBy }}
+                {{ $value->createdBy }} - {{ ($value->reviewedBy) ? $value->reviewedBy : 'Belum direview' }}
             </td>
             <td class="table-td">
                 {{ $value->updated_at }}

@@ -42,10 +42,10 @@
                 <td class="table-td">
                     {{ $value->group->name }}
                 </td>
-                <td class="table-td">
+                <td class="table-td price-attributes">
                     {{ $value->min_change }}
                 </td>
-                <td class="table-td">
+                <td class="table-td price-attributes">
                     {{ $value->max_change }}
                 </td>
                 <td class="table-td">

@@ -169,10 +169,16 @@ const attachEventListener = () => {
             if (!beforePage) beforePage = 1;
             if (currentPage == "prev") {
                 currentPage = beforePage - 1;
-                if (currentPage == 0) return;
+                if (currentPage == 0) {
+                    activatePagination("not first init", 1);
+                    return;
+                }
             } else if (currentPage == "next") {
                 currentPage = beforePage + 1;
-                if (beforePage == totalPages) return;
+                if (beforePage == totalPages) {
+                    activatePagination("not first init", currentPage - 1);
+                    return;
+                }
             } else {
                 currentPage = changePage(beforePage, currentPage, index);
             }
@@ -245,12 +251,12 @@ const generatePagination = (curPage) => {
             });
     }
 };
-const activatePagination = (value) => {
+const activatePagination = (value, pageThatShouldBeActive = currentPage) => {
     // console.log(value)
     list.forEach((node) => {
         if (value) {
             let nodes = node.getAttribute("data-page");
-            if (nodes == currentPage) {
+            if (nodes == pageThatShouldBeActive) {
                 node.querySelector("a").classList.add("p-active");
             }
         } else {
@@ -261,8 +267,40 @@ const activatePagination = (value) => {
 };
 window.generatePagination = generatePagination;
 window.activatePagination = activatePagination;
+const callback = function (mutationsList, observer) {
+    for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
+            check(changeOnDocument);
+        } else if (mutation.type === "attributes") {
+            check(changeOnDocument);
+        }
+    }
+};
 
+const formatThreeDigit = (number) => {
+    let numberToString = number.toString();
+    // let firstStepSplit = numberToString.split(',')
+    return numberToString.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
 const formatNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    let numberToString = number.toString();
+    return numberToString.replace(".", ",");
 };
 window.formatNumber = formatNumber;
+window.formatThreeDigit = formatThreeDigit;
+const setNumberPrice = (value) => {
+    let final = value.replace(/\./g, "").replace(/,/g, ".");
+    return Number(final);
+};
+window.setNumberPrice = setNumberPrice;
+const observer = new MutationObserver(callback);
+const config = { attributes: true, childList: true, subtree: true };
+const startObserving = (targetView) => {
+    if (targetView) {
+        observer.observe(targetView, config);
+    }
+};
+window.startObserving = startObserving;
+const check = (changeOnDocument) => {
+    if (changeOnDocument) changeOnDocument();
+};
