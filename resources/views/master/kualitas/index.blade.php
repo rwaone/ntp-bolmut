@@ -101,10 +101,6 @@
                 console.log(error.response.data.errors)
             }
         }
-        const setNumberPrice = (value) => {
-            let final = value.replace(/\./g, '').replace(/,/g, '.')
-            return Number(final)
-        }
         document.addEventListener('DOMContentLoaded', () => {
             var tbody = document.querySelector('tbody')
             var rowsLength = tbody.rows.length
@@ -204,6 +200,7 @@
             }
             window.fetchForPagination = fetchData
             window.targetView = document.getElementById('data-table-kualitas')
+            startObserving(window.targetView)
             const delayedFetchData = debounce(async () => {
                 currentPage = 1
                 let fetchedData = await fetchData()
@@ -243,15 +240,18 @@
             const updateList = (data) => {
                 $('#data-table-kualitas').html(data.html)
             }
-            document.querySelectorAll('.price-attributes').forEach((node) => {
-                let number = Number(node.textContent)
-                node.textContent = formatNumber(number)
-            })
-            document.querySelectorAll('.status-attributes').forEach((node) => {
-                let value = node.textContent
-                if (value == 1) node.textContent = 'DIPAKAI'
-                else node.textContent = 'TIDAK DIPAKAI'
-            })
+            const changeOnDocument = () => {
+                window.targetView.querySelectorAll('.price-attributes').forEach((node) => {
+                    node.textContent = formatThreeDigit(node.textContent)
+                })
+                window.targetView.querySelectorAll('.status-attributes').forEach((node) => {
+                    let value = node.textContent
+                    if (value == 1) node.textContent = 'DIPAKAI'
+                    else node.textContent = 'TIDAK DIPAKAI'
+                })
+            }
+            changeOnDocument()
+            window.changeOnDocument = changeOnDocument
         })
     </script>
 </x-app-layout>
