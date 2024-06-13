@@ -13,7 +13,7 @@ class StoreDocumentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,19 @@ class StoreDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'id' => ['integer'],
+            'name' => ['string', 'required'],
+            'type' => ['string', 'required'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Nama dokumen tidak boleh kosong.',
+            'type.required' => 'Tipe dokumen tidak boleh kosong.',
+            'name.string' => '',
+            'type.string' => '',
         ];
     }
 }

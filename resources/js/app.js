@@ -72,3 +72,33 @@ import validate from "jquery-validation";
 window.validate = validate;
 
 import.meta.glob(["../images/**"]);
+
+import {
+    renderPagination,
+    deleteItem,
+    displayErrors,
+    attachEditBtnListeners,
+    setModalTitle,
+    populateFormFields,
+    handlePrevClick,
+    handleNextClick,
+    handlePaginationClick,
+    debounce,
+    fetchAndRenderData,
+    handleFormSubmit
+} from './custom/custom-function.js';
+
+window.renderPagination = renderPagination;
+window.deleteItem = deleteItem;
+window.displayErrors = displayErrors;
+window.attachEditBtnListeners = attachEditBtnListeners;
+window.setModalTitle = setModalTitle;
+window.populateFormFields = populateFormFields;
+window.handlePrevClick = handlePrevClick;
+window.handleNextClick = handleNextClick;
+window.handlePaginationClick = handlePaginationClick;
+window.debounce = debounce;
+window.fetchAndRenderData = fetchAndRenderData;
+window.handleFormSubmit = handleFormSubmit;
+
+

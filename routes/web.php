@@ -48,6 +48,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
     Route::resource('petugas', PetugasController::class);
     // Documents
+    Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
+    Route::post('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::resource('documents', DocumentController::class);
     // Sections
     Route::resource('sections', SectionController::class);

@@ -105,7 +105,7 @@ class PetugasController extends Controller
         $petugas = Petugas::find($id);
     
         if ($petugas) {
-            return response()->json($petugas);
+            return response()->json($petugas, 200);
         } else {
             return response()->json(['message' => 'Petugas not found'], 404);
         }

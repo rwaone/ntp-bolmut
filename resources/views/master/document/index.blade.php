@@ -9,14 +9,14 @@
             </div>
             <div class="flex flex-wrap">
                 <span class="flex items-center">
-                    <input id="petugas-search" name="search" type="text" class="form-control" placeholder="Cari Petugas">
+                    <input id="dokumen-search" name="search" type="text" class="form-control" placeholder="Cari Dokumen">
                 </span>
 
                 <button class="btn inline-flex justify-center btn-sm btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 "
                     data-bs-toggle="modal" data-bs-target="#modalCreate">
                     <span class="flex items-center">
                         <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2" icon="ph:plus-bold"></iconify-icon>
-                        <span>Tambah Petugas</span>
+                        <span>Tambah Dokumen</span>
                     </span>
                 </button>
             </div>
@@ -31,7 +31,7 @@
                                 <div class="inline-block min-w-full align-middle">
                                     <div class="overflow-hidden ">
                                         <div id="tableContainer">
-                                            @include('master.petugas.data-table')
+                                            @include('master.document.data-table')
                                         </div>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        @include('master.petugas.modal')
+        @include('master.document.modal')
     </div>
 
     @push('scripts')
@@ -96,7 +96,7 @@
             const deleteModal = document.getElementById('modalDelete');
             const confirmDeleteButton = deleteModal.querySelector('#button-delete');
             const paginationData = {
-                data: @json($officers),
+                data: @json($documents),
                 current_page: @json($current_page),
                 last_page: @json($last_page),
                 total: @json($total),
@@ -105,7 +105,7 @@
 
             renderPagination(paginationData, pageSize, modalTitle, form);
 
-            const searchInput = document.getElementById('petugas-search');
+            const searchInput = document.getElementById('dokumen-search');
             const debouncedSearch = debounce(function() {
                 fetchAndRenderData(1, pageSize, paginationData, modalTitle, form, searchInput.value);
             }, 500); // Adjust the delay (300ms) as needed
