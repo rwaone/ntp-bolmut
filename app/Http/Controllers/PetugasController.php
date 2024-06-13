@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Petugas;
 use App\Http\Requests\StorePetugasRequest;
 use App\Http\Requests\UpdatePetugasRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+
 
 class PetugasController extends Controller
 {
@@ -15,7 +18,27 @@ class PetugasController extends Controller
      */
     public function index()
     {
-        //
+        $officers = Petugas::paginate(10);
+        $startingIndex = ($officers->currentPage() - 1) * $officers->perPage() + 1;
+        // dd($officers);
+        $breadcrumbsItems = [
+            [
+                'name' => 'Petugas',
+                'url' => '/petugas',
+                'active' => true
+            ],
+        ];
+
+        return response()->view('master/petugas/index', [
+            'pageTitle' => 'Master Petugas',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'officers' => $officers,
+            'current_page' => $officers->currentPage(),
+            'last_page' => $officers->lastPage(),
+            'total' => $officers->total(),
+            'per_page' => $officers->perPage(),
+            'startingIndex' => $startingIndex,
+        ]);
     }
 
     /**
@@ -36,7 +59,28 @@ class PetugasController extends Controller
      */
     public function store(StorePetugasRequest $request)
     {
-        //
+         // Validate the request data
+         $validatedData = $request->validated();
+
+         try {
+            // Create a new Petugas record
+            $petugas = Petugas::create($validatedData);
+
+            // Return a response
+            return response()->json([
+                'message' => 'Petugas created successfully',
+                'data' => $petugas
+            ], 201);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error creating Petugas: ' . $e->getMessage());
+
+            // Return an error response
+            return response()->json([
+                'message' => 'An error occurred while creating the Petugas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -56,9 +100,15 @@ class PetugasController extends Controller
      * @param  \App\Models\Petugas  $petugas
      * @return \Illuminate\Http\Response
      */
-    public function edit(Petugas $petugas)
+    public function edit($id)
     {
-        //
+        $petugas = Petugas::find($id);
+    
+        if ($petugas) {
+            return response()->json($petugas, 200);
+        } else {
+            return response()->json(['message' => 'Petugas not found'], 404);
+        }
     }
 
     /**
@@ -68,9 +118,42 @@ class PetugasController extends Controller
      * @param  \App\Models\Petugas  $petugas
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePetugasRequest $request, Petugas $petugas)
+    public function update(UpdatePetugasRequest $request, $id)
     {
-        //
+        $method = $request->method();
+
+        if ($request->isMethod('PUT')) {
+            try {
+                // Validate the request data
+                $validatedData = $request->validated();
+
+                // Find the petugas record or throw an exception
+                $petugas = Petugas::findOrFail($id);
+
+                // Check if the data is validated
+                if ($validatedData) {
+                    // Update the petugas record
+                    $petugas->update($validatedData);
+
+                    return response()->json([
+                        'message' => 'Petugas updated successfully',
+                        'data' => $petugas
+                    ], 201);
+                } else {
+                    // Return an error response if data is not validated
+                    return response()->json(['error' => 'Invalid data provided.']);
+                }
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                // Handle the case when the petugas record is not found
+                return response()->json(['error' => 'Petugas not found.'], 404);
+            } catch (\Exception $e) {
+                // Log the exception message or details
+                \Log::error('Error updating petugas: ' . $e->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'An error occurred while updating the petugas.'], 500);
+            }
+        }
     }
 
     /**
@@ -81,6 +164,31 @@ class PetugasController extends Controller
      */
     public function destroy(Petugas $petugas)
     {
-        //
+        $petugas->delete();
+
+        return response()->json([
+            'message' => 'Petugas deleted successfully.'
+        ], 200);
+    }
+
+    public function getTableData(Request $request)
+    {
+        $pageSize = $request->query('size', 10);
+        $searchQuery = $request->query('search', '');
+        $officers = Petugas::where('name', 'like', "%$searchQuery%")
+                    ->orWhere('nip', 'like', "%$searchQuery%")
+                    ->orWhere('jabatan', 'like', "%$searchQuery%")
+                    ->paginate($pageSize);
+
+        $startingIndex = ($officers->currentPage() - 1) * $officers->perPage() + 1;
+
+        return response()->json([
+            'html' => view('master.petugas.data-table', compact('officers', 'startingIndex'))->render(),
+            'data' => $officers->items(),
+            'current_page' => $officers->currentPage(),
+            'last_page' => $officers->lastPage(),
+            'total' => $officers->total(),
+            'per_page' => $officers->perPage(),
+        ]);
     }
 }

@@ -304,3 +304,32 @@ window.startObserving = startObserving;
 const check = (changeOnDocument) => {
     if (changeOnDocument) changeOnDocument();
 };
+import {
+    renderPagination,
+    deleteItem,
+    displayErrors,
+    attachEditBtnListeners,
+    setModalTitle,
+    populateFormFields,
+    handlePrevClick,
+    handleNextClick,
+    handlePaginationClick,
+    debounceSearch,
+    fetchAndRenderData,
+    handleFormSubmit
+} from './custom/custom-function.js';
+
+window.renderPagination = renderPagination;
+window.deleteItem = deleteItem;
+window.displayErrors = displayErrors;
+window.attachEditBtnListeners = attachEditBtnListeners;
+window.setModalTitle = setModalTitle;
+window.populateFormFields = populateFormFields;
+window.handlePrevClick = handlePrevClick;
+window.handleNextClick = handleNextClick;
+window.handlePaginationClick = handlePaginationClick;
+window.debounceSearch = debounceSearch;
+window.fetchAndRenderData = fetchAndRenderData;
+window.handleFormSubmit = handleFormSubmit;
+
+

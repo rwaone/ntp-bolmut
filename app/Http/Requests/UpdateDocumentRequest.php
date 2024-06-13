@@ -13,7 +13,7 @@ class UpdateDocumentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,30 @@ class UpdateDocumentRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [
+            // 'id' => ['integer'],
+            'name' => ['string', 'required'],
+            'type' => ['string', 'required'],
+        ];
+
+        // If the request is for updating a record
+        if ($this->isMethod('PUT')) {
+            // Make the fields optional
+            $rules = array_map(function ($rule) {
+                return array_merge(['sometimes'], $rule);
+            }, $rules);
+        }
+
+        return $rules;
+    }
+
+    public function messages()
+    {
         return [
-            //
+            'name.required' => 'Nama dokumen tidak boleh kosong.',
+            'type.required' => 'Tipe dokumen tidak boleh kosong.',
+            'name.string' => '',
+            'type.string' => '',
         ];
     }
 }

@@ -13,7 +13,7 @@ class UpdatePetugasRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,33 @@ class UpdatePetugasRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [
+            // 'id' => ['integer'],
+            'name' => ['string', 'required', 'regex:/^[\pL\s,\.]+$/u'],
+            'nip' => ['string', 'required', 'size:18', 'regex:/^(\d{4})(\d{2})(\d{2})(\d{4})(\d{2})([12])\d{3}$/'],
+            'jabatan' => ['string', 'required'],
+        ];
+
+        // If the request is for updating a record
+        if ($this->isMethod('PUT')) {
+            // Make the fields optional
+            $rules = array_map(function ($rule) {
+                return array_merge(['sometimes'], $rule);
+            }, $rules);
+        }
+
+        return $rules;
+    }
+
+    public function messages()
+    {
         return [
-            //
+            'name.required' => 'Nama tidak boleh kosong.',
+            'nip.required' => 'NIP tidak boleh kosong.',
+            'jabatan.required' => 'Jabatan tidak boleh kosong.',
+            'name.regex' => 'Isian tidak sesuai format.',
+            'nip.regex' => 'Isian tidak sesuai format.',
+            'nip.size' => 'NIP tidak boleh kurang dari 18 digit'
         ];
     }
 }
