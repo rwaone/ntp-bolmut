@@ -28,22 +28,22 @@ class DesaController extends Controller
                 'kabupatens.name as kabkot'
             );
 
-            $kecamatan = $request->query('kecamatan_name');
-            $desa = $request->query('desa_name');
-            $stat_pem = $request->query('stat_pem');
+        $kecamatan = $request->query('kecamatan_name');
+        $desa = $request->query('desa_name');
+        $stat_pem = $request->query('stat_pem');
 
-            if($kecamatan) {
-                $query->where('kecamatans.name','like','%'.$kecamatan.'%');
-            }
+        if ($kecamatan) {
+            $query->where('kecamatans.name', 'like', '%' . $kecamatan . '%');
+        }
 
-            if($desa) {
-                $query->where('desas.name','like','%'.$desa.'%');
-            }
-            if($stat_pem) {
-                $query->where('desas.stat_pem','like','%'.$stat_pem.'%');
-            }
+        if ($desa) {
+            $query->where('desas.name', 'like', '%' . $desa . '%');
+        }
+        if ($stat_pem) {
+            $query->where('desas.stat_pem', 'like', '%' . $stat_pem . '%');
+        }
 
-            $master_wilayah = $query->paginate(10);
+        $master_wilayah = $query->paginate(10);
 
 
         $breadcrumbsItems = [
@@ -238,9 +238,17 @@ class DesaController extends Controller
         return response()->json($desa, 200);
     }
 
-    public function fetch_by_kecamatan(Kecamatan $kecamatan)
+    public function fetch_by_kecamatan(String $id)
     {
-        $desas = Desa::where('kecamatan_id', $kecamatan->id)->get();
+        $desas = Desa::where('kecamatan_id', $id)->get();
         return response()->json($desas, 200);
+    }
+    public function fetch(Request $request)
+    {
+        $kecamatan_id = $request->query('kecamatan_id');
+        if ($kecamatan_id) {
+            $desas = Desa::where('kecamatan_id', $kecamatan_id)->get();
+            return response()->json($desas, 200);
+        }
     }
 }

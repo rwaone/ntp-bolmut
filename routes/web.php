@@ -56,8 +56,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('master/samples/{sample}', [SampleController::class, 'destroy'])->name('samples.destroy');
     
     // Kecamatan
-    Route::get('master/wilayah/desa/fetch-by-kecamatan/{kecamatan}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
-
+    Route::get('master/wilayah/desa/fetch-by-kecamatan/{id}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
+    
+    // api
+    Route::get('api/desa', [DesaController::class, 'fetch'])->name('api.desa');
+    
     
     // Petugas
     Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
