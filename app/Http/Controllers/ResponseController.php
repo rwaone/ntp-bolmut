@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Response;
 use App\Http\Requests\StoreResponseRequest;
 use App\Http\Requests\UpdateResponseRequest;
+use Inertia\Inertia;
 
 class ResponseController extends Controller
 {
@@ -25,7 +26,7 @@ class ResponseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Coba');
     }
 
     /**
@@ -47,7 +48,7 @@ class ResponseController extends Controller
      */
     public function show(Response $response)
     {
-        //
+        return Inertia::render('Document');
     }
 
     /**

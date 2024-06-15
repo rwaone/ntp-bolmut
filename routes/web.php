@@ -26,6 +26,8 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DatabaseBackupController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Http\Controllers\ResponseController;
+use Inertia\Inertia;
 
 require __DIR__ . '/auth.php';
 
@@ -54,23 +56,23 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('master/samples/edit/{sample}', [SampleController::class, 'edit'])->name('samples.edit');
     Route::patch('master/samples/update', [SampleController::class, 'update'])->name('samples.update');
     Route::delete('master/samples/{sample}', [SampleController::class, 'destroy'])->name('samples.destroy');
-    
+
     // Kecamatan
     Route::get('master/wilayah/desa/fetch-by-kecamatan/{id}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
-    
+
     // api
     Route::get('api/desa', [DesaController::class, 'fetch'])->name('api.desa');
-    
-    
+
+
     // Petugas
-    Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
-    Route::post('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
-    Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
+    // Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
+    // Route::post('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
+    // Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
     Route::resource('petugas', PetugasController::class);
     // Documents
-    Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
-    Route::post('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
-    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    // Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
+    // Route::post('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+    // Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::resource('documents', DocumentController::class);
     // Sections
     Route::resource('sections', SectionController::class);
@@ -90,7 +92,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/kualitas/store', [QualityController::class, 'store'])->name('kualitas.store');
     Route::get('/kualitas/fetch/{id}', [QualityController::class, 'fetch'])->name('kualitas.fetch');
     Route::delete('/kualitas/delete/{id}', [QualityController::class, 'destroy'])->name('kualitas.destroy');
-    
+
     // User
     Route::resource('users', UserController::class);
     // Permission
@@ -105,5 +107,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);
+    Route::resource('responses', ResponseController::class);
     Route::get('database-backups-download/{fileName}', [DatabaseBackupController::class, 'databaseBackupDownload'])->name('database-backups.download');
 });
