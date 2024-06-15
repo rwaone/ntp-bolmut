@@ -1,0 +1,16 @@
+.table {
+    width: 100%;
+    padding: 30px;
+}
+.data {
+    padding: 10px;
+    border: 1px solid #c0c0c0;
+}
+.title {
+    background-color: rgb(9, 82, 82);
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.9rem;
+    color: #fff;
+}
