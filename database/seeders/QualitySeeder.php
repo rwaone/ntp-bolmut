@@ -351,6 +351,56 @@ class QualitySeeder extends Seeder
                 'name' => 'Petroganik',
                 'satuan' => '1 Kg'
             ],
+            [
+                'commodity_id' => 40,
+                'name' => 'Basudin',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 40,
+                'name' => 'Furadan',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 41,
+                'name' => 'Baycor',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 42,
+                'name' => 'DMA-6',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 42,
+                'name' => 'Gramoxon',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 43,
+                'name' => 'Fumarin',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 44,
+                'name' => 'Agrimycin',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 44,
+                'name' => 'Scoor',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 45,
+                'name' => 'Tedion',
+                'satuan' => '1 Liter'
+            ],
+            [
+                'commodity_id' => 46,
+                'name' => 'Moluskisida',
+                'satuan' => '1 Liter'
+            ],
         ];
 
         foreach ($qualities as $quality){
