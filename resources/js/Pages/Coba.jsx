@@ -5,12 +5,27 @@ import Blok5 from "./Document/Blok5/Blok5";
 import Tab1 from "./Document/Tab1/Tab1";
 import Tab5 from "./Document/Tab5/Tab5";
 
+const blok1 = {
+    bulan: "Januari",
+    tahun: 2024,
+    provinsi: "SULAWESI UTARA",
+    kode_provinsi: "71",
+    kabkot: "MANADO",
+    kode_kabkot: "71",
+    kecamatan: "WANEA",
+    kode_kecamatan: "031",
+};
+const blok2 = {
+    petugas_nip: "199810132021041002",
+    pemeriksa_nip: "199810132021041001",
+};
+
 const Coba = () => {
     const tabs = [
         {
             key: "1",
             label: "Blok I - II",
-            children: <Tab1 />,
+            children: <Tab1 blok1={blok1} blok2={blok2} />,
         },
         {
             key: "2",

@@ -1,8 +1,7 @@
 import styles from "../Document.module.css";
-import BlokTitle from "../../../components/BlokTitle/BlokTitle";
 import { DatePicker, Input } from "antd";
 
-const Blok2 = () => {
+const Blok2 = ({ petugas_nip, pemeriksa_nip }) => {
     return (
         <table className={styles.table}>
             <tbody>
@@ -24,11 +23,11 @@ const Blok2 = () => {
                 <tr className={styles.row}>
                     <td className={styles.data}>1. NIP</td>
                     <td className={styles.data}>
-                        <Input readOnly value="123456789012345678" />
+                        <Input readOnly value={petugas_nip} />
                     </td>
 
                     <td className={styles.data}>
-                        <Input readOnly value="123456789012345678" />
+                        <Input readOnly value={pemeriksa_nip} />
                     </td>
                 </tr>
                 <tr className={styles.row}>

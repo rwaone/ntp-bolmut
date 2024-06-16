@@ -6,11 +6,26 @@
     padding: 10px;
     border: 1px solid #c0c0c0;
 }
-.title {
-    background-color: rgb(9, 82, 82);
+.data_right {
     padding: 10px;
+    border: 1px solid #c0c0c0;
+    text-align: right;
+}
+.data_center {
+    padding: 10px;
+    border: 1px solid #c0c0c0;
+    text-align: center;
+}
+.title {
+    padding: 10px;
+    background-color: rgb(9, 82, 82);
     text-align: center;
     font-weight: 600;
     font-size: 1.9rem;
     color: #fff;
+}
+
+.button {
+    background-color: rgb(9, 82, 82);
+    margin-bottom: 1rem;
 }
