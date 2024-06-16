@@ -17,20 +17,32 @@ class DocumentSeeder extends Seeder
     {
         $docs = [
             [
-                'type' => 'HD1',
+                'type' => 'HD-1',
                 'name' => 'Survei Harga Produsen Perdesaan Subsektor Tanaman Pangan',
             ],
             [
-                'type' => 'HD2',
-                'name' => 'Survei Harga Produsen Perdesaan Subsektor Hortikultura',
+                'type' => 'HD-3',
+                'name' => 'Survei Harga Produsen Perdesaan Subsektor Perkebunan Rakyat',
             ],
             [
-                'type' => 'HK1',
-                'name' => 'Survei Harga Konsumen Perdesaan Subsektor Tanaman Pangan',
+                'type' => 'HD-4',
+                'name' => 'Survei Harga Produsen Perdesaan Subsektor Peternakan',
             ],
             [
-                'type' => 'HK2',
-                'name' => 'Survei Harga Konsumen Perdesaan Subsektor Hortikultura',
+                'type' => 'HD-5.1',
+                'name' => 'Survei Harga Produsen Perdesaan Subsektor Perikanan Tangkap',
+            ],
+            [
+                'type' => 'HKD-1',
+                'name' => 'Survei Harga Konsumen Perdesaan Kelompok Makanan',
+            ],
+            [
+                'type' => 'HKD-2.1',
+                'name' => 'Survei Harga Konsumen Perdesaan Kelompok Non Makanan (Konstruksi, Jasa, dan Transportasi)',
+            ],
+            [
+                'type' => 'HKD-2.2',
+                'name' => 'Survei Harga Konsumen Perdesaan Kelompok Non Makanan (Aneka Perlengkapan Rumah Tangga dan Lainnya)',
             ],
         ];
         foreach ($docs as $doc) {
