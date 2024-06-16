@@ -31,7 +31,11 @@ class DatabaseSeeder extends Seeder
             KabupatenSeeder::class,
             KecamatanSeeder::class,
             DesaSeeder::class,
-            DocumentSeeder::class
+            DocumentSeeder::class,
+            SectionSeeder::class,
+            GroupSeeder::class,
+            CommoditySeeder::class,
+            QualitySeeder::class,
         ]);
     }
 }

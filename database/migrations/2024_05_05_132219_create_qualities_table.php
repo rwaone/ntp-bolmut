@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('qualities', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->foreignId('commodity_id');
             $table->string('name');
-            $table->bigInteger('min_price');
-            $table->bigInteger('max_price');
-            $table->string('status');
-            $table->string('created_by');
-            $table->string('reviewed_by');
+            $table->string('satuan');
+            $table->bigInteger('min_price')->nullable();
+            $table->bigInteger('max_price')->nullable();
+            $table->string('status')->default('digunakan');
+            $table->string('created_by')->nullable();
+            $table->string('reviewed_by')->nullable();
             $table->timestamps();
         });
     }
