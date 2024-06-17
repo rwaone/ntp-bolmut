@@ -1,43 +1,63 @@
 import styles from "../Document.module.css";
-import BlokTitle from "../../../components/BlokTitle/BlokTitle";
-import { DatePicker, Input } from "antd";
+import { Form, Input } from "antd";
 
-const Blok6 = () => {
+const Blok6 = ({ form, respondent_name, desa_name, komoditas }) => {
+    console.log({ respondent_name, desa_name, komoditas });
+    form.setFieldsValue({
+        respondent_name: respondent_name,
+        desa_name: desa_name,
+        komoditas: komoditas,
+    });
     return (
         <table className={styles.table}>
+            <thead>
+                <tr className={styles.row}>
+                    <th colSpan={3} className={styles.title}>
+                        VI. KETERANGAN RESPONDEN
+                    </th>
+                </tr>
+                <tr>
+                    <th className={`${styles.data_center}`}>NAMA RESPONDEN</th>
+                    <th className={`${styles.data_center}`}>NAMA DESA</th>
+                    <th className={`${styles.data_center}`}>
+                        JENIS BARANG/KOMODITAS YANG DIHASILKAN
+                    </th>
+                </tr>
+                <tr>
+                    <th className={`${styles.data_center}`}>(1)</th>
+                    <th className={`${styles.data_center}`}>(2)</th>
+                    <th className={`${styles.data_center}`}>(3)</th>
+                </tr>
+            </thead>
             <tbody>
                 <tr className={styles.row}>
-                    <td colSpan={3} className={styles.title}>
-                        I. KETERANGAN PETUGAS
-                    </td>
-                </tr>
-                <tr className={styles.row}>
-                    <td className={styles.data}>1. Nama</td>
                     <td className={styles.data}>
-                        <Input readOnly value="Mutiara Mawarni" />
-                    </td>
-
-                    <td className={styles.data}>
-                        <Input readOnly value="DANUKIDD" />
-                    </td>
-                </tr>
-                <tr className={styles.row}>
-                    <td className={styles.data}>1. NIP</td>
-                    <td className={styles.data}>
-                        <Input readOnly value="123456789012345678" />
+                        <Form.Item
+                            name="respondent_name"
+                            className={styles.form_item}
+                            initialValue={respondent_name}
+                        >
+                            <Input />
+                        </Form.Item>
                     </td>
 
                     <td className={styles.data}>
-                        <Input readOnly value="123456789012345678" />
+                        <Form.Item
+                            name="desa_name"
+                            className={styles.form_item}
+                            initialValue={desa_name}
+                        >
+                            <Input />
+                        </Form.Item>
                     </td>
-                </tr>
-                <tr className={styles.row}>
-                    <td className={styles.data}>1. Tanggal</td>
                     <td className={styles.data}>
-                        <DatePicker />
-                    </td>
-                    <td className={styles.data}>
-                        <DatePicker />
+                        <Form.Item
+                            name="komoditas"
+                            className={styles.form_item}
+                            initialValue={komoditas}
+                        >
+                            <Input />
+                        </Form.Item>
                     </td>
                 </tr>
             </tbody>

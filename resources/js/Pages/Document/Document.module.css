@@ -3,7 +3,7 @@
     padding: 30px;
 }
 .data {
-    padding: 10px;
+    /* padding: 10px; */
     border: 1px solid #c0c0c0;
 }
 .data_right {
@@ -28,4 +28,20 @@
 .button {
     background-color: rgb(9, 82, 82);
     margin-bottom: 1rem;
+}
+
+.body {
+    min-height: 500px;
+}
+
+.form_item {
+    margin-bottom: 0;
+}
+
+.rupiah_input .ant-input-number-input {
+    text-align: right;
+}
+
+.rupiah_input .ant-input-number-handler-wrap {
+    display: none;
 }

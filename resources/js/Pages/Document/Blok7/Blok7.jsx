@@ -1,44 +1,24 @@
 import styles from "../Document.module.css";
 import BlokTitle from "../../../components/BlokTitle/BlokTitle";
-import { DatePicker, Input } from "antd";
+import { Form, DatePicker, Input } from "antd";
+import TextArea from "antd/es/input/TextArea";
 
-const Blok7 = () => {
+const Blok7 = ({ form }) => {
     return (
         <table className={styles.table}>
+            <thead>
+                <tr className={styles.row}>
+                    <th colSpan={3} className={styles.title}>
+                        VII. CATATAN
+                    </th>
+                </tr>
+            </thead>
             <tbody>
                 <tr className={styles.row}>
-                    <td colSpan={3} className={styles.title}>
-                        I. KETERANGAN PETUGAS
-                    </td>
-                </tr>
-                <tr className={styles.row}>
-                    <td className={styles.data}>1. Nama</td>
-                    <td className={styles.data}>
-                        <Input readOnly value="Mutiara Mawarni" />
-                    </td>
-
-                    <td className={styles.data}>
-                        <Input readOnly value="DANUKIDD" />
-                    </td>
-                </tr>
-                <tr className={styles.row}>
-                    <td className={styles.data}>1. NIP</td>
-                    <td className={styles.data}>
-                        <Input readOnly value="123456789012345678" />
-                    </td>
-
-                    <td className={styles.data}>
-                        <Input readOnly value="123456789012345678" />
-                    </td>
-                </tr>
-                <tr className={styles.row}>
-                    <td className={styles.data}>1. Tanggal</td>
-                    <td className={styles.data}>
-                        <DatePicker />
-                    </td>
-                    <td className={styles.data}>
-                        <DatePicker />
-                    </td>
+                    <TextArea
+                        placeholder="Isi Catatan Sesuai Pedoman"
+                        allowClear
+                    />
                 </tr>
             </tbody>
         </table>

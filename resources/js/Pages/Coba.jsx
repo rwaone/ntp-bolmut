@@ -1,9 +1,11 @@
-import { Tabs } from "antd";
+import { Form, Tabs } from "antd";
 import Blok3 from "./Document/Blok3/Blok3";
 import Blok4 from "./Document/Blok4/Blok4";
 import Blok5 from "./Document/Blok5/Blok5";
 import Tab1 from "./Document/Tab1/Tab1";
 import Tab5 from "./Document/Tab5/Tab5";
+import Status from "../components/Status";
+import styles from "./Document/Document.module.css";
 
 const blok1 = {
     bulan: "Januari",
@@ -21,6 +23,7 @@ const blok2 = {
 };
 
 const Coba = () => {
+    const [form] = Form.useForm();
     const tabs = [
         {
             key: "1",
@@ -45,10 +48,15 @@ const Coba = () => {
         {
             key: "5",
             label: "Blok VII",
-            children: <Tab5 />,
+            children: <Tab5 form={form} />,
         },
     ];
-    return <Tabs items={tabs} />;
+    return (
+        <div>
+            <Tabs items={tabs} className={styles.body} />
+            <Status status="error" />
+        </div>
+    );
 };
 
 export default Coba;
