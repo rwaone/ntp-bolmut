@@ -18,14 +18,14 @@ const Blok5 = () => {
                 className={styles.button}
                 onClick={addRowHarga}
             >
-                Tambah Komoditas
+                Tambah Harga
             </Button>
             <Form form={form}>
                 <table className={styles.table}>
                     <thead>
                         <tr className={styles.row}>
                             <td colSpan={7} className={styles.title}>
-                                V.HARGA YANG DIBAYAR PETANI
+                                V. HARGA YANG DIBAYAR PETANI
                             </td>
                         </tr>
                         <tr>
