@@ -17,6 +17,30 @@ class Response extends Model
     protected $load = ['datas'];
     protected $with = ['document','petugas', 'sample'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                if (!$model->isDirty('created_by')) {
+                    $model->created_by = Auth::user()->id;
+                }
+                if (!$model->isDirty('updated_by')) {
+                    $model->updated_by = Auth::user()->id;
+                }
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                if (!$model->isDirty('updated_by')) {
+                    $model->updated_by = Auth::user()->id;
+                }
+            }
+        });
+    }
+
     public function datas(){
         return $this->hasMany(Data::class);
     }
