@@ -230,8 +230,22 @@
                                     readonly="readonly">
                             </div>
                         </div>
-                      <x-select-search :datas="$kecamatans" name="kecamatan"></x-select-search>
-                      {{-- <x-select-search :datas="$kecamatans" name="kecamatan"></x-select-search> --}}
+                        <div class="relative w-full">
+                            <label for="kecamatan-edit-input" class=" form-label">Kecamatan</label>
+                            <input type="text" id="kecamatan-edit-input" name="kecamatan_name"
+                                class="w-full p-2 border border-gray-300 rounded" placeholder="Select an option"
+                                autocomplete="off" />
+                            <input type="text" id="kecamatan-edit-id" name="kecamatan_id"
+                                class="w-full p-2 border border-gray-300 rounded hidden" />
+                            <div id="kecamatan-edit-options"
+                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg hidden">
+                                @foreach ($kecamatans as $kecamatan)
+                                    <div class="p-2 cursor-pointer hover:bg-gray-200" data-value="{{ $kecamatan->id }}">
+                                        {{ $kecamatan->name }}</div>
+                                @endforeach
+                            </div>
+
+                        </div>
                         <div class="relative w-full">
                             <label for="desa-edit-input" class=" form-label">Desa</label>
                             <input type="text" id="desa-edit-input" name="desa_name"

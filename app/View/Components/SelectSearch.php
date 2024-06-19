@@ -14,10 +14,16 @@ class SelectSearch extends Component
 
      public $datas;
      public $name;
-    public function __construct($name,$datas)
+     public $uniqueId;
+     public $dependentComponentId;
+     public $dependentName;
+    public function __construct($name,$datas,$uniqueId,$dependentComponentId='',$dependentName='')
     {
         $this->name = $name;
         $this->datas = $datas;
+        $this->uniqueId = $uniqueId;
+        $this->dependentComponentId = $dependentComponentId;
+        $this->dependentName = $dependentName;
     }
 
     /**

@@ -1,88 +1,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const comboboxInput = document.getElementById('kecamatan-input');
-        const comboboxValue = document.getElementById('kecamatan-id');
-        const comboboxOptions = document.getElementById('kecamatan-options');
-        const options = document.querySelectorAll('.kecamatan-create-option');
-
-        comboboxInput.addEventListener('focus', () => {
-            comboboxOptions.classList.remove('hidden');
-        });
-
-        comboboxInput.addEventListener('blur', () => {
-            setTimeout(() => comboboxOptions.classList.add('hidden'), 200);
-        });
-        const fetchDesaByKecamatan = async (kecamatanId) => {
-            const desaInput = document.getElementById('desa-input');
-            const desaInputLoading = document.getElementById('desa-input-loading');
-            try {
-
-                desaInputLoading.classList.remove('hidden');
-                desaInput.value = 'memuat daftar desa ';
-                desaInput.disabled = true;
-                // const response 
-                const {
-                    data
-                } = await axios.get(`/master/wilayah/desa/fetch-by-kecamatan/${kecamatanId}`);
-
-                const desaOptionElement = document.getElementById('desa-options');
-
-                desaOptionElement.innerHTML = "";
-                data.forEach(desa => {
-                    const desaOption =
-                        `<div class="desa-option p-2 cursor-pointer hover:bg-gray-200" data-value="${desa.id}">${desa.name}</div>`;
-                    desaOptionElement.innerHTML += desaOption;
-                })
-            } catch (error) {
-                console.log({
-                    error
-                });
-            } finally {
-                desaAddEvent()
-                desaInputLoading.classList.add('hidden');
-                desaInput.value = '';
-                desaInput.disabled = false;
-
-            }
-        };
-        Array.from(options).forEach(option => {
-            option.addEventListener('click', () => {
-                const dataValue = option.getAttribute('data-value');
-                comboboxInput.value = option.textContent.trim();
-                comboboxValue.value = dataValue;
-                comboboxOptions.classList.add('hidden');
-                fetchDesaByKecamatan(dataValue);
-                // ambil data desa berdasarkan kecamatan
-
-
-            });
-
-
-        });
-
-        comboboxInput.addEventListener('input', function() {
-            const filter = comboboxInput.value.toLowerCase();
-            Array.from(options).forEach(option => {
-                const text = option.textContent.toLowerCase();
-                if (text.includes(filter)) {
-                    option.classList.remove('hidden');
-                } else {
-                    option.classList.add('hidden');
-                }
-            });
-        });
-        comboboxInput.addEventListener('keydown', (event) => {
-            console.log("pressed", event.key);
-            if (event.key !== 'Enter') return
-            const dataValue = option.getAttribute('data-value');
-            comboboxInput.value = option.textContent.trim();
-            comboboxValue.value = dataValue;
-            comboboxOptions.classList.add('hidden');
-            // ambil data desa berdasarkan kecamatan
-
-
-        });
-
+       
         const desaAddEvent = () => {
             const desaInput = document.getElementById('desa-input');
             const desaValue = document.getElementById('desa-id');
@@ -227,43 +145,15 @@
                                     readonly="readonly">
                             </div>
                         </div>
-                        <div class="relative w-full">
-                            <label for="kecamatan-input" class=" form-label">Kecamatan</label>
-                            <input type="text" id="kecamatan-input" class="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Select an option" autocomplete="off" />
-                            <input type="text" id="kecamatan-id" name="kecamatan_id"
-                                class="w-full p-2 border border-gray-300 rounded hidden" />
-                            <div id="kecamatan-options"
-                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg hidden">
-                                @foreach ($kecamatans as $kecamatan)
-                                    <div class="kecamatan-create-option p-2 cursor-pointer hover:bg-gray-200"
-                                        data-value="{{ $kecamatan->id }}">
-                                        {{ $kecamatan->name }}</div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="relative w-full">
-                            <label for="desa-input" class=" form-label">Desa</label>
-                            <div class="relative inline-block w-full">
-                                <input type="text" id="desa-input" class="w-full p-2 border border-gray-300 rounded"
-                                    placeholder="Select an option" autocomplete="off" />
-                                <span id="desa-input-loading"
-                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 hidden">
+                        @php
+                            $kecamatan_uniqid = uniqid();
+                            $desa_uniqid= uniqid();
 
-                                    <iconify-icon class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
-                                        icon="line-md:loading-twotone-loop"></iconify-icon>
-                                </span>
-                            </div>
-
-                            <input type="text" id="desa-id" name="desa_id"
-                                class="w-full p-2 border border-gray-300 rounded hidden" />
-                            <div id="desa-options"
-                                class="absolute z-10 w-full max-h-72 overflow-y-auto mt-1 bg-white border border-gray-300 rounded shadow-lg hidden">
-
-                            </div>
-
-                        </div>
-                        <x-select-search :datas="$documents" name="document"></x-select-search>
+                        @endphp
+                       <x-select-search :uniqueId="$kecamatan_uniqid" :datas="$kecamatans" name="kecamatan" :dependentComponentId="$desa_uniqid" dependentName="desa" ></x-select-search>
+                       <x-select-search :uniqueId="$desa_uniqid" :datas="[]" name="desa"></x-select-search>
+                        
+                        <x-select-search :uniqueId="uniqid()" :datas="$documents" name="document"></x-select-search>
                         <div class="relative w-full">
                             <label for="nama-responden" class="form-label">Nama Responden</label>
                             <input type="text" name="respondent_name"

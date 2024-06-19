@@ -1,8 +1,3 @@
-@php
-    $uniqueId = uniqid();
-
-@endphp
-
 <div id="{{ $name }}-combobox-{{ $uniqueId }}" class="relative w-full">
     <label for="{{ $name }}-input" class=" form-label">{{ $name }}</label>
     <input type="text" name="{{ $name }}_name" class="w-full p-2 border border-gray-300 rounded"
@@ -13,7 +8,7 @@
         @foreach ($datas as $data)
             <div class="{{ $name }}-option p-2 cursor-pointer hover:bg-gray-200"
                 data-value="{{ $data->id }}">
-                {{ $data->type . ' ' . $data->name }}</div>
+                {{ $data->name }}</div>
         @endforeach
     </div>
 </div>
@@ -41,6 +36,11 @@
                 comboboxInput.value = option.textContent.trim();
                 comboboxValue.value = dataValue;
                 comboboxOptions.classList.add('hidden');
+
+                if ("{{ $dependentComponentId }}".length > 0) {
+                    fetchDependentData(comboboxValue.value, '{{ $dependentComponentId }}');
+                }
+
             });
         });
 
@@ -66,5 +66,44 @@
 
 
         });
+
+        function fetchDependentData(selectedValue, dependentComponentId) {
+            axios.get('/api/{{ $dependentName }}', {
+                    params: {
+                        '{{ $name }}_id': selectedValue
+                    }
+                })
+                .then(response => {
+                    // Update the dependent select component with the fetched data
+                    const dependentContainer = document.getElementById(
+                        `{{ $dependentName }}-combobox-${dependentComponentId}`);
+                    const dependentOptionsContainer = dependentContainer.querySelector('div.desa-options')
+                    dependentOptionsContainer.innerHTML = ''; // Clear existing options
+
+                    response.data.forEach(data => {
+                        const optionElement = document.createElement('div');
+                        optionElement.classList.add('{{ $dependentName }}-option', 'p-2',
+                            'cursor-pointer', 'hover:bg-gray-200');
+                        optionElement.setAttribute('data-value', data.id);
+                        optionElement.textContent = data.name;
+                        dependentOptionsContainer.appendChild(optionElement);
+
+                        // Add event listener for new options
+                        optionElement.addEventListener('click', () => {
+                            const dependentInputField = document.getElementById(
+                                `{{ $dependentName }}-input-${dependentComponentId}`);
+                            const dependentHiddenInputField = document.getElementById(
+                                `{{ $dependentName }}-id-${dependentComponentId}`);
+                            dependentInputField.value = optionElement.textContent.trim();
+                            dependentHiddenInputField.value = optionElement.getAttribute(
+                                'data-value');
+                            dependentOptionsContainer.classList.add('hidden');
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching dependent data:', error);
+                });
+        }
     })();
 </script>
