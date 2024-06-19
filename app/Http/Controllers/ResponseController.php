@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Response;
 use App\Http\Requests\StoreResponseRequest;
 use App\Http\Requests\UpdateResponseRequest;
+use App\Models\Document;
+use App\Models\Quality;
+use App\Models\Sample;
+use App\Models\Section;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ResponseController extends Controller
 {
@@ -34,8 +40,9 @@ class ResponseController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\RedirectResponse
     */
-    public function storeInitialResponse(Request $request)
+    public function storeInitialResponse()
     {
+        // return;
         try {
             // Validate the request data
             $validatedData = $request->validate([
@@ -45,45 +52,46 @@ class ResponseController extends Controller
             ]);
             
             // Check if a response already exists for the given month, year, and sample
-            $existingResponse = Response::where('sample_id', $validatedData['sample_id'])
-            ->where('month', $validatedData['month'])
-            ->where('year', $validatedData['year'])
+            $existingResponse = Response::where('sample_id', '9c52fc21-06db-461f-8805-F967452c7019')
+            ->where('month', 1)
+            ->where('year', 2024)
             ->first();
+            
 
-            if ($existingResponse) {
+            if ($existingResponse != null) {
                 // If a response already exists, redirect to the existing response's data entry form
                 //Catatan : Belum menghandle kondisi jika sudah entri sebagian
-                return redirect()->route('response.create', [
-                    'response' => $existingResponse,
-                ]);
                 
-                return redirect()->route('response.edit', [
+                return redirect()->route('responses.edit', [
                    'response' => $existingResponse,
                 ]);
             }
 
-            $sample = Sample::findOrFail($validatedData['sample_id']);
+            $sample = Sample::findOrFail('9c52fc21-06db-461f-8805-F967452c7019');
+
             
             // Create a new response record
             $response = Response::create([
                 'document_id' => $sample->document_id,
-                'sample_id' => $validatedData['sample_id'],
-                'month' => $validatedData['month'],
-                'year' => $validatedData['year'],
+                'sample_id' => '9c52fc21-06db-461f-8805-F967452c7019',
+                'month' => '1',
+                'year' => '2024',
                 // Add any other necessary data
             ]);
 
             // Redirect to the data entry form with the response ID and necessary data
-            return redirect()->route('response.create', [
+            return redirect()->route('responses.edit', [
                 'response' => $response,
                 
             ]);
 
             // // Redirect to the data entry form
             // return redirect()->route('surveys.data.create');
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Handle the exception
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            throw $th;
+            
+            // return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -218,7 +226,7 @@ class ResponseController extends Controller
             $document = Document::findOrFail($sample->document_id);
 
             // Get the sections associated with the document
-            $sections = $document->sections;
+            $sections = $document->sections()->with('groups.commodities.qualities')->get();
 
             // Get the groups associated with the sections
             $groups = $sections->flatMap(function ($section) {
@@ -243,8 +251,15 @@ class ResponseController extends Controller
                 ->where('year', $previousYear)
                 ->first();
 
-            // If a previous response exists, get the selected qualities from it
-            $selectedQualities = $previousResponse ? $previousResponse->data->pluck('quality_id')->toArray() : [];
+            // If a previous response exists, get the selected qualities and prices from it
+            $selectedQualities = [];
+            $previousPrices = [];
+            if ($previousResponse) {
+                $selectedQualities = $previousResponse->data->pluck('quality_id')->toArray();
+                $previousPrices = $previousResponse->data->mapWithKeys(function ($item) {
+                    return [$item->quality_id => $item->price];
+                })->toArray();
+            }
             
             // Redirect to the data entry form with the response ID and necessary data
             return view('response/edit', [
@@ -256,11 +271,13 @@ class ResponseController extends Controller
                 'commodities' => $commodities,
                 'qualities' => $qualities,
                 'selectedQualities' => $selectedQualities,
+                'previousPrices' => $previousPrices,
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Handle the exception
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            throw $th;
+            // return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 

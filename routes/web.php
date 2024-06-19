@@ -21,6 +21,7 @@ use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\SetLocaleController;
+use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\ComponentsController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DatabaseBackupController;
@@ -99,6 +100,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Env
     Route::singleton('general-settings', GeneralSettingController::class);
     Route::post('general-settings-logo', [GeneralSettingController::class, 'logoUpdate'])->name('general-settings.logo');
+
+    //Responses
+    Route::get('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
+    Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
 
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);
