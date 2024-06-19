@@ -26,16 +26,13 @@ class Response extends Model
                 if (!$model->isDirty('created_by')) {
                     $model->created_by = Auth::user()->id;
                 }
-                if (!$model->isDirty('updated_by')) {
-                    $model->updated_by = Auth::user()->id;
-                }
             }
         });
 
         static::updating(function ($model) {
             if (Auth::check()) {
-                if (!$model->isDirty('updated_by')) {
-                    $model->updated_by = Auth::user()->id;
+                if (!$model->isDirty('reviewed_by')) {
+                    $model->reviewed_by = Auth::user()->id;
                 }
             }
         });
