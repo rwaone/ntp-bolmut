@@ -90,10 +90,20 @@
 
                         // Add event listener for new options
                         optionElement.addEventListener('click', () => {
-                            const dependentInputField = document.getElementById(
-                                `{{ $dependentName }}-input-${dependentComponentId}`);
-                            const dependentHiddenInputField = document.getElementById(
-                                `{{ $dependentName }}-id-${dependentComponentId}`);
+                            const dependentContainer = document.getElementById(
+                                `{{ $dependentName }}-combobox-${dependentComponentId}`);
+                            const dependentOptionsContainer = dependentContainer.querySelector(
+                                'div.desa-options')
+                            const dependentInputField = dependentContainer.querySelector(
+                                'input[name="{{ $dependentName }}_name"]')
+                            const dependentHiddenInputField = dependentContainer
+                                .querySelector(
+                                    'input[name="{{ $dependentName }}_id"]')
+                            console.log({
+                                dependentInputField
+                            });
+                            // const dependentHiddenInputField = document.getElementById(
+                            //     `{{ $dependentName }}-id-${dependentComponentId}`);
                             dependentInputField.value = optionElement.textContent.trim();
                             dependentHiddenInputField.value = optionElement.getAttribute(
                                 'data-value');

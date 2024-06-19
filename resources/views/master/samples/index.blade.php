@@ -174,8 +174,8 @@
         </div>
     </div>
     @include('master.samples.create')
-    {{-- @include('master.samples.edit')
-    @include('master.samples.delete') --}}
+    @include('master.samples.edit')
+    {{-- @include('master.samples.delete') --}}
 
     @push('scripts')
     @endpush
