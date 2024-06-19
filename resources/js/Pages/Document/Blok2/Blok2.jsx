@@ -1,5 +1,6 @@
+import SearchInput from "../../../components/SearchInput";
 import styles from "../Document.module.css";
-import { DatePicker, Input } from "antd";
+import { DatePicker, Form, Input } from "antd";
 
 const Blok2 = ({ petugas_nip, pemeriksa_nip }) => {
     return (
@@ -13,30 +14,42 @@ const Blok2 = ({ petugas_nip, pemeriksa_nip }) => {
                 <tr className={styles.row}>
                     <td className={styles.data}>1. Nama</td>
                     <td className={styles.data}>
-                        <Input readOnly value="Mutiara Mawarni" />
+                        <Form.Item name="petugas_nama">
+                            <Input readOnly />
+                        </Form.Item>
                     </td>
 
                     <td className={styles.data}>
-                        <Input readOnly value="DANUKIDD" />
+                        <Form.Item name="pemeriksa_nama">
+                            <Input readOnly />
+                        </Form.Item>
                     </td>
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>1. NIP</td>
                     <td className={styles.data}>
-                        <Input readOnly value={petugas_nip} />
+                        <Form.Item>
+                            <SearchInput />
+                        </Form.Item>
                     </td>
 
                     <td className={styles.data}>
-                        <Input readOnly value={pemeriksa_nip} />
+                        <Form.Item>
+                            <SearchInput />
+                        </Form.Item>
                     </td>
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>1. Tanggal</td>
                     <td className={styles.data}>
-                        <DatePicker />
+                        <Form.Item>
+                            <DatePicker />
+                        </Form.Item>
                     </td>
                     <td className={styles.data}>
-                        <DatePicker />
+                        <Form.Item>
+                            <DatePicker />
+                        </Form.Item>
                     </td>
                 </tr>
             </tbody>

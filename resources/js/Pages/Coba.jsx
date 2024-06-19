@@ -47,7 +47,7 @@ const Coba = () => {
         },
         {
             key: "5",
-            label: "Blok VII",
+            label: "Blok VI-VII",
             children: <Tab5 form={form} />,
         },
     ];

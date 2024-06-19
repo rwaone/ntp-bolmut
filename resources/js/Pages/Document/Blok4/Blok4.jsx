@@ -18,6 +18,7 @@ const Blok4 = () => {
                 type="primary"
                 className={styles.button}
                 onClick={addRowHarga}
+                icon
             >
                 Tambah Harga
             </Button>
