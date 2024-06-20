@@ -123,7 +123,7 @@
                 paginated = document.getElementById('showData').value
                 let addedData = new URLSearchParams({
                     value: document.getElementById('kualitas-search').value,
-                    currentPage: currentPage,
+                    currentPage: (currentPage) ? currentPage : 1,
                     paginated: paginated,
                 })
                 const combinedData = `${data}&${addedData}`
