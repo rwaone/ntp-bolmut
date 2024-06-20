@@ -3,8 +3,16 @@
     padding: 30px;
 }
 .data {
-    /* padding: 10px; */
+    padding: 5px;
     border: 1px solid #c0c0c0;
+}
+.group {
+    padding: 10px;
+    background-color: darkgoldenrod;
+    border: 1px solid #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
 }
 .data_right {
     padding: 10px;

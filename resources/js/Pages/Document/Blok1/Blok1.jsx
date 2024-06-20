@@ -11,7 +11,11 @@ const Blok1 = ({
     kode_kabkot,
     kecamatan,
     kode_kecamatan,
+    desa,
+    kode_desa,
+    respondent_name,
 }) => {
+    // console.log({ desa, kode_desa });
     return (
         <table className={styles.table}>
             <tbody>
@@ -46,6 +50,19 @@ const Blok1 = ({
                     <td className={styles.data}>{kecamatan}</td>
                     <td className={styles.data}>
                         <Input readOnly value={kode_kecamatan} />
+                    </td>
+                </tr>
+                <tr className={styles.row}>
+                    <td className={styles.data}>5. Desa</td>
+                    <td className={styles.data}>{desa}</td>
+                    <td className={styles.data}>
+                        <Input readOnly value={kode_desa} />
+                    </td>
+                </tr>
+                <tr className={styles.row}>
+                    <td className={styles.data}>6. Responden</td>
+                    <td className={styles.data} colSpan={2}>
+                        {respondent_name}
                     </td>
                 </tr>
             </tbody>

@@ -202,4 +202,25 @@ class QualityController extends Controller
         }
         return;
     }
+
+    public function fetchQualities(Request $request)
+    {
+        try {
+            $sectionId = $request->query('sectionId');
+
+            if (strlen($sectionId) > 0) {
+
+
+                $qualities = Quality::join('commodities', 'qualities.commodity_id', 'commodities.id')
+                    ->join('groups', 'commodities.group_id', 'groups.id')
+                    ->join('sections', 'groups.section_id', 'sections.id')
+                    ->select('qualities.id as quality_id', 'qualities.commodity_id', 'commodities.name as commodity_name', 'qualities.name as quality_name', 'qualities.code as quality_code', 'qualities.satuan', 'groups.id as group_id')
+                    ->where('sections.id', $sectionId)->get();
+                // dd($qualities);
+                return response()->json($qualities, 200);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

@@ -52,7 +52,7 @@ class ResponseController extends Controller
             // ]);
 
             // Check if a response already exists for the given month, year, and sample
-            $existingResponse = Response::where('sample_id', '9c529839-e58c-49a0-90e4-dd61fd16293d')
+            $existingResponse = Response::where('sample_id', '9c53f7de-b953-43dc-af91-8766110a6fac')
                 ->where('month', 1)
                 ->where('year', 2024)
                 ->first();
@@ -67,13 +67,13 @@ class ResponseController extends Controller
                 ]);
             }
 
-            $sample = Sample::findOrFail('9c529839-e58c-49a0-90e4-dd61fd16293d');
+            $sample = Sample::findOrFail('9c53f7de-b953-43dc-af91-8766110a6fac');
 
 
             // Create a new response record
             $response = Response::create([
                 'document_id' => $sample->document_id,
-                'sample_id' => '9c529839-e58c-49a0-90e4-dd61fd16293d',
+                'sample_id' => '9c53f7de-b953-43dc-af91-8766110a6fac',
                 'month' => '1',
                 'year' => '2024',
                 // Add any other necessary data

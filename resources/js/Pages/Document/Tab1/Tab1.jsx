@@ -2,6 +2,7 @@ import Blok1 from "../Blok1/Blok1";
 import Blok2 from "../Blok2/Blok2";
 
 const Tab1 = ({ blok1, blok2 }) => {
+    // console.log({ blok1, blok2 });
     return (
         <div className="flex flex-col space-y-6">
             <Blok1
@@ -13,6 +14,9 @@ const Tab1 = ({ blok1, blok2 }) => {
                 kode_kabkot={blok1.kode_kabkot}
                 kecamatan={blok1.kecamatan}
                 kode_kecamatan={blok1.kode_kecamatan}
+                desa={blok1.desa}
+                kode_desa={blok1.kode_desa}
+                respondent_name={blok1.respondent_name}
             />
             <Blok2
                 petugas_nip={blok2.petugas_nip}

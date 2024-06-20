@@ -62,6 +62,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // api
     Route::get('api/desa', [DesaController::class, 'fetch'])->name('api.desa');
+    Route::get('api/pencacah', [PetugasController::class, 'getPencacah'])->name('api.pencacah');
+    Route::get('api/pengawas', [PetugasController::class, 'getPengawas'])->name('api.pengawas');
+    Route::get('api/qualities', [QualityController::class, 'fetchQualities'])->name('api.qualities');
 
 
     // Petugas
@@ -92,7 +95,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/kualitas/store', [QualityController::class, 'store'])->name('kualitas.store');
     Route::get('/kualitas/fetch/{id}', [QualityController::class, 'fetch'])->name('kualitas.fetch');
     Route::delete('/kualitas/delete/{id}', [QualityController::class, 'destroy'])->name('kualitas.destroy');
-    
+
     // User
     Route::resource('users', UserController::class);
     // Permission
@@ -104,12 +107,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Env
     Route::singleton('general-settings', GeneralSettingController::class);
     Route::post('general-settings-logo', [GeneralSettingController::class, 'logoUpdate'])->name('general-settings.logo');
-    
+
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);
     // Route::resource('responses', ResponseController::class);
-   //Responses
-   Route::get('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
-   Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
+    //Responses
+    Route::get('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
+    Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
     Route::get('database-backups-download/{fileName}', [DatabaseBackupController::class, 'databaseBackupDownload'])->name('database-backups.download');
 });
