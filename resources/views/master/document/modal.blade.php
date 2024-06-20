@@ -42,6 +42,12 @@
                                 placeholder="Tipe Dokumen">
                             <div class="error-message text-red-500 text-sm mt-1" id="type-error"></div>
                         </div>
+                        <div class="label-area mb-3">
+                            <label for="code" class="form-label">Kode Dokumen</label>
+                            <input id="code" name="code" type="text" class="form-control"
+                                placeholder="Tipe Dokumen">
+                            <div class="error-message text-red-500 text-sm mt-1" id="code-error"></div>
+                        </div>
                 </div>
                 <!-- Modal footer -->
                 <div

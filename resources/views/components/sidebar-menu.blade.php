@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('response.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
+                <a href="{{ route('responses.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="material-symbols:keyboard-external-input"></iconify-icon>
                         <span>{{ __('Entri Data') }}</span>
@@ -43,8 +43,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('dashboard.index') }}"
-                    class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:print-preview"></iconify-icon>
                         <span>{{ __('Pemeriksaan Data') }}</span>
@@ -113,8 +112,7 @@
             </li>
             <!-- Group -->
             <li>
-                <a href="{{ route('groups.index') }}"
-                    class="navItem {{ request()->is('groups*') ? 'active' : '' }}">
+                <a href="{{ route('groups.index') }}" class="navItem {{ request()->is('groups*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="fa6-solid:layer-group"></iconify-icon>
                         <span>{{ __('Group') }}</span>

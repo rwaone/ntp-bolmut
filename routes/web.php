@@ -70,15 +70,21 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     })->name('fetch.desa');
     
     // Petugas
-    Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
-    Route::post('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
+    Route::get('/petugas', [PetugasController::class, 'index'])->name('petugas.index');
+    Route::post('/petugas', [PetugasController::class, 'store'])->name('petugas.store');
+    Route::get('/petugas/{petugas}/edit', [PetugasController::class, 'edit'])->name('petugas.edit');
+    Route::put('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
     Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
-    Route::resource('petugas', PetugasController::class);
+    Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
+    // Route::resource('petugas', PetugasController::class);
     // Documents
-    Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
-    Route::post('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{documents}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
+    Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-    Route::resource('documents', DocumentController::class);
+    Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
+    // Route::resource('documents', DocumentController::class);
     // Sections
     Route::resource('sections', SectionController::class);
     // Group
@@ -112,10 +118,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     //Responses
      //Response
-     Route::get('/response/index', [ResponseController::class, 'index'])->name('response.index');
-     Route::get('/response/fetchSample', [ResponseController::class, 'fetchSample'])->name('response.fetchSample');
-    Route::post('/response/create', [ResponseController::class, 'storeInitialResponse'])->name('response.create');
-    Route::get('/response/edit/{response}', [ResponseController::class, 'edit'])->name('response.edit');
+     Route::get('/responses/index', [ResponseController::class, 'index'])->name('responses.index');
+     Route::get('/responses/fetchSample', [ResponseController::class, 'fetchSample'])->name('responses.fetchSample');
+    Route::post('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
+    Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
 
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);
