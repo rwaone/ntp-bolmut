@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('document_id');
+            $table->string('title');
             $table->string('name');
             $table->timestamps();
         });
