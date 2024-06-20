@@ -35,11 +35,11 @@ class ResponseController extends Controller
     }
 
     /**
-    * Store the initial entry details and redirect to the data entry form.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\RedirectResponse
-    */
+     * Store the initial entry details and redirect to the data entry form.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeInitialResponse()
     {
         // return;
@@ -50,26 +50,26 @@ class ResponseController extends Controller
             //     'year' => 'required|digits:4|integer|min:2000|max:' . (date('Y')),
             //     'month' => 'required|digits:2|integer|between:1,12',
             // ]);
-            
-            // Check if a response already exists for the given month, year, and sample
-            // $existingResponse = Response::where('sample_id', '9c529839-e58c-49a0-90e4-dd61fd16293d')
-            // ->where('month', 1)
-            // ->where('year', 2024)
-            // ->first();
-            
 
-            // if ($existingResponse != null) {
-            //     // If a response already exists, redirect to the existing response's data entry form
-            //     //Catatan : Belum menghandle kondisi jika sudah entri sebagian
-                
-            //     return redirect()->route('responses.edit', [
-            //        'response' => $existingResponse,
-            //     ]);
-            // }
+            // Check if a response already exists for the given month, year, and sample
+            $existingResponse = Response::where('sample_id', '9c529839-e58c-49a0-90e4-dd61fd16293d')
+                ->where('month', 1)
+                ->where('year', 2024)
+                ->first();
+
+
+            if ($existingResponse != null) {
+                // If a response already exists, redirect to the existing response's data entry form
+                //Catatan : Belum menghandle kondisi jika sudah entri sebagian
+
+                return redirect()->route('responses.edit', [
+                    'response' => $existingResponse,
+                ]);
+            }
 
             $sample = Sample::findOrFail('9c529839-e58c-49a0-90e4-dd61fd16293d');
 
-            
+
             // Create a new response record
             $response = Response::create([
                 'document_id' => $sample->document_id,
@@ -82,7 +82,7 @@ class ResponseController extends Controller
             // Redirect to the data entry form with the response ID and necessary data
             return redirect()->route('responses.edit', [
                 'response' => $response,
-                
+
             ]);
 
             // // Redirect to the data entry form
@@ -90,7 +90,7 @@ class ResponseController extends Controller
         } catch (\Throwable $th) {
             // Handle the exception
             throw $th;
-            
+
             // return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -226,9 +226,8 @@ class ResponseController extends Controller
             $document = Document::findOrFail($sample->document_id);
 
             // Get the sections associated with the document
-            $sections = $document->sections->with('groups')->get();
+            $sections = $document->sections()->with('groups.commodities.qualities')->get();
 
-    
             // Get the groups associated with the sections
             $groups = $sections->flatMap(function ($section) {
                 return $section->groups;
@@ -243,8 +242,8 @@ class ResponseController extends Controller
             $qualities = $commodities->flatMap(function ($commodity) {
                 return $commodity->qualities;
             });
-            
-             // Check if a response exists for the previous month
+
+            // Check if a response exists for the previous month
             $previousMonth = $response->month === 1 ? 12 : $response->month - 1;
             $previousYear = $response->month === 1 ? $response->year - 1 : $response->year;
             $previousResponse = Response::where('sample_id', $response->sample_id)
@@ -252,9 +251,16 @@ class ResponseController extends Controller
                 ->where('year', $previousYear)
                 ->first();
 
-            // If a previous response exists, get the selected qualities from it
-            $selectedQualities = $previousResponse ? $previousResponse->data->pluck('quality_id')->toArray() : [];
-            
+            // If a previous response exists, get the selected qualities and prices from it
+            $selectedQualities = [];
+            $previousPrices = [];
+            if ($previousResponse) {
+                $selectedQualities = $previousResponse->data->pluck('quality_id')->toArray();
+                $previousPrices = $previousResponse->data->mapWithKeys(function ($item) {
+                    return [$item->quality_id => $item->price];
+                })->toArray();
+            }
+
             // Redirect to the data entry form with the response ID and necessary data
             return Inertia::render('Document/Edit', [
                 'response' => $response,
@@ -265,8 +271,8 @@ class ResponseController extends Controller
                 'commodities' => $commodities,
                 'qualities' => $qualities,
                 'selectedQualities' => $selectedQualities,
+                'previousPrices' => $previousPrices,
             ]);
-
         } catch (\Throwable $th) {
             // Handle the exception
             throw $th;

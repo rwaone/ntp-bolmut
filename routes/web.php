@@ -108,7 +108,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);
     // Route::resource('responses', ResponseController::class);
-    Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
-    Route::get('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
+   //Responses
+   Route::get('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
+   Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
     Route::get('database-backups-download/{fileName}', [DatabaseBackupController::class, 'databaseBackupDownload'])->name('database-backups.download');
 });
