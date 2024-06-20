@@ -316,8 +316,8 @@ import {
     handlePaginationClick,
     debounceSearch,
     fetchAndRenderData,
-    handleFormSubmit
-} from './custom/custom-function.js';
+    handleFormSubmit,
+} from "./custom/custom-function.js";
 
 window.renderPagination = renderPagination;
 window.deleteItem = deleteItem;
@@ -331,5 +331,3 @@ window.handlePaginationClick = handlePaginationClick;
 window.debounceSearch = debounceSearch;
 window.fetchAndRenderData = fetchAndRenderData;
 window.handleFormSubmit = handleFormSubmit;
-
-

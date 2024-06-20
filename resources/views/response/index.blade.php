@@ -31,7 +31,7 @@
                                 </select>
                             </div>
                             <div class="input-area relative">
-                                <label for="largeInput" class="form-label">Desa (Sampel)</label>
+                                <label for="largeInput" class="form-label">Desa</label>
                                 <select id="filter-desa" name="filter-desa" class="form-control">
                                     <option disabled selected>-- Pilih Desa --</option>
                                 </select>
@@ -45,30 +45,12 @@
                                     @endforeach
                                 </select>
                             </div>
-                            {{-- <div class="input-area relative">
-                                <label for="largeInput" class="form-label">Bulan</label>
-                                <select id="filter-bulan" name="filter-bulan" class="form-control">
-                                    <option disabled selected>-- Pilih Bulan --</option>
-                                    <option value="01">Januari</option>
-                                    <option value="02">Februari</option>
-                                    <option value="03">Maret</option>
-                                    <option value="04">April</option>
-                                    <option value="05">Mei</option>
-                                    <option value="06">Juni</option>
-                                    <option value="07">Juli</option>
-                                    <option value="08">Agustus</option>
-                                    <option value="09">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
-                                </select>
-                            </div> --}}
                             <div class="input-area relative">
                                 <label for="largeInput" class="form-label">Jenis Dokumen</label>
                                 <select id="filter-dokumen" name="filter-dokumen" class="form-control">
                                     <option disabled selected>-- Pilih Jenis Dokumen --</option>
                                     @foreach ($dokumen as $item)
-                                        <option value="{{ $item->id }}">{{ $item->type }} - {{ $item->name }}
+                                        <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -180,24 +162,141 @@
                 }
             })
             document.getElementById('response-index').addEventListener('click', async (e) => {
-                e.preventDefault()
+                e.preventDefault();
+
+                const kabkotSelect = document.getElementById('filter-kabkot');
+                const kecSelect = document.getElementById('filter-kec');
+                const desaSelect = document.getElementById('filter-desa');
+                const tahunSelect = document.getElementById('filter-tahun');
+                const dokumenSelect = document.getElementById('filter-dokumen');
+
+                const kabkotValue = kabkotSelect.value;
+                const kecValue = kecSelect.value;
+                const desaValue = desaSelect.value;
+                const tahunValue = tahunSelect.value;
+                const dokumenValue = dokumenSelect.value;
+
+                const defaultKabkotOption = kabkotSelect.options[0].text;
+                const defaultKecOption = kecSelect.options[0].text;
+                const defaultDesaOption = desaSelect.options[0].text;
+                const defaultTahunOption = tahunSelect.options[0].text;
+                const defaultDokumenOption = dokumenSelect.options[0].text;
+
+                clearErrors();
+
+                let hasError = false;
+
+                if (kabkotValue === defaultKabkotOption) {
+                    showError('filter-kabkot', 'Kabupaten/Kota tidak boleh kosong.');
+                    hasError = true;
+                }
+
+                if (kecValue === defaultKecOption) {
+                    showError('filter-kec', 'Kecamatan tidak boleh kosong.');
+                    hasError = true;
+                }
+
+                if (desaValue === defaultDesaOption) {
+                    showError('filter-desa', 'Desa tidak boleh kosong.');
+                    hasError = true;
+                }
+
+                if (tahunValue === defaultTahunOption) {
+                    showError('filter-tahun', 'Tahun tidak boleh kosong.');
+                    hasError = true;
+                }
+
+                if (dokumenValue === defaultDokumenOption) {
+                    showError('filter-dokumen', 'Tipe dokumen tidak boleh kosong.');
+                    hasError = true;
+                }
+
+                if (hasError) {
+                    return;
+                }
+
                 let data = {
                     _token: '{{ csrf_token() }}',
-                    desa: document.getElementById('filter-desa').value,
-                    tahun: document.getElementById('filter-tahun').value,
-                    // bulan: document.getElementById('filter-bulan').value,
-                    dokumen: document.getElementById('filter-dokumen').value,
-                }
+                    desa: desaValue,
+                    tahun: tahunValue,
+                    dokumen: dokumenValue,
+                };
+
                 try {
                     const response = await axios.get('/response/fetchSample', {
                         params: data,
-                    })
-                    const html = response.data.html
-                    document.getElementById('data-table-sample').innerHTML = html
+                    });
+                    const html = response.data.html;
+                    document.getElementById('data-table-sample').innerHTML = html;
+                    attachBtnListener();
                 } catch (error) {
-
+                    console.error(error);
                 }
-            })
+            });
         })
+
+        function showError(fieldId, errorMessage) {
+            const errorElement = document.createElement('div');
+            errorElement.classList.add('error-message', 'text-red-600', 'dark:text-red-500');
+            errorElement.textContent = errorMessage;
+
+            const fieldElement = document.getElementById(fieldId);
+            fieldElement.parentNode.appendChild(errorElement);
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach((element) => {
+                element.remove();
+            });
+        }
+
+        function attachBtnListener() {
+            document.querySelectorAll('.entri-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var sampleId = this.getAttribute('data-id');
+                    var year = this.getAttribute('data-year');
+                    var month = parseInt(this.getAttribute('data-month'));
+
+                    if (!this.disabled) {
+                        submitForm(sampleId, year, month);
+                    }
+                });
+            });
+        }
+
+        function submitForm(sampleId, year, month) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/response/create';
+
+            var sampleIdInput = document.createElement('input');
+            sampleIdInput.type = 'hidden';
+            sampleIdInput.name = 'sample_id';
+            sampleIdInput.value = sampleId;
+            form.appendChild(sampleIdInput);
+
+            var yearInput = document.createElement('input');
+            yearInput.type = 'hidden';
+            yearInput.name = 'year';
+            yearInput.value = year;
+            form.appendChild(yearInput);
+
+            var monthInput = document.createElement('input');
+            monthInput.type = 'hidden';
+            monthInput.name = 'month';
+            monthInput.value = month;
+            form.appendChild(monthInput);
+
+            var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            var csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 </x-app-layout>

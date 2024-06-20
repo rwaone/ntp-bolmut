@@ -44,63 +44,28 @@ class ResponseController extends Controller
 
     public function fetchSample(Request $request)
     {
-        // dd($request);
-        // $data = Sample::leftJoin('responses as r', 'r.sample_id', '=', 'samples.id')
-        //     ->where('desa_id', $request->desa)
-        //     ->where('samples.document_id', $request->dokumen)
-        //     ->select([
-        //         'r.*',
-        //         'respondent_name as nama_responden'
-        //     ])
-        //     ->get();
-
         $data = Sample::select('samples.id', 'samples.respondent_name', 'samples.document_id')
             ->leftJoin('responses', 'responses.sample_id', '=', 'samples.id')
-            ->selectRaw('CASE WHEN MAX(CASE WHEN responses.month = 1 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 1 THEN responses.status END) END AS month_1,
-                         CASE WHEN MAX(CASE WHEN responses.month = 2 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 2 THEN responses.status END) END AS month_2,
-                         CASE WHEN MAX(CASE WHEN responses.month = 3 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 3 THEN responses.status END) END AS month_3,
-                         CASE WHEN MAX(CASE WHEN responses.month = 4 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 4 THEN responses.status END) END AS month_4,
-                         CASE WHEN MAX(CASE WHEN responses.month = 5 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 5 THEN responses.status END) END AS month_5,
-                         CASE WHEN MAX(CASE WHEN responses.month = 6 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 6 THEN responses.status END) END AS month_6,
-                         CASE WHEN MAX(CASE WHEN responses.month = 7 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 7 THEN responses.status END) END AS month_7,
-                         CASE WHEN MAX(CASE WHEN responses.month = 8 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 8 THEN responses.status END) END AS month_8,
-                         CASE WHEN MAX(CASE WHEN responses.month = 9 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 9 THEN responses.status END) END AS month_9,
-                         CASE WHEN MAX(CASE WHEN responses.month = 10 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 10 THEN responses.status END) END AS month_10,
-                         CASE WHEN MAX(CASE WHEN responses.month = 11 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 11 THEN responses.status END) END AS month_11,
-                         CASE WHEN MAX(CASE WHEN responses.month = 12 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 12 THEN responses.status END) END AS month_12')
+            ->selectRaw('CASE WHEN MAX(CASE WHEN responses.month = 1 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 1 AND responses.year = ? THEN responses.status END) END AS month_1,
+                        CASE WHEN MAX(CASE WHEN responses.month = 2 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 2 AND responses.year = ? THEN responses.status END) END AS month_2,
+                        CASE WHEN MAX(CASE WHEN responses.month = 3 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 3 AND responses.year = ? THEN responses.status END) END AS month_3,
+                        CASE WHEN MAX(CASE WHEN responses.month = 4 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 4 AND responses.year = ? THEN responses.status END) END AS month_4,
+                        CASE WHEN MAX(CASE WHEN responses.month = 5 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 5 AND responses.year = ? THEN responses.status END) END AS month_5,
+                        CASE WHEN MAX(CASE WHEN responses.month = 6 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 6 AND responses.year = ? THEN responses.status END) END AS month_6,
+                        CASE WHEN MAX(CASE WHEN responses.month = 7 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 7 AND responses.year = ? THEN responses.status END) END AS month_7,
+                        CASE WHEN MAX(CASE WHEN responses.month = 8 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 8 AND responses.year = ? THEN responses.status END) END AS month_8,
+                        CASE WHEN MAX(CASE WHEN responses.month = 9 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 9 AND responses.year = ? THEN responses.status END) END AS month_9,
+                        CASE WHEN MAX(CASE WHEN responses.month = 10 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 10 AND responses.year = ? THEN responses.status END) END AS month_10,
+                        CASE WHEN MAX(CASE WHEN responses.month = 11 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 11 AND responses.year = ? THEN responses.status END) END AS month_11,
+                        CASE WHEN MAX(CASE WHEN responses.month = 12 AND responses.year = ? THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 12 AND responses.year = ? THEN responses.status END) END AS month_12', 
+                        [$request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun, $request->tahun])
+            ->where('samples.document_id', $request->dokumen)
+            ->where('samples.desa_id', $request->desa)
             ->groupBy('samples.id', 'samples.document_id', 'samples.respondent_name')
             ->get();
-            
-        
 
-        // if ($data) {
-        // foreach ($data as $key => $value) {
-        //     # code...
-        //     $check = Response::join('documents', 'documents.id', '=', 'responses.document_id')
-        //         ->join('users as petugas', 'petugas.id', '=', 'responses.petugas_id')
-        //         ->join('users as pengawas', 'pengawas.id', '=', 'responses.pengawas_id')
-        //         ->join('users as creator', 'creator.id', '=', 'responses.created_by')
-        //         ->join('users as reviewer', 'reviewer.id', '=', 'responses.reviewed_by')
-        //         ->where('sample_id', $value->id)
-        //         ->select([
-        //             'documents.type as tipe_dokumen',
-        //             'responses.*',
-        //             'petugas.name as petugas',
-        //             'pengawas.name as pengawas',
-        //             'creator.name as creator',
-        //             'reviewer.name as reviewer', 
-        //         ])
-        //         ->first();
-        //     $value->response = ($check) ? 'Sudah' : 'Belum';
-        //     $value->response_updatedAt = ($check) ? $check->updated_at : 'Belum';
-        //     $value->tipe_dokumen = ($check) ? $check->tipe_dokumen : 'Belum';
-        //     $value->petugas = ($check) ? $check->petugas : 'Belum';
-        //     $value->pengawas = ($check) ? $check->pengawas : 'Belum';
-        //     $value->creator = ($check) ? $check->creator : 'Belum';
-        //     $value->reviewer = ($check) ? $check->reviewer : 'Belum';
-        // }
-        // }
-        $html = view('response/data-table-sample', compact('data'))->render(); 
+        $year = $request->tahun;
+        $html = view('response/data-table-sample', compact('data', 'year'))->render(); 
         return response()->json([
             'html' => $html,
             'data' => $data,
@@ -123,58 +88,49 @@ class ResponseController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\RedirectResponse
     */
-    public function storeInitialResponse()
+    public function storeInitialResponse(Request $request)
     {
-        // return;
         try {
             // Validate the request data
-            // $validatedData = $request->validate([
-            //     'sample_id' => 'required|exists:samples,id',
-            //     'year' => 'required|digits:4|integer|min:2000|max:' . (date('Y')),
-            //     'month' => 'required|digits:2|integer|between:1,12',
-            // ]);
+            $validatedData = $request->validate([
+                'sample_id' => 'required|exists:samples,id',
+                'year' => 'required|digits:4|integer|min:2000|max:' . (date('Y')),
+                'month' => 'required|digits_between:1,2|integer|between:1,12',
+            ]);
             
             // Check if a response already exists for the given month, year, and sample
-            $existingResponse = Response::where('sample_id', '9c5493c2-2dcc-465e-9c66-7834b253bea5')
-            ->where('month', 1)
-            ->where('year', 2024)
+            $existingResponse = Response::where('sample_id', $request->sample_id)
+            ->where('month', $request->month)
+            ->where('year', $request->year)
             ->first();
             
-
             if ($existingResponse != null) {
                 // If a response already exists, redirect to the existing response's data entry form
                 //Catatan : Belum menghandle kondisi jika sudah entri sebagian
-                
                 return redirect()->route('response.edit', [
                    'response' => $existingResponse,
                 ]);
             }
 
-            $sample = Sample::findOrFail('9c5493c2-2dcc-465e-9c66-7834b253bea5');
-
+            $sample = Sample::findOrFail($request->sample_id);
             
             // Create a new response record
             $response = Response::create([
                 'document_id' => $sample->document_id,
-                'sample_id' => '9c5493c2-2dcc-465e-9c66-7834b253bea5',
-                'month' => '1',
-                'year' => '2024',
+                'sample_id' => $request->sample_id,
+                'month' => $request->month,
+                'year' => $request->year,
                 // Add any other necessary data
             ]);
 
             // Redirect to the data entry form with the response ID and necessary data
             return redirect()->route('response.edit', [
                 'response' => $response,
-                
             ]);
 
-            // // Redirect to the data entry form
-            // return redirect()->route('surveys.data.create');
         } catch (\Throwable $th) {
             // Handle the exception
             throw $th;
-            
-            // return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -338,8 +294,8 @@ class ResponseController extends Controller
             $selectedQualities = [];
             $previousPrices = [];
             if ($previousResponse) {
-                $selectedQualities = $previousResponse->data->pluck('quality_id')->toArray();
-                $previousPrices = $previousResponse->data->mapWithKeys(function ($item) {
+                $selectedQualities = $previousResponse->datas->pluck('quality_id')->toArray();
+                $previousPrices = $previousResponse->datas->mapWithKeys(function ($item) {
                     return [$item->quality_id => $item->price];
                 })->toArray();
             }

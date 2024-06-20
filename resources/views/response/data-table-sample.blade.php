@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-        @if ($data)
+        @if (!empty($data) && count($data) > 0)
             @foreach ($data as $key => $value)
                 <tr class="even:bg-slate-50 dark:even:bg-slate-700">
                     <td class="table-td">
@@ -27,36 +27,43 @@
                         <td class="text-center">
                             @php
                                 $status = $value->{'month_' . $month};
+                                $previousMonthStatus = $month === 1 ? 'C' : $value->{'month_' . ($month - 1)};
+                                $buttonDisabled = $month !== 1 && $previousMonthStatus !== 'C';
                             @endphp
+
                             @if ($status === 'B')
                                 <div
                                     class="inline-flex w-full items-center justify-center bg-slate-400 text-white px-2 py-1">
                                     <p class="inline-block mr-2" title="Blank">B</p>
-                                    <a title="Update Data" class="inline-block update-pen mr-1 edit-btn"
-                                        data-id="{{ $value->id }}" data-bs-toggle="modal"
-                                        data-bs-target="#modalCreate">
-                                        <iconify-icon icon="uil:pen"></iconify-icon>
-                                    </a>
+                                    @if (!$buttonDisabled)
+                                        <button id="entri-{{ $value->id }}" title="Entri Data"
+                                            class="inline-block update-pen mr-1 entri-btn" data-id="{{ $value->id }}"
+                                            data-year="{{ $year }}" data-month="{{ $month }}">
+                                            <iconify-icon icon="uil:pen"></iconify-icon>
+                                        </button>
+                                    @endif
                                 </div>
                             @elseif ($status === 'E')
                                 <div
                                     class="inline-flex w-full items-center justify-center bg-red-500 text-white px-2 py-1">
-                                    <p class="inline-block mr-2" title="Blank">E</p>
-                                    <a title="Update Data" class="inline-block update-pen mr-1 edit-btn"
-                                        data-id="{{ $value->id }}" data-bs-toggle="modal"
-                                        data-bs-target="#modalCreate">
-                                        <iconify-icon icon="uil:pen"></iconify-icon>
-                                    </a>
+                                    <p class="inline-block mr-2" title="Error">E</p>
+                                    @if (!$buttonDisabled)
+                                        <button id="entri-{{ $value->id }}" title="Entri Data"
+                                            class="inline-block update-pen mr-1 entri-btn" data-id="{{ $value->id }}"
+                                            data-year="{{ $year }}" data-month="{{ $month }}">
+                                            <iconify-icon icon="uil:pen"></iconify-icon>
+                                        </button>
+                                    @endif
                                 </div>
                             @elseif ($status === 'C')
                                 <div
                                     class="inline-flex w-full items-center justify-center bg-green-500 text-white px-2 py-1">
-                                    <p class="inline-block mr-2" title="Blank">C</p>
-                                    <a title="Update Data" class="inline-block update-pen mr-1 edit-btn"
-                                        data-id="{{ $value->id }}" data-bs-toggle="modal"
-                                        data-bs-target="#modalCreate">
+                                    <p class="inline-block mr-2" title="Clean">C</p>
+                                    <button id="entri-{{ $value->id }}" title="Entri Data"
+                                        class="inline-block update-pen mr-1 entri-btn" data-id="{{ $value->id }}"
+                                        data-year="{{ $year }}" data-month="{{ $month }}">
                                         <iconify-icon icon="uil:pen"></iconify-icon>
-                                    </a>
+                                    </button>
                                 </div>
                             @endif
                         </td>
@@ -65,7 +72,7 @@
             @endforeach
         @else
             <tr class="text-center even:bg-slate-50 dark:even:bg-slate-700">
-                <td colspan="14">Data Tidak Ada</td>
+                <td colspan="14">Data tidak ditemukan</td>
             </tr>
         @endif
     </tbody>
