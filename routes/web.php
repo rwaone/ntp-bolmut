@@ -27,6 +27,8 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DatabaseBackupController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Models\Desa;
+use App\Models\Kecamatan;
 
 require __DIR__ . '/auth.php';
 
@@ -58,7 +60,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     
     // Kecamatan
     Route::get('master/wilayah/desa/fetch-by-kecamatan/{kecamatan}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
-
+    Route::get('fetch-kec/{id_kab}', function (String $id_kab) {
+        $target = Kecamatan::where('kabupaten_id', $id_kab)->get();
+        return response()->json($target);
+    })->name('fetch.kec');
+    Route::get('fetch-desa/{id_kec}', function (String $id_kec) {
+        $target = Desa::where('kecamatan_id', $id_kec)->get();
+        return response()->json($target);
+    })->name('fetch.desa');
     
     // Petugas
     Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
@@ -102,8 +111,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('general-settings-logo', [GeneralSettingController::class, 'logoUpdate'])->name('general-settings.logo');
 
     //Responses
-    Route::get('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
-    Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
+     //Response
+     Route::get('/response/index', [ResponseController::class, 'index'])->name('response.index');
+     Route::get('/response/fetchSample', [ResponseController::class, 'fetchSample'])->name('response.fetchSample');
+    Route::get('/response/create', [ResponseController::class, 'storeInitialResponse'])->name('response.create');
+    Route::get('/response/edit/{response}', [ResponseController::class, 'edit'])->name('response.edit');
 
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);

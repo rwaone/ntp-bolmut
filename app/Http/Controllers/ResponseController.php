@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateResponseRequest;
 use App\Models\Document;
 use App\Models\Quality;
 use App\Models\Sample;
+use App\Models\Kabupaten;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,6 +23,88 @@ class ResponseController extends Controller
     public function index()
     {
         //
+        $query = Response::query();
+        // $data = $query->get();
+        // $year = Response::distinct()->pluck('year');
+        $currentYear = date("Y");
+        $years = [
+            $currentYear - 1,
+            $currentYear,
+            $currentYear + 1
+        ];
+        $kabkot = Kabupaten::get();
+        $documents = Document::get();
+        return view('response/index', [
+            'data' => null,
+            'kabkot' => $kabkot,
+            'tahun' => $years,
+            'dokumen' => $documents,
+        ]);
+    }
+
+    public function fetchSample(Request $request)
+    {
+        // dd($request);
+        // $data = Sample::leftJoin('responses as r', 'r.sample_id', '=', 'samples.id')
+        //     ->where('desa_id', $request->desa)
+        //     ->where('samples.document_id', $request->dokumen)
+        //     ->select([
+        //         'r.*',
+        //         'respondent_name as nama_responden'
+        //     ])
+        //     ->get();
+
+        $data = Sample::select('samples.id', 'samples.respondent_name', 'samples.document_id')
+            ->leftJoin('responses', 'responses.sample_id', '=', 'samples.id')
+            ->selectRaw('CASE WHEN MAX(CASE WHEN responses.month = 1 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 1 THEN responses.status END) END AS month_1,
+                         CASE WHEN MAX(CASE WHEN responses.month = 2 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 2 THEN responses.status END) END AS month_2,
+                         CASE WHEN MAX(CASE WHEN responses.month = 3 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 3 THEN responses.status END) END AS month_3,
+                         CASE WHEN MAX(CASE WHEN responses.month = 4 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 4 THEN responses.status END) END AS month_4,
+                         CASE WHEN MAX(CASE WHEN responses.month = 5 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 5 THEN responses.status END) END AS month_5,
+                         CASE WHEN MAX(CASE WHEN responses.month = 6 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 6 THEN responses.status END) END AS month_6,
+                         CASE WHEN MAX(CASE WHEN responses.month = 7 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 7 THEN responses.status END) END AS month_7,
+                         CASE WHEN MAX(CASE WHEN responses.month = 8 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 8 THEN responses.status END) END AS month_8,
+                         CASE WHEN MAX(CASE WHEN responses.month = 9 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 9 THEN responses.status END) END AS month_9,
+                         CASE WHEN MAX(CASE WHEN responses.month = 10 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 10 THEN responses.status END) END AS month_10,
+                         CASE WHEN MAX(CASE WHEN responses.month = 11 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 11 THEN responses.status END) END AS month_11,
+                         CASE WHEN MAX(CASE WHEN responses.month = 12 THEN responses.status END) IS NULL THEN "B" ELSE MAX(CASE WHEN responses.month = 12 THEN responses.status END) END AS month_12')
+            ->groupBy('samples.id', 'samples.document_id', 'samples.respondent_name')
+            ->get();
+            
+        
+
+        // if ($data) {
+        // foreach ($data as $key => $value) {
+        //     # code...
+        //     $check = Response::join('documents', 'documents.id', '=', 'responses.document_id')
+        //         ->join('users as petugas', 'petugas.id', '=', 'responses.petugas_id')
+        //         ->join('users as pengawas', 'pengawas.id', '=', 'responses.pengawas_id')
+        //         ->join('users as creator', 'creator.id', '=', 'responses.created_by')
+        //         ->join('users as reviewer', 'reviewer.id', '=', 'responses.reviewed_by')
+        //         ->where('sample_id', $value->id)
+        //         ->select([
+        //             'documents.type as tipe_dokumen',
+        //             'responses.*',
+        //             'petugas.name as petugas',
+        //             'pengawas.name as pengawas',
+        //             'creator.name as creator',
+        //             'reviewer.name as reviewer', 
+        //         ])
+        //         ->first();
+        //     $value->response = ($check) ? 'Sudah' : 'Belum';
+        //     $value->response_updatedAt = ($check) ? $check->updated_at : 'Belum';
+        //     $value->tipe_dokumen = ($check) ? $check->tipe_dokumen : 'Belum';
+        //     $value->petugas = ($check) ? $check->petugas : 'Belum';
+        //     $value->pengawas = ($check) ? $check->pengawas : 'Belum';
+        //     $value->creator = ($check) ? $check->creator : 'Belum';
+        //     $value->reviewer = ($check) ? $check->reviewer : 'Belum';
+        // }
+        // }
+        $html = view('response/data-table-sample', compact('data'))->render(); 
+        return response()->json([
+            'html' => $html,
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -45,14 +128,14 @@ class ResponseController extends Controller
         // return;
         try {
             // Validate the request data
-            $validatedData = $request->validate([
-                'sample_id' => 'required|exists:samples,id',
-                'year' => 'required|digits:4|integer|min:2000|max:' . (date('Y')),
-                'month' => 'required|digits:2|integer|between:1,12',
-            ]);
+            // $validatedData = $request->validate([
+            //     'sample_id' => 'required|exists:samples,id',
+            //     'year' => 'required|digits:4|integer|min:2000|max:' . (date('Y')),
+            //     'month' => 'required|digits:2|integer|between:1,12',
+            // ]);
             
             // Check if a response already exists for the given month, year, and sample
-            $existingResponse = Response::where('sample_id', '9c52fc21-06db-461f-8805-F967452c7019')
+            $existingResponse = Response::where('sample_id', '9c5493c2-2dcc-465e-9c66-7834b253bea5')
             ->where('month', 1)
             ->where('year', 2024)
             ->first();
@@ -62,25 +145,25 @@ class ResponseController extends Controller
                 // If a response already exists, redirect to the existing response's data entry form
                 //Catatan : Belum menghandle kondisi jika sudah entri sebagian
                 
-                return redirect()->route('responses.edit', [
+                return redirect()->route('response.edit', [
                    'response' => $existingResponse,
                 ]);
             }
 
-            $sample = Sample::findOrFail('9c52fc21-06db-461f-8805-F967452c7019');
+            $sample = Sample::findOrFail('9c5493c2-2dcc-465e-9c66-7834b253bea5');
 
             
             // Create a new response record
             $response = Response::create([
                 'document_id' => $sample->document_id,
-                'sample_id' => '9c52fc21-06db-461f-8805-F967452c7019',
+                'sample_id' => '9c5493c2-2dcc-465e-9c66-7834b253bea5',
                 'month' => '1',
                 'year' => '2024',
                 // Add any other necessary data
             ]);
 
             // Redirect to the data entry form with the response ID and necessary data
-            return redirect()->route('responses.edit', [
+            return redirect()->route('response.edit', [
                 'response' => $response,
                 
             ]);
