@@ -1,13 +1,8 @@
+import RupiahInput from "../../../components/RupiahInput";
 import styles from "../Document.module.css";
 import { Form, Input } from "antd";
 
-const Blok6 = ({ form, respondent_name, desa_name, komoditas }) => {
-    console.log({ respondent_name, desa_name, komoditas });
-    form.setFieldsValue({
-        respondent_name: respondent_name,
-        desa_name: desa_name,
-        komoditas: komoditas,
-    });
+const Blok6 = () => {
     return (
         <table className={styles.table}>
             <thead>
@@ -35,9 +30,10 @@ const Blok6 = ({ form, respondent_name, desa_name, komoditas }) => {
                         <Form.Item
                             name="respondent_name"
                             className={styles.form_item}
-                            initialValue={respondent_name}
+
+                            // initialValue={respondent_name}
                         >
-                            <Input />
+                            <Input readOnly />
                         </Form.Item>
                     </td>
 
@@ -45,16 +41,17 @@ const Blok6 = ({ form, respondent_name, desa_name, komoditas }) => {
                         <Form.Item
                             name="desa_name"
                             className={styles.form_item}
-                            initialValue={desa_name}
+
+                            // initialValue={desa_name}
                         >
-                            <Input />
+                            <Input readOnly />
                         </Form.Item>
                     </td>
                     <td className={styles.data}>
                         <Form.Item
                             name="komoditas"
                             className={styles.form_item}
-                            initialValue={komoditas}
+                            // initialValue={komoditas}
                         >
                             <Input />
                         </Form.Item>

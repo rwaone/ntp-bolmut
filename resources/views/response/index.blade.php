@@ -223,7 +223,7 @@
                 };
 
                 try {
-                    const response = await axios.get('/response/fetchSample', {
+                    const response = await axios.get('/responses/fetchSample', {
                         params: data,
                     });
                     const html = response.data.html;
@@ -268,7 +268,7 @@
         function submitForm(sampleId, year, month) {
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/response/create';
+            form.action = '/responses/create';
 
             var sampleIdInput = document.createElement('input');
             sampleIdInput.type = 'hidden';

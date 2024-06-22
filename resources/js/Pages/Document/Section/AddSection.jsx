@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const AddSection = ({ sectionId, confirm }) => {
     const [qualities, setQualities] = useState([]);
     const [loading, setLoading] = useState(false);
-    console.log({ sectionId });
+
     useEffect(() => {
         const fetchQualities = async (sectionId) => {
             setLoading(true);
@@ -42,7 +42,10 @@ const AddSection = ({ sectionId, confirm }) => {
             title: "Action",
             key: "operation",
             render: (values) => (
-                <Button type="primary" onClick={() => confirm(values)}>
+                <Button
+                    type="primary"
+                    onClick={() => confirm(values, sectionId)}
+                >
                     Pilih
                 </Button>
             ),

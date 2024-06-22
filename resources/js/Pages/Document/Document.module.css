@@ -1,6 +1,8 @@
 .table {
     width: 100%;
-    padding: 30px;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
 }
 .data {
     padding: 5px;
@@ -35,7 +37,7 @@
 
 .button {
     background-color: rgb(9, 82, 82);
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
 }
 
 .body {
@@ -44,6 +46,7 @@
 
 .form_item {
     margin-bottom: 0;
+    width: 100%;
 }
 
 .rupiah_input .ant-input-number-input {

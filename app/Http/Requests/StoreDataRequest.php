@@ -13,7 +13,7 @@ class StoreDataRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreDataRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'response_id' => 'required',
+            'quality_id' => 'required',
+            'price' => 'required',
         ];
     }
 }

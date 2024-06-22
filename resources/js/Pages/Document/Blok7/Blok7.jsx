@@ -15,10 +15,12 @@ const Blok7 = ({ form }) => {
             </thead>
             <tbody>
                 <tr className={styles.row}>
-                    <TextArea
-                        placeholder="Isi Catatan Sesuai Pedoman"
-                        allowClear
-                    />
+                    <Form.Item name="notes">
+                        <TextArea
+                            placeholder="Isi Catatan Sesuai Pedoman"
+                            allowClear
+                        />
+                    </Form.Item>
                 </tr>
             </tbody>
         </table>

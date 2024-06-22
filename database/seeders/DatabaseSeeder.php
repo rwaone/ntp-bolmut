@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
             GroupSeeder::class,
             CommoditySeeder::class,
             QualitySeeder::class,
+            SampleSeeder::class,
+            PetugasSeeder::class,
         ]);
     }
 }
