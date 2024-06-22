@@ -58,7 +58,7 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
         }
         return "";
     };
-    const confirmAddQuality = async (values, section_id) => {
+    const confirmAddQuality = async (values, sectionId) => {
         // console.log({ values, response_id });
         try {
             messageApi.open({
@@ -92,10 +92,10 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                 key: "kualitas-add",
             });
         } finally {
-            fetchQualities(section_id);
+            fetchQualities(sectionId);
         }
     };
-    const confirmDeleteQuality = async (id, section_id) => {
+    const confirmDeleteQuality = async (id, sectionId) => {
         // console.log({ values, response_id });
         try {
             messageApi.open({
@@ -119,14 +119,14 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                 key: "kualitas-delete",
             });
         } finally {
-            fetchQualities(section_id);
+            fetchQualities(sectionId);
         }
     };
-    const fetchQualities = async (section_id) => {
+    const fetchQualities = async (sectionId) => {
         try {
             //start loading
             const { data } = await axios.get("/api/data", {
-                params: { section_id: section_id },
+                params: { sectionId: sectionId },
             });
             setQualities(data);
         } catch (error) {

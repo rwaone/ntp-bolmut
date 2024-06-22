@@ -207,18 +207,17 @@ class QualityController extends Controller
     {
         try {
             $sectionId = $request->query('sectionId');
-
+            $query = Quality::join('commodities', 'qualities.commodity_id', 'commodities.id')
+                ->join('groups', 'commodities.group_id', 'groups.id')
+                ->join('sections', 'groups.section_id', 'sections.id')
+                ->select('qualities.id as quality_id', 'qualities.commodity_id', 'commodities.name as commodity_name', 'qualities.name as quality_name', 'qualities.code as quality_code', 'qualities.satuan', 'groups.id as group_id');
             if (strlen($sectionId) > 0) {
-
-
-                $qualities = Quality::join('commodities', 'qualities.commodity_id', 'commodities.id')
-                    ->join('groups', 'commodities.group_id', 'groups.id')
-                    ->join('sections', 'groups.section_id', 'sections.id')
-                    ->select('qualities.id as quality_id', 'qualities.commodity_id', 'commodities.name as commodity_name', 'qualities.name as quality_name', 'qualities.code as quality_code', 'qualities.satuan', 'groups.id as group_id')
-                    ->where('sections.id', $sectionId)->get();
-                // dd($qualities);
-                return response()->json($qualities, 200);
+                $query->where('sections.id', $sectionId);
             }
+
+
+            $qualities = $query->get();
+            return response()->json($qualities, 200);
         } catch (\Throwable $th) {
             throw $th;
         }

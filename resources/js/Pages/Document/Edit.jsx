@@ -1,4 +1,14 @@
-import { Badge, Button, Form, Modal, Space, Tabs, message, Table } from "antd";
+import {
+    Badge,
+    Button,
+    Form,
+    Modal,
+    Space,
+    Tabs,
+    message,
+    Table,
+    Input,
+} from "antd";
 import Blok3 from "./Blok3/Blok3";
 import Blok4 from "./Blok4/Blok4";
 import Blok5 from "./Blok5/Blok5";
@@ -40,7 +50,7 @@ const Edit = ({
     selectedQualities,
     previousPrices,
 }) => {
-    console.log({ selectedQualities });
+    // console.log({ selectedQualities });
     const [form] = Form.useForm();
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -81,16 +91,15 @@ const Edit = ({
 
     useEffect(() => {
         setBlok1({
-            bulan: "Januari",
-            tahun: 2024,
-            provinsi: "SULAWESI UTARA",
-            kode_provinsi: "71",
-            kabkot: "MANADO",
-            kode_kabkot: "71",
-            kecamatan: "WANEA",
-            kode_kecamatan: "031",
-            desa: "Kelurahan WANEA",
-            kode_desa: "031",
+            bulan: "2",
+            nama_bulan: "Februari",
+            tahun: "2024",
+            nama_desa: "SANGTOMBOLANG",
+            kode_desa: "001",
+            nama_kecamatan: "SANGKUB",
+            kode_kecamatan: "010",
+            nama_kabupaten: "BOLAANG MONGONDOW UTARA",
+            kode_kabupaten: "7107",
             respondent_name: sample.respondent_name,
         });
         setBlok2({
@@ -99,11 +108,11 @@ const Edit = ({
         });
         form.setFieldsValue({
             respondent_name: sample.respondent_name,
+
+            response_id: response.id,
         });
+        console.log({ qualities });
     }, []);
-    useEffect(() => {
-        console.log({ openRevalModal });
-    }, [openRevalModal]);
 
     const tabs = [
         {
@@ -134,7 +143,12 @@ const Edit = ({
         {
             key: "5",
             label: "Blok VI-VII",
-            children: <Tab5 form={form} />,
+            children: (
+                <Tab5
+                    respondent_name={sample.respondent_name}
+                    nama_desa={blok1.nama_desa}
+                />
+            ),
         },
     ];
 
@@ -243,6 +257,9 @@ const Edit = ({
                     onFinish={onFinish}
                     onValuesChange={handleValuesChange}
                 >
+                    <Form.Item name="response_id" hidden>
+                        <Input readOnly />
+                    </Form.Item>
                     <Tabs items={tabs} className={styles.body} />
                 </Form>
                 <Status status="error" />

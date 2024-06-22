@@ -3,15 +3,13 @@ import BlokTitle from "../../../components/BlokTitle/BlokTitle";
 import { Input } from "antd";
 
 const Blok1 = ({
-    bulan,
+    nama_bulan,
     tahun,
-    provinsi,
-    kode_provinsi,
-    kabkot,
-    kode_kabkot,
-    kecamatan,
+    nama_kabupaten,
+    kode_kabupaten,
+    nama_kecamatan,
     kode_kecamatan,
-    desa,
+    nama_desa,
     kode_desa,
     respondent_name,
 }) => {
@@ -26,35 +24,31 @@ const Blok1 = ({
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>1. Bulan & Tahun</td>
-                    <td className={styles.data}>{bulan}</td>
-                    <td className={styles.data}>
-                        <Input readOnly value={tahun} />
-                    </td>
+                    <td className={styles.data}>{nama_bulan}</td>
+                    <td className={styles.data}>{tahun}</td>
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>2. Provinsi</td>
-                    <td className={styles.data}>{provinsi}</td>
-                    <td className={styles.data}>
-                        <Input readOnly value={kode_provinsi} />
-                    </td>
+                    <td className={styles.data}>71</td>
+                    <td className={styles.data}>SULAWESI UTARA</td>
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>3. Kabupaten</td>
-                    <td className={styles.data}>{kabkot}</td>
+                    <td className={styles.data}>{nama_kabupaten}</td>
                     <td className={styles.data}>
-                        <Input readOnly value={kode_kabkot} />
+                        <Input readOnly value={kode_kabupaten} />
                     </td>
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>4. Kecamatan</td>
-                    <td className={styles.data}>{kecamatan}</td>
+                    <td className={styles.data}>{nama_kecamatan}</td>
                     <td className={styles.data}>
                         <Input readOnly value={kode_kecamatan} />
                     </td>
                 </tr>
                 <tr className={styles.row}>
                     <td className={styles.data}>5. Desa</td>
-                    <td className={styles.data}>{desa}</td>
+                    <td className={styles.data}>{nama_desa}</td>
                     <td className={styles.data}>
                         <Input readOnly value={kode_desa} />
                     </td>

@@ -105,15 +105,32 @@ class DataController extends Controller
     }
     public function fetch(Request $request)
     {
-        $section_id = $request->query('section_id');
-        $data = [];
-        if ($section_id) {
-            $data = Data::join('qualities', 'data.quality_id', 'qualities.id')
-                ->join('commodities', 'qualities.commodity_id', 'commodities.id')
-                ->join('groups', 'commodities.group_id', 'groups.id')
-                ->join('sections', 'groups.section_id', 'sections.id')
-                ->select('qualities.id as quality_id', 'qualities.commodity_id', 'commodities.name as commodity_name', 'qualities.name as quality_name', 'qualities.code as quality_code', 'qualities.satuan', 'groups.id as group_id', 'data.*')
-                ->where('sections.id', $section_id)->get();
+        $sectionId = $request->query('sectionId');
+        $responseId = $request->query('responseId');
+        $isChange = $request->query('isChange');
+        $data = Data::join('qualities', 'data.quality_id', 'qualities.id')
+            ->join('commodities', 'qualities.commodity_id', 'commodities.id')
+            ->join('groups', 'commodities.group_id', 'groups.id')
+            ->join('sections', 'groups.section_id', 'sections.id')
+            ->join('responses', 'data.response_id', 'responses.id')
+            ->select('qualities.id as quality_id', 'qualities.commodity_id', 'commodities.name as commodity_name', 'qualities.name as quality_name', 'qualities.code as quality_code', 'qualities.satuan', 'groups.id as group_id', 'data.*');
+
+        if ($sectionId) {
+            $data->where('sections.id', $sectionId);
+        }
+        if ($responseId) {
+            $data->where('data.response_id', $responseId);
+        }
+
+        // get prev price by id data and assign to current data
+        // get sample with bys 
+
+        // get prev response
+        // get quality
+        // get prev data
+
+        $data = $data->get();
+        if ($isChange == '1') {
         }
         return response()->json($data, 200);
     }

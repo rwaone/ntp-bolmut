@@ -6,15 +6,13 @@ const Tab1 = ({ blok1, blok2 }) => {
     return (
         <div className="flex flex-col space-y-6">
             <Blok1
-                bulan={blok1.bulan}
+                nama_bulan={blok1.nama_bulan}
                 tahun={blok1.tahun}
-                provinsi={blok1.provinsi}
-                kode_provinsi={blok1.kode_provinsi}
-                kabkot={blok1.kabkot}
-                kode_kabkot={blok1.kode_kabkot}
-                kecamatan={blok1.kecamatan}
+                nama_kabupaten={blok1.nama_kabupaten}
+                kode_kabupaten={blok1.kode_kabupaten}
+                nama_kecamatan={blok1.nama_kecamatan}
                 kode_kecamatan={blok1.kode_kecamatan}
-                desa={blok1.desa}
+                nama_desa={blok1.nama_desa}
                 kode_desa={blok1.kode_desa}
                 respondent_name={blok1.respondent_name}
             />
