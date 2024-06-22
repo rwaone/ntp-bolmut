@@ -100,9 +100,9 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
     'available_locales' => [
-        'en'=>'united-states',
+        'id'=>'indonesia',
         'de'=>'germany',
         'fr'=>'france',
     ],

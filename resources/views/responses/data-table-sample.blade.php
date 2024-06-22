@@ -9,7 +9,8 @@
             </th>
             @foreach (range(1, 12) as $month)
                 <th scope="col" class="table-th" style="text-align: center;">
-                    {{ \Carbon\Carbon::createFromDate(null, $month)->formatLocalized('%b') }}</th>
+                    {{ \Carbon\Carbon::createFromDate(null, $month)->formatLocalized('%b') }}
+                </th>
             @endforeach
         </tr>
     </thead>
@@ -33,7 +34,7 @@
 
                             @if ($status === 'B')
                                 <div
-                                    class="inline-flex w-full items-center justify-center bg-slate-400 text-white px-2 py-1">
+                                    class="inline-flex w-full items-center justify-center bg-slate-500 text-white px-2 py-1">
                                     <p class="inline-block mr-2" title="Blank">B</p>
                                     @if (!$buttonDisabled)
                                         <button id="entri-{{ $value->id }}" title="Entri Data"
@@ -64,6 +65,18 @@
                                         data-year="{{ $year }}" data-month="{{ $month }}">
                                         <iconify-icon icon="uil:pen"></iconify-icon>
                                     </button>
+                                </div>
+                            @elseif ($status === '-')
+                                <div class="inline-flex w-full items-center justify-center px-2 py-1">
+                                    <p class="inline-block mr-2" title="Blank">-</p>
+                                    @if (!$buttonDisabled)
+                                        <button id="entri-{{ $value->id }}" title="Entri Data"
+                                            class="inline-block update-pen mr-1 entri-btn"
+                                            data-id="{{ $value->id }}" data-year="{{ $year }}"
+                                            data-month="{{ $month }}">
+                                            <iconify-icon icon="uil:pen"></iconify-icon>
+                                        </button>
+                                    @endif
                                 </div>
                             @endif
                         </td>
