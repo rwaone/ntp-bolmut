@@ -424,7 +424,7 @@ class ResponseController extends Controller
                     $commodity = Commodity::find($quality->commodity_id);
 
                     // Validate price range based on quality
-                    if ($quality && ($value['price'] < $quality->min_price || $value['price'] > $quality->max_price)) {
+                    if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
                         $errors[] = [
                             'id' => $dataId,
                             'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
@@ -434,9 +434,9 @@ class ResponseController extends Controller
                     // Validate price change based on commodity
                     if ($commodity) {
                         $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
-                        $change = ($previousMonthPrice - $value['price']) / 100;
+                        $change = ($previousMonthPrice - $value) / 100;
 
-                        if ($change < 0 && abs($change) > $commodity->min_change) {
+                        if ($change < 0 && abs($change) > abs($commodity->min_change)) {
                             $errors[] = [
                                 'id' => $dataId,
                                 'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_change}%",
@@ -449,7 +449,7 @@ class ResponseController extends Controller
                         }
                     }
 
-                    $data->price = $value['price'];
+                    $data->price = $value;
                     $data->save();
                 }
             }
