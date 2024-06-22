@@ -27,6 +27,7 @@ class UpdateDocumentRequest extends FormRequest
             // 'id' => ['integer'],
             'name' => ['string', 'required'],
             'type' => ['string', 'required'],
+            'code' => ['string', 'required'],
         ];
 
         // If the request is for updating a record
@@ -45,8 +46,10 @@ class UpdateDocumentRequest extends FormRequest
         return [
             'name.required' => 'Nama dokumen tidak boleh kosong.',
             'type.required' => 'Tipe dokumen tidak boleh kosong.',
+            'code.required' => 'Kode dokumen tidak boleh kosong.',
             'name.string' => '',
             'type.string' => '',
+            'code.string' => '',
         ];
     }
 }

@@ -9,20 +9,25 @@
 
         <!-- Sidebar Type Button -->
         <div id="sidebar_type" class="cursor-pointer text-slate-900 dark:text-white text-lg">
-            <iconify-icon class="sidebarDotIcon extend-icon text-slate-900 dark:text-slate-200" icon="fa-regular:dot-circle"></iconify-icon>
-            <iconify-icon class="sidebarDotIcon collapsed-icon text-slate-900 dark:text-slate-200" icon="material-symbols:circle-outline"></iconify-icon>
+            <iconify-icon class="sidebarDotIcon extend-icon text-slate-900 dark:text-slate-200"
+                icon="fa-regular:dot-circle"></iconify-icon>
+            <iconify-icon class="sidebarDotIcon collapsed-icon text-slate-900 dark:text-slate-200"
+                icon="material-symbols:circle-outline"></iconify-icon>
         </div>
         <button class="sidebarCloseIcon text-2xl inline-block md:hidden">
             <iconify-icon class="text-slate-900 dark:text-slate-200" icon="clarity:window-close-line"></iconify-icon>
         </button>
     </div>
-    <div id="nav_shadow" class="nav_shadow h-[60px] absolute top-[80px] nav-shadow z-[1] w-full transition-all duration-200 pointer-events-none
-      opacity-0"></div>
+    <div id="nav_shadow"
+        class="nav_shadow h-[60px] absolute top-[80px] nav-shadow z-[1] w-full transition-all duration-200 pointer-events-none
+      opacity-0">
+    </div>
     <div class="sidebar-menus bg-white dark:bg-slate-800 py-2 px-4 h-[calc(100%-80px)] z-50" id="sidebar_menus">
         <ul class="sidebar-menu">
             <li class="sidebar-menu-title">{{ __('MENU') }}</li>
             <li>
-                <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('dashboard*')) ? 'active' : '' }}">
+                <a href="{{ route('dashboard.index') }}"
+                    class="navItem {{ request()->is('dashboard*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="heroicons-outline:home"></iconify-icon>
                         <span>{{ __('Dashboard') }}</span>
@@ -30,7 +35,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('entry*')) ? 'active' : '' }}">
+                <a href="{{ route('responses.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="material-symbols:keyboard-external-input"></iconify-icon>
                         <span>{{ __('Entri Data') }}</span>
@@ -38,7 +43,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('entry*')) ? 'active' : '' }}">
+                <a href="{{ route('dashboard.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:print-preview"></iconify-icon>
                         <span>{{ __('Pemeriksaan Data') }}</span>
@@ -46,7 +51,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('dashboard.index') }}" class="navItem {{ (request()->is('analysis*')) ? 'active' : '' }}">
+                <a href="{{ route('dashboard.index') }}"
+                    class="navItem {{ request()->is('analysis*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="icon-park-outline:analysis"></iconify-icon>
                         <span>{{ __('Analisis Data') }}</span>
@@ -56,7 +62,8 @@
             <li class="sidebar-menu-title">{{ __('MASTER') }}</li>
             <!-- Wilayah -->
             <li>
-                <a href="{{ route('wilayah.index') }}" class="navItem {{ (request()->is('wilayah*')) ? 'active' : '' }}">
+                <a href="{{ route('wilayah.index') }}"
+                    class="navItem {{ request()->is('wilayah*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="oui:vis-map-region"></iconify-icon>
                         <span>{{ __('Wilayah') }}</span>
@@ -65,7 +72,8 @@
             </li>
             <!-- Sample -->
             <li>
-                <a href="{{ route('samples.index') }}" class="navItem {{ (request()->is('samples*')) ? 'active' : '' }}">
+                <a href="{{ route('samples.index') }}"
+                    class="navItem {{ request()->is('samples*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:person-multiple"></iconify-icon>
                         <span>{{ __('Sample') }}</span>
@@ -74,7 +82,8 @@
             </li>
             <!-- Petugas -->
             <li>
-                <a href="{{ route('petugas.index') }}" class="navItem {{ (request()->is('petugas*')) ? 'active' : '' }}">
+                <a href="{{ route('petugas.index') }}"
+                    class="navItem {{ request()->is('petugas*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="fluent:person-note-16-filled"></iconify-icon>
                         <span>{{ __('Petugas') }}</span>
@@ -83,7 +92,8 @@
             </li>
             <!-- Dokumen -->
             <li>
-                <a href="{{ route('documents.index') }}" class="navItem {{ (request()->is('documents*')) ? 'active' : '' }}">
+                <a href="{{ route('documents.index') }}"
+                    class="navItem {{ request()->is('documents*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="oui:documents"></iconify-icon>
                         <span>{{ __('Document') }}</span>
@@ -92,7 +102,8 @@
             </li>
             <!-- Section -->
             <li>
-                <a href="{{ route('sections.index') }}" class="navItem {{ (request()->is('sections*')) ? 'active' : '' }}">
+                <a href="{{ route('sections.index') }}"
+                    class="navItem {{ request()->is('sections*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="uis:web-section-alt"></iconify-icon>
                         <span>{{ __('Section') }}</span>
@@ -101,7 +112,7 @@
             </li>
             <!-- Group -->
             <li>
-                <a href="{{ route('groups.index') }}" class="navItem {{ (request()->is('groups*')) ? 'active' : '' }}">
+                <a href="{{ route('groups.index') }}" class="navItem {{ request()->is('groups*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="fa6-solid:layer-group"></iconify-icon>
                         <span>{{ __('Group') }}</span>
@@ -110,7 +121,8 @@
             </li>
             <!-- Komoditas -->
             <li>
-                <a href="{{ route('komoditas.index') }}" class="navItem {{ (request()->is('komoditas*')) ? 'active' : '' }}">
+                <a href="{{ route('komoditas.index') }}"
+                    class="navItem {{ request()->is('komoditas*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="ph:plant-fill"></iconify-icon>
                         <span>{{ __('Komoditas') }}</span>
@@ -119,7 +131,8 @@
             </li>
             <!-- Quality -->
             <li>
-                <a href="{{ route('kualitas.index') }}" class="navItem {{ (request()->is('kualitas*')) ? 'active' : '' }}">
+                <a href="{{ route('kualitas.index') }}"
+                    class="navItem {{ request()->is('kualitas*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="carbon:rule-data-quality"></iconify-icon>
                         <span>{{ __('Kualitas') }}</span>
@@ -129,7 +142,8 @@
             <li class="sidebar-menu-title">{{ __('SETTINGS') }}</li>
             <!-- Database -->
             <li>
-                <a href="{{ route('database-backups.index') }}" class="navItem {{ (request()->is('database-backups*')) ? 'active' : '' }}">
+                <a href="{{ route('database-backups.index') }}"
+                    class="navItem {{ request()->is('database-backups*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="iconoir:database-backup"></iconify-icon>
                         <span>{{ __('Database Backup') }}</span>
@@ -138,7 +152,8 @@
             </li>
             <!-- Settings -->
             <li>
-                <a href="{{ route('general-settings.show') }}" class="navItem {{ (request()->is('general-settings*')) || (request()->is('users*')) || (request()->is('roles*')) || (request()->is('profiles*')) || (request()->is('permissions*')) ? 'active' : '' }}">
+                <a href="{{ route('general-settings.show') }}"
+                    class="navItem {{ request()->is('general-settings*') || request()->is('users*') || request()->is('roles*') || request()->is('profiles*') || request()->is('permissions*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="material-symbols:settings-outline"></iconify-icon>
                         <span>{{ __('Settings') }}</span>

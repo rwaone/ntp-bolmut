@@ -8,6 +8,7 @@ use App\Models\Petugas;
 use App\Models\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Response extends Model
 {
@@ -16,6 +17,27 @@ class Response extends Model
     protected $guarded = ['id'];
     protected $load = ['datas'];
     protected $with = ['document','petugas', 'sample'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                if (!$model->isDirty('created_by')) {
+                    $model->created_by = Auth::user()->id;
+                }
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                if (!$model->isDirty('reviewed_by')) {
+                    $model->reviewed_by = Auth::user()->id;
+                }
+            }
+        });
+    }
 
     public function datas(){
         return $this->hasMany(Data::class);

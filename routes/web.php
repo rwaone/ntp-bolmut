@@ -21,6 +21,7 @@ use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CommodityController;
 use App\Http\Controllers\SetLocaleController;
+use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\ComponentsController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DatabaseBackupController;
@@ -28,6 +29,8 @@ use App\Http\Controllers\DesaController;
 use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\ResponseController;
 use Inertia\Inertia;
+use App\Models\Desa;
+use App\Models\Kecamatan;
 
 require __DIR__ . '/auth.php';
 
@@ -58,25 +61,32 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('master/samples/{sample}', [SampleController::class, 'destroy'])->name('samples.destroy');
 
     // Kecamatan
-    Route::get('master/wilayah/desa/fetch-by-kecamatan/{id}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
-
-    // api
-    Route::get('api/desa', [DesaController::class, 'fetch'])->name('api.desa');
-    Route::get('api/pencacah', [PetugasController::class, 'getPencacah'])->name('api.pencacah');
-    Route::get('api/pengawas', [PetugasController::class, 'getPengawas'])->name('api.pengawas');
-    Route::get('api/qualities', [QualityController::class, 'fetchQualities'])->name('api.qualities');
-
+    Route::get('master/wilayah/desa/fetch-by-kecamatan/{kecamatan}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
+    Route::get('fetch-kec/{id_kab}', function (String $id_kab) {
+        $target = Kecamatan::where('kabupaten_id', $id_kab)->get();
+        return response()->json($target);
+    })->name('fetch.kec');
+    Route::get('fetch-desa/{id_kec}', function (String $id_kec) {
+        $target = Desa::where('kecamatan_id', $id_kec)->get();
+        return response()->json($target);
+    })->name('fetch.desa');
 
     // Petugas
-    // Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
-    // Route::post('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
+    // Route::get('/petugas', [PetugasController::class, 'index'])->name('petugas.index');
+    Route::post('/petugas', [PetugasController::class, 'store'])->name('petugas.store');
+    Route::get('/petugas/{petugas}/edit', [PetugasController::class, 'edit'])->name('petugas.edit');
+    // Route::put('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
     // Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
-    Route::resource('petugas', PetugasController::class);
+    Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
+    // Route::resource('petugas', PetugasController::class);
     // Documents
-    // Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
-    // Route::post('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
-    // Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-    Route::resource('documents', DocumentController::class);
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{documents}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
+    Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::get('/documents/table', [DocumentController::class, 'getTableData'])->name('documents.table');
+    // Route::resource('documents', DocumentController::class);
     // Sections
     Route::resource('sections', SectionController::class);
     // Group
@@ -107,6 +117,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Env
     Route::singleton('general-settings', GeneralSettingController::class);
     Route::post('general-settings-logo', [GeneralSettingController::class, 'logoUpdate'])->name('general-settings.logo');
+
+    //Responses
+    //Response
+    Route::get('/responses/index', [ResponseController::class, 'index'])->name('responses.index');
+    Route::get('/responses/fetchSample', [ResponseController::class, 'fetchSample'])->name('responses.fetchSample');
+    Route::post('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
+    Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
 
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);

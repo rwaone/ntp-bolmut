@@ -1,34 +1,48 @@
-let method = 'POST';
-const urlParts = window.location.href.split('/');
+let method = "POST";
+const urlParts = window.location.href.split("/");
 const currentRoute = urlParts[urlParts.length - 1];
 
-export function handleFormSubmit(form, paginationData, modalTitle, dismissModalElement, errorElements) {
-    form.addEventListener('submit', function (event) {
+export function handleFormSubmit(
+    form,
+    paginationData,
+    modalTitle,
+    dismissModalElement,
+    errorElements
+) {
+    form.addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent the default form submission behavior
 
         // Clear errors
         errorElements.forEach(function (element) {
-            element.innerHTML = '';
+            element.innerHTML = "";
         });
-
 
         const formData = new FormData(form);
 
-        const url = method === 'PUT' ? `/${currentRoute}/${formData.get('id')}` : `/${currentRoute}`;
+        const url =
+            method === "PUT"
+                ? `/${currentRoute}/${formData.get("id")}`
+                : `/${currentRoute}`;
 
-        if (method === 'PUT') {
-            formData.append('_method', 'PUT');
+        if (method === "PUT") {
+            formData.append("_method", "PUT");
         }
 
         axios({
-            method: 'POST',
+            method: "POST",
             url: url,
             data: formData,
         })
             .then(function (response) {
                 // Handle the successful response
                 form.reset();
-                fetchAndRenderData(paginationData.current_page, paginationData.per_page, paginationData, modalTitle, form);
+                fetchAndRenderData(
+                    paginationData.current_page,
+                    paginationData.per_page,
+                    paginationData,
+                    modalTitle,
+                    form
+                );
 
                 // If the element exists, trigger a click event on it
                 if (dismissModalElement) {
@@ -48,41 +62,67 @@ export function handleFormSubmit(form, paginationData, modalTitle, dismissModalE
     });
 }
 
-export function deleteItem(petugas, dismissModalDelete, paginationData, pageSize, tableContainer, modalTitle, form) {
+export function deleteItem(
+    petugas,
+    dismissModalDelete,
+    paginationData,
+    pageSize,
+    tableContainer,
+    modalTitle,
+    form
+) {
     // console.log(paginationData);
     // Send an Axios DELETE request to delete the item
-    axios.delete(`/${currentRoute}/${petugas}`)
+    axios
+        .delete(`/${currentRoute}/${petugas}`)
         .then(function (response) {
             // Handle the successful response
-            axios.get(`/${currentRoute}/table?page=${paginationData.current_page}&size=${pageSize}`)
+            axios
+                .get(
+                    `/${currentRoute}/table?page=${paginationData.current_page}&size=${pageSize}`
+                )
                 .then(function (tableResponse) {
                     // Update the table container with the new table data
                     tableContainer.innerHTML = tableResponse.data.html;
 
                     // Update the pagination data
                     paginationData.data = tableResponse.data.data;
-                    paginationData.current_page = tableResponse.data.current_page;
+                    paginationData.current_page =
+                        tableResponse.data.current_page;
                     paginationData.last_page = tableResponse.data.last_page;
                     paginationData.total = tableResponse.data.total;
                     paginationData.per_page = tableResponse.data.per_page;
 
                     // Check if the current page is now empty
-                    if (paginationData.data.length === 0 && paginationData.current_page >
-                        1) {
+                    if (
+                        paginationData.data.length === 0 &&
+                        paginationData.current_page > 1
+                    ) {
                         // Navigate to the previous page
-                        fetchAndRenderData(paginationData.current_page - 1, pageSize, paginationData, modalTitle, form);
+                        fetchAndRenderData(
+                            paginationData.current_page - 1,
+                            pageSize,
+                            paginationData,
+                            modalTitle,
+                            form
+                        );
                     } else {
                         // Render the pagination links
-                        renderPagination(paginationData, pageSize, modalTitle, form);
+                        renderPagination(
+                            paginationData,
+                            pageSize,
+                            modalTitle,
+                            form
+                        );
                         attachEditBtnListeners(modalTitle, form);
                     }
                 })
                 .catch(function (error) {
-                    console.error('Error fetching table data:', error);
+                    console.error("Error fetching table data:", error);
                 });
         })
-        .catch(error => {
-            console.error('Error deleting item:', error);
+        .catch((error) => {
+            console.error("Error deleting item:", error);
         });
 
     // If the element exists, trigger a click event on it
@@ -97,10 +137,9 @@ export function displayErrors(errors) {
         const errorElement = document.getElementById(`${field}-error`);
 
         if (errorElement) {
-            let errorHtml = '';
+            let errorHtml = "";
             errorMessages.forEach(function (message) {
-                errorHtml +=
-                    `<p class="mt-2 text-sm text-red-600 dark:text-red-500"> ${message} </p>`;
+                errorHtml += `<p class="mt-2 text-sm text-red-600 dark:text-red-500"> ${message} </p>`;
             });
             errorElement.innerHTML = errorHtml;
         }
@@ -108,38 +147,39 @@ export function displayErrors(errors) {
 }
 
 export function attachEditBtnListeners(modalTitle, form) {
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            setModalTitle('edit', modalTitle);
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            setModalTitle("edit", modalTitle);
             populateFormFields(btn.dataset.id, form);
         });
     });
 }
 
 export function setModalTitle(action) {
-    if (action === 'edit') {
-        modalTitle.textContent = 'Edit Petugas';
-        method = 'PUT';
+    if (action === "edit") {
+        modalTitle.textContent = "Edit Petugas";
+        method = "PUT";
     } else {
-        modalTitle.textContent = 'Tambah Petugas';
-        method = 'POST';
+        modalTitle.textContent = "Tambah Petugas";
+        method = "POST";
     }
 }
 
 export function populateFormFields(id, form) {
-    axios.get(`/${currentRoute}/${id}/edit`)
-        .then(response => {
+    axios
+        .get(`/${currentRoute}/${id}/edit`)
+        .then((response) => {
             const data = response.data;
             // Create and append the id input field
-            const idField = document.createElement('input');
-            idField.type = 'hidden';
-            idField.name = 'id';
+            const idField = document.createElement("input");
+            idField.type = "hidden";
+            idField.name = "id";
             idField.value = data.id;
             form.appendChild(idField);
             // Populate the form fields with the record data
             const formData = new FormData();
 
-            formData.append('id', data.id);
+            formData.append("id", data.id);
 
             const formElements = form.elements;
             for (let i = 0; i < formElements.length; i++) {
@@ -160,25 +200,27 @@ export function populateFormFields(id, form) {
             }
             // ... (populate other form fields)
         })
-        .catch(error => {
-            console.error('Error fetching record data:', error);
+        .catch((error) => {
+            console.error("Error fetching record data:", error);
         });
 }
 
 let prevLinkClickHandler, nextLinkClickHandler;
 export function renderPagination(data, pageSize, modalTitle, form) {
-    const prevLink = document.getElementById('prevLink');
-    const nextLink = document.getElementById('nextLink');
-    const paginationButton = document.getElementById('paginationButton');
-    const currentPagesSpan = document.getElementById('currentPages');
-    const totalPagesSpan = document.getElementById('totalPages');
+    const prevLink = document.getElementById("prevLink");
+    const nextLink = document.getElementById("nextLink");
+    const paginationButton = document.getElementById("paginationButton");
+    const currentPagesSpan = document.getElementById("currentPages");
+    const totalPagesSpan = document.getElementById("totalPages");
 
     // Clear existing page links
-    paginationButton.innerHTML = '';
+    paginationButton.innerHTML = "";
 
     // Update current and total pages
     if (data.total > 0) {
-        currentPagesSpan.textContent = `${data.current_page * data.per_page - data.per_page + 1} - ${Math.min(data.current_page * data.per_page, data.total)}`;
+        currentPagesSpan.textContent = `${
+            data.current_page * data.per_page - data.per_page + 1
+        } - ${Math.min(data.current_page * data.per_page, data.total)}`;
     } else {
         currentPagesSpan.textContent = "0";
     }
@@ -187,20 +229,21 @@ export function renderPagination(data, pageSize, modalTitle, form) {
 
     // Remove existing event listeners
     if (prevLinkClickHandler) {
-        prevLink.removeEventListener('click', prevLinkClickHandler);
+        prevLink.removeEventListener("click", prevLinkClickHandler);
     }
     if (nextLinkClickHandler) {
-        nextLink.removeEventListener('click', nextLinkClickHandler);
+        nextLink.removeEventListener("click", nextLinkClickHandler);
     }
 
     // Disable/enable previous link
     if (data.current_page === 1) {
-        prevLink.classList.add('cursor-not-allowed');
+        prevLink.classList.add("cursor-not-allowed");
     } else {
-        prevLink.classList.remove('cursor-not-allowed');
+        prevLink.classList.remove("cursor-not-allowed");
         // Attach event listener to the previous link
-        prevLinkClickHandler = () => handlePrevClick(data, pageSize, modalTitle, form);
-        prevLink.addEventListener('click', prevLinkClickHandler);
+        prevLinkClickHandler = () =>
+            handlePrevClick(data, pageSize, modalTitle, form);
+        prevLink.addEventListener("click", prevLinkClickHandler);
     }
 
     // Render page links
@@ -216,64 +259,66 @@ export function renderPagination(data, pageSize, modalTitle, form) {
     }
 
     if (startPage > 1) {
-        const pageLink = document.createElement('li');
-        pageLink.classList.add('inline-block');
+        const pageLink = document.createElement("li");
+        pageLink.classList.add("inline-block");
 
-        const pageLinkButton = document.createElement('button');
-        pageLinkButton.textContent = '1';
+        const pageLinkButton = document.createElement("button");
+        pageLinkButton.textContent = "1";
         pageLinkButton.classList.add(
-            'flex',
-            'items-center',
-            'justify-center',
-            'w-6',
-            'h-6',
-            'bg-slate-100',
-            'dark:bg-slate-700',
-            'dark:hover:bg-black-500',
-            'text-slate-800',
-            'dark:text-white',
-            'rounded',
-            'mx-1',
-            'hover:bg-black-500',
-            'hover:text-white',
-            'text-sm',
-            'font-Inter',
-            'font-medium',
-            'transition-all',
-            'duration-300'
+            "flex",
+            "items-center",
+            "justify-center",
+            "w-6",
+            "h-6",
+            "bg-slate-100",
+            "dark:bg-slate-700",
+            "dark:hover:bg-black-500",
+            "text-slate-800",
+            "dark:text-white",
+            "rounded",
+            "mx-1",
+            "hover:bg-black-500",
+            "hover:text-white",
+            "text-sm",
+            "font-Inter",
+            "font-medium",
+            "transition-all",
+            "duration-300"
         );
-        pageLinkButton.addEventListener('click', () => handlePaginationClick(1, pageSize, data, modalTitle, form));
+        pageLinkButton.addEventListener("click", () =>
+            handlePaginationClick(1, pageSize, data, modalTitle, form)
+        );
 
         pageLink.appendChild(pageLinkButton);
         paginationButton.appendChild(pageLink);
 
         if (startPage > 2) {
-            const ellipsisLink = document.createElement('li');
-            ellipsisLink.classList.add('inline-block');
+            const ellipsisLink = document.createElement("li");
+            ellipsisLink.classList.add("inline-block");
 
-            const ellipsisButton = document.createElement('button');
-            ellipsisButton.textContent = '...';
+            const ellipsisButton = document.createElement("button");
+            ellipsisButton.textContent = "...";
             ellipsisButton.classList.add(
-                'flex',
-                'items-center',
-                'justify-center',
-                'w-6',
-                'h-6',
-                'bg-slate-100',
-                'dark:bg-slate-700',
-                'dark:hover:bg-black-500',
-                'text-slate-800',
-                'dark:text-white',
-                'rounded',
-                'mx-1',
-                'hover:bg-black-500',
-                'hover:text-white',
-                'text-sm',
-                'font-Inter',
-                'font-medium',
-                'transition-all',
-                'duration-300',
-                'cursor-default'
+                "flex",
+                "items-center",
+                "justify-center",
+                "w-6",
+                "h-6",
+                "bg-slate-100",
+                "dark:bg-slate-700",
+                "dark:hover:bg-black-500",
+                "text-slate-800",
+                "dark:text-white",
+                "rounded",
+                "mx-1",
+                "hover:bg-black-500",
+                "hover:text-white",
+                "text-sm",
+                "font-Inter",
+                "font-medium",
+                "transition-all",
+                "duration-300",
+                "cursor-default"
             );
 
             ellipsisLink.appendChild(ellipsisButton);
@@ -282,37 +327,39 @@ export function renderPagination(data, pageSize, modalTitle, form) {
     }
 
     for (let i = startPage; i <= endPage; i++) {
-        const pageLink = document.createElement('li');
-        pageLink.classList.add('inline-block');
+        const pageLink = document.createElement("li");
+        pageLink.classList.add("inline-block");
 
-        const pageLinkButton = document.createElement('button');
+        const pageLinkButton = document.createElement("button");
         pageLinkButton.textContent = i;
         pageLinkButton.classList.add(
-            'flex',
-            'items-center',
-            'justify-center',
-            'w-6',
-            'h-6',
-            'bg-slate-100',
-            'dark:bg-slate-700',
-            'dark:hover:bg-black-500',
-            'text-slate-800',
-            'dark:text-white',
-            'rounded',
-            'mx-1',
-            'hover:bg-black-500',
-            'hover:text-white',
-            'text-sm',
-            'font-Inter',
-            'font-medium',
-            'transition-all',
-            'duration-300'
+            "flex",
+            "items-center",
+            "justify-center",
+            "w-6",
+            "h-6",
+            "bg-slate-100",
+            "dark:bg-slate-700",
+            "dark:hover:bg-black-500",
+            "text-slate-800",
+            "dark:text-white",
+            "rounded",
+            "mx-1",
+            "hover:bg-black-500",
+            "hover:text-white",
+            "text-sm",
+            "font-Inter",
+            "font-medium",
+            "transition-all",
+            "duration-300"
         );
 
         if (i === data.current_page) {
-            pageLinkButton.classList.add('p-active', 'cursor-not-allowed');
+            pageLinkButton.classList.add("p-active", "cursor-not-allowed");
         } else {
-            pageLinkButton.addEventListener('click', () => handlePaginationClick(i, pageSize, data, modalTitle, form));
+            pageLinkButton.addEventListener("click", () =>
+                handlePaginationClick(i, pageSize, data, modalTitle, form)
+            );
         }
 
         pageLink.appendChild(pageLinkButton);
@@ -320,64 +367,72 @@ export function renderPagination(data, pageSize, modalTitle, form) {
     }
 
     if (endPage < data.last_page) {
-        const ellipsisLink = document.createElement('li');
-        ellipsisLink.classList.add('inline-block');
+        const ellipsisLink = document.createElement("li");
+        ellipsisLink.classList.add("inline-block");
 
-        const ellipsisButton = document.createElement('button');
-        ellipsisButton.textContent = '...';
+        const ellipsisButton = document.createElement("button");
+        ellipsisButton.textContent = "...";
         ellipsisButton.classList.add(
-            'flex',
-            'items-center',
-            'justify-center',
-            'w-6',
-            'h-6',
-            'bg-slate-100',
-            'dark:bg-slate-700',
-            'dark:hover:bg-black-500',
-            'text-slate-800',
-            'dark:text-white',
-            'rounded',
-            'mx-1',
-            'hover:bg-black-500',
-            'hover:text-white',
-            'text-sm',
-            'font-Inter',
-            'font-medium',
-            'transition-all',
-            'duration-300',
-            'cursor-default'
+            "flex",
+            "items-center",
+            "justify-center",
+            "w-6",
+            "h-6",
+            "bg-slate-100",
+            "dark:bg-slate-700",
+            "dark:hover:bg-black-500",
+            "text-slate-800",
+            "dark:text-white",
+            "rounded",
+            "mx-1",
+            "hover:bg-black-500",
+            "hover:text-white",
+            "text-sm",
+            "font-Inter",
+            "font-medium",
+            "transition-all",
+            "duration-300",
+            "cursor-default"
         );
 
         ellipsisLink.appendChild(ellipsisButton);
         paginationButton.appendChild(ellipsisLink);
 
-        const pageLink = document.createElement('li');
-        pageLink.classList.add('inline-block');
+        const pageLink = document.createElement("li");
+        pageLink.classList.add("inline-block");
 
-        const pageLinkButton = document.createElement('button');
+        const pageLinkButton = document.createElement("button");
         pageLinkButton.textContent = data.last_page;
         pageLinkButton.classList.add(
-            'flex',
-            'items-center',
-            'justify-center',
-            'w-6',
-            'h-6',
-            'bg-slate-100',
-            'dark:bg-slate-700',
-            'dark:hover:bg-black-500',
-            'text-slate-800',
-            'dark:text-white',
-            'rounded',
-            'mx-1',
-            'hover:bg-black-500',
-            'hover:text-white',
-            'text-sm',
-            'font-Inter',
-            'font-medium',
-            'transition-all',
-            'duration-300'
+            "flex",
+            "items-center",
+            "justify-center",
+            "w-6",
+            "h-6",
+            "bg-slate-100",
+            "dark:bg-slate-700",
+            "dark:hover:bg-black-500",
+            "text-slate-800",
+            "dark:text-white",
+            "rounded",
+            "mx-1",
+            "hover:bg-black-500",
+            "hover:text-white",
+            "text-sm",
+            "font-Inter",
+            "font-medium",
+            "transition-all",
+            "duration-300"
         );
-        pageLinkButton.addEventListener('click', () => handlePaginationClick(data.last_page, pageSize, data, modalTitle, form));
+        pageLinkButton.addEventListener("click", () =>
+            handlePaginationClick(
+                data.last_page,
+                pageSize,
+                data,
+                modalTitle,
+                form
+            )
+        );
 
         pageLink.appendChild(pageLinkButton);
         paginationButton.appendChild(pageLink);
@@ -385,30 +440,59 @@ export function renderPagination(data, pageSize, modalTitle, form) {
 
     // Disable/enable next link
     if (data.current_page === data.last_page) {
-        nextLink.classList.add('cursor-not-allowed');
+        nextLink.classList.add("cursor-not-allowed");
     } else {
-        nextLink.classList.remove('cursor-not-allowed');
+        nextLink.classList.remove("cursor-not-allowed");
         // Attach event listener to the next link
-        nextLinkClickHandler = () => handleNextClick(data, pageSize, modalTitle, form);
-        nextLink.addEventListener('click', nextLinkClickHandler);
+        nextLinkClickHandler = () =>
+            handleNextClick(data, pageSize, modalTitle, form);
+        nextLink.addEventListener("click", nextLinkClickHandler);
     }
 }
 
 export function handlePrevClick(paginationData, pageSize, modalTitle, form) {
-    fetchAndRenderData(paginationData.current_page - 1, pageSize, paginationData, modalTitle, form);
+    fetchAndRenderData(
+        paginationData.current_page - 1,
+        pageSize,
+        paginationData,
+        modalTitle,
+        form
+    );
 }
 
 export function handleNextClick(paginationData, pageSize, modalTitle, form) {
-    fetchAndRenderData(paginationData.current_page + 1, pageSize, paginationData, modalTitle, form);
+    fetchAndRenderData(
+        paginationData.current_page + 1,
+        pageSize,
+        paginationData,
+        modalTitle,
+        form
+    );
 }
 
-export function handlePaginationClick(page, pageSize, paginationData, modalTitle, form) {
+export function handlePaginationClick(
+    page,
+    pageSize,
+    paginationData,
+    modalTitle,
+    form
+) {
     fetchAndRenderData(page, pageSize, paginationData, modalTitle, form);
 }
 
-export function fetchAndRenderData(page = 1, size = pageSize, paginationData, modalTitle, form, searchQuery = '') {
+export function fetchAndRenderData(
+    page = 1,
+    size = pageSize,
+    paginationData,
+    modalTitle,
+    form,
+    searchQuery = ""
+) {
     // console.log('fck');
-    axios.get(`/${currentRoute}/table?page=${page}&size=${size}&search=${searchQuery}`)
+    axios
+        .get(
+            `/${currentRoute}/table?page=${page}&size=${size}&search=${searchQuery}`
+        )
         .then(function (tableResponse) {
             // Update the table container with the new table data
             tableContainer.innerHTML = tableResponse.data.html;
@@ -425,7 +509,7 @@ export function fetchAndRenderData(page = 1, size = pageSize, paginationData, mo
             attachEditBtnListeners(modalTitle, form);
         })
         .catch(function (error) {
-            console.error('Error fetching table data:', error);
+            console.error("Error fetching table data:", error);
         });
 }
 
