@@ -32,7 +32,7 @@ const Blok2 = ({ petugas_id, pengawas_id }) => {
             <thead>
                 <tr className={styles.row}>
                     <td colSpan={3} className={styles.title}>
-                        I. KETERANGAN PETUGAS
+                        II. KETERANGAN PETUGAS
                     </td>
                 </tr>
                 <tr>

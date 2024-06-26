@@ -361,7 +361,7 @@ const Blok3 = () => {
                 </tr>
             </thead>
             <tbody>
-                {!loading &&
+                {/* {!loading &&
                     changedCommodities.map((quality) => (
                         <tr>
                             <td className={styles.data}>
@@ -393,7 +393,7 @@ const Blok3 = () => {
                                 />
                             </td>
                         </tr>
-                    ))}
+                    ))} */}
             </tbody>
         </table>
     );

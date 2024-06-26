@@ -28,6 +28,7 @@ import {
     ReloadOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const blok1 = {
     bulan: "Januari",
@@ -42,6 +43,7 @@ const blok1 = {
 
 const Edit = ({
     response,
+    blok1,
     sample,
     document,
     sections,
@@ -51,12 +53,12 @@ const Edit = ({
     selectedQualities,
     previousPrices,
 }) => {
-    // console.log({ selectedQualities });
+    // console.log({ response });
     const [form] = Form.useForm();
 
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [blok1, setBlok1] = useState({});
+    // const [blok1, setBlok1] = useState({});
     const [blok2, setBlok2] = useState({});
     const [qualityChanges, setQualityChanges] = useState({});
     const [openRevalModal, setOpenRevalModal] = useState(false);
@@ -91,28 +93,23 @@ const Edit = ({
     ];
 
     useEffect(() => {
-        setBlok1({
-            bulan: "2",
-            nama_bulan: "Februari",
-            tahun: "2024",
-            nama_desa: "SANGTOMBOLANG",
-            kode_desa: "001",
-            nama_kecamatan: "SANGKUB",
-            kode_kecamatan: "010",
-            nama_kabupaten: "BOLAANG MONGONDOW UTARA",
-            kode_kabupaten: "7107",
-            respondent_name: sample.respondent_name,
-        });
+        blok1["respondent_name"] = sample.respondent_name;
         setBlok2({
             petugas_nip: "",
             pemeriksa_nip: "",
         });
         form.setFieldsValue({
             respondent_name: sample.respondent_name,
+            commodities: response.commodities,
+            notes: response.notes,
 
             response_id: response.id,
+            petugas_id: response.petugas_id,
+            pengawas_id: response.pengawas_id,
+            enumeration_date: dayjs(new Date(response.enumeration_date)),
+            review_date: dayjs(new Date(response.review_date)),
         });
-        console.log({ qualities });
+        // console.log({ qualities });
     }, []);
 
     const tabs = [
@@ -154,7 +151,12 @@ const Edit = ({
     ];
 
     const onFinish = async (values) => {
-        console.log({ values });
+        // filter previous prices
+        const filteredValues = Object.fromEntries(
+            Object.entries(values).filter(([key]) => !key.includes("prev"))
+        );
+        // console.log({ filteredValues });
+        // return;
         messageApi.open({
             type: "loading",
             content: "Menyimpan Dokumen...",
@@ -162,7 +164,7 @@ const Edit = ({
         });
         const response = await axios.patch(
             `/responses/${values.response_id}`,
-            values,
+            filteredValues,
             {
                 headers: { "Content-Type": "application/json" },
             }
@@ -174,7 +176,7 @@ const Edit = ({
         });
         try {
         } catch (error) {
-            console.log({ error });
+            // console.log({ error });
             messageApi.open({
                 type: "error",
                 content: "An error occurred while saving",

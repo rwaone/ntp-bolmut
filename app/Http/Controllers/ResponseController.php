@@ -7,6 +7,7 @@ use App\Http\Requests\StoreResponseRequest;
 use App\Http\Requests\UpdateResponseRequest;
 use App\Models\Commodity;
 use App\Models\Data;
+use App\Models\Desa;
 use App\Models\Document;
 use App\Models\Kabupaten;
 use App\Models\Quality;
@@ -15,6 +16,7 @@ use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Throwable;
 
 class ResponseController extends Controller
 {
@@ -286,35 +288,73 @@ class ResponseController extends Controller
                 return $commodity->qualities;
             });
 
-            // Check if a response exists for the previous month
-            $previousMonth = $response->month === 1 ? 12 : $response->month - 1;
-            $previousYear = $response->month === 1 ? $response->year - 1 : $response->year;
-            $previousResponse = Response::where('sample_id', $response->sample_id)
-                ->where('month', $previousMonth)
-                ->where('year', $previousYear)
-                ->first();
+            $bulanText = [
+                1 => 'Januari',
+                2 => 'Februari',
+                3 => 'Maret',
+                4 => 'April',
+                5 => 'Mei',
+                6 => 'Juni',
+                7 => 'Juli',
+                8 => 'Agustus',
+                9 => 'September',
+                10 => 'Oktober',
+                11 => 'November',
+                12 => 'Desember'
+            ];
 
-            // If a previous response exists, get the selected qualities and prices from it
-            $selectedQualities = [];
-            $previousPrices = [];
-            if ($previousResponse) {
-                $selectedQualities = $previousResponse->datas->pluck('quality_id')->toArray();
-                $previousPrices = $previousResponse->datas->mapWithKeys(function ($item) {
-                    return [$item->quality_id => $item->price];
-                })->toArray();
-            }
+            $bulan = $response->month;
+            $nama_bulan = $bulanText[$bulan];
+            $tahun = $response->year;
+            $desa_response = Desa::with('kecamatan.kabupaten')->findOrFail($sample->desa_id);
+
+            $desa = $desa_response;
+            $kecamatan = $desa->kecamatan;
+            $kabupaten = $kecamatan->kabupaten;
+
+            $nama_desa = $desa->name;
+            $kode_desa = $desa->code;
+
+            $nama_kecamatan = $kecamatan->name;
+            $kode_kecamatan = $kecamatan->code;
+
+            $nama_kabupaten = $kabupaten->name;
+            $kode_kabupaten = $kabupaten->code;
+
+            $blok1 = [
+                'bulan' => $bulan,
+                'nama_bulan' => $nama_bulan,
+                'tahun' => $tahun,
+                'nama_desa' => $nama_desa,
+                'kode_desa' => $kode_desa,
+                'nama_kecamatan' => $nama_kecamatan,
+                'kode_kecamatan' => $kode_kecamatan,
+                'nama_kabupaten' => $nama_kabupaten,
+                'kode_kabupaten' => $kode_kabupaten
+            ];
+
+            $new_response = [
+
+                'petugas_id' => $response['petugas_id'],
+                'id' => $response['id'],
+                'pengawas_id' => $response['pengawas_id'],
+                'enumeration_date' => $response['enumeration_date'],
+                'review_date' => $response['review_date'],
+                'respondent_name' => $response['sample']['respondent_name'],
+                'desa_name' => $nama_desa,
+                'commodities' => $response['commodities'],
+                'notes' => $response['notes'],
+
+            ];
 
             // Redirect to the data entry form with the response ID and necessary data
             return Inertia::render('Document/Edit', [
-                'response' => $response,
+                'response' => $new_response,
                 'sample' => $sample,
-                'document' => $document,
                 'sections' => $sections,
                 'groups' => $groups,
-                'commodities' => $commodities,
                 'qualities' => $qualities,
-                'selectedQualities' => $selectedQualities,
-                'previousPrices' => $previousPrices,
+                'blok1' => $blok1,
             ]);
         } catch (\Throwable $th) {
             // Handle the exception
@@ -381,13 +421,13 @@ class ResponseController extends Controller
             // dd($request->all());
             foreach ($validatedData as $key => $value) {
                 if (str_contains($key, '-price')) {
-                    $dataId = $key;
-                    $data = Data::where('response_id', $response->id)
-                        ->where('id', explode('-', $key)[0])
-                        ->firstOrNew();
+                    $dataId = explode('-', $key)[0];
+                    // dd($dataId);
+                    $data = Data::where('id', $dataId)->first();
+                    // dd($data);
 
-                    $quality = Quality::find($data->quality_id);
-                    $commodity = Commodity::find($quality->commodity_id);
+                    // $quality = Quality::find($data->quality_id);
+                    // $commodity = Commodity::find($quality->commodity_id);
 
                     // Validate price range based on quality
                     // if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
@@ -443,8 +483,9 @@ class ResponseController extends Controller
                 ]);
                 return response()->json(['message' => 'Data berhasil disimpan dengan status clean'], 201);
             }
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } catch (Throwable $th) {
+            throw $th;
+            // return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
