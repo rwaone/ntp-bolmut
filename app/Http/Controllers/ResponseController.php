@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Response;
 use App\Http\Requests\StoreResponseRequest;
 use App\Http\Requests\UpdateResponseRequest;
+use App\Models\Commodity;
+use App\Models\Data;
 use App\Models\Document;
 use App\Models\Kabupaten;
 use App\Models\Quality;
 use App\Models\Sample;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ResponseController extends Controller
@@ -327,10 +330,124 @@ class ResponseController extends Controller
      * @param  \App\Models\Response  $response
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateResponseRequest $request, Response $response)
+    public function update(Request $request)
     {
-        //
+        try {
+            // Define custom validation error messages
+            $customMessages = [
+                'petugas_id.required' => 'Pencacah harus terisi',
+                'pengawas_id.required' => 'Pengawas harus terisi',
+                'enumeration_date.required' => 'Tanggal pencacahan harus terisi',
+                'review_date.required' => 'Tanggal pemeriksaan harus terisi',
+                'komoditas.required' => 'Komoditas harus terisi',
+            ];
+
+            // Validate the incoming request data
+            // $validator = Validator::make($request->all(), [
+            //     'petugas_id' => 'required|exists:users,id',
+            //     'pengawas_id' => 'required|exists:users,id',
+            //     'enumeration_date' => 'required|date',
+            //     'review_date' => 'required|date',
+            //     'respondent_name' => 'required|string',
+            //     'desa_name' => 'required|string',
+            //     'komoditas' => 'required|string',
+            //     'notes' => 'nullable|string',
+            //     '*.price' => 'nullable|numeric',
+            // ], $customMessages);
+
+            // $validatedData = $validator->validated();
+            $validatedData = $request->all();
+            $errors = [];
+
+            // Find the response record based on the request data
+            // $response = Response::where('response_id', $request->input('response_id'))
+            // ->where('month', $request->input('month'))
+            // ->where('year', $request->input('year'))
+            // ->firstOrFail();
+            $response = Response::findOrFail($request->input('response_id'));
+
+
+            // Update the response record
+            $response->update([
+                'petugas_id' => $validatedData['petugas_id'] ?? null,
+                'pengawas_id' => $validatedData['pengawas_id'] ?? null,
+                'enumeration_date' => $validatedData['enumeration_date'] ?? null,
+                'review_date' => $validatedData['review_date'] ?? null,
+                'commodities' => $validatedData['commodities'] ?? null,
+                'notes' => $validatedData['notes'] ?? null,
+            ]);
+
+            // Update the data records
+            // dd($request->all());
+            foreach ($validatedData as $key => $value) {
+                if (str_contains($key, '-price')) {
+                    $dataId = $key;
+                    $data = Data::where('response_id', $response->id)
+                        ->where('id', explode('-', $key)[0])
+                        ->firstOrNew();
+
+                    $quality = Quality::find($data->quality_id);
+                    $commodity = Commodity::find($quality->commodity_id);
+
+                    // Validate price range based on quality
+                    // if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
+                    //     $errors[] = [
+                    //         'id' => $dataId,
+                    //         'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
+                    //     ];
+                    // }
+
+                    // Validate price change based on commodity
+                    // if ($commodity) {
+                    //     $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
+                    //     $change = ($previousMonthPrice - $value) / 100;
+
+                    //     if ($change < 0 && abs($change) > abs($commodity->min_change)) {
+                    //         $errors[] = [
+                    //             'id' => $dataId,
+                    //             'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_change}%",
+                    //         ];
+                    //     } elseif ($change > 0 && $change > $commodity->max_change) {
+                    //         $errors[] = [
+                    //             'id' => $dataId,
+                    //             'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_change}%",
+                    //         ];
+                    //     }
+                    // }
+
+                    $data->price = $value;
+                    // dd($data);
+                    $data->save();
+                }
+            }
+
+            // // Handle validation errors for required fields
+            // $validator->errors()->add('values', []);
+            // foreach ($validator->errors()->get('values.*') as $key => $messages) {
+            //     foreach ($messages as $message) {
+            //         $errors[] = [
+            //             'id' => $key,
+            //             'message' => $message,
+            //         ];
+            //     }
+            // }
+
+            if (!empty($errors)) {
+                $response->update([
+                    'status' => 'E'
+                ]);
+                return response()->json(['errors' => $errors], 422);
+            } else {
+                $response->update([
+                    'status' => 'C'
+                ]);
+                return response()->json(['message' => 'Data berhasil disimpan dengan status clean'], 201);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -341,5 +458,23 @@ class ResponseController extends Controller
     public function destroy(Response $response)
     {
         //
+    }
+
+    private function getPreviousMonthPrice($sampleId, $month, $year, $qualityId)
+    {
+        $previousMonth = $month === 1 ? 12 : $month - 1;
+        $previousYear = $month === 1 ? $year - 1 : $year;
+
+        $previousResponse = Response::where('sample_id', $sampleId)
+            ->where('month', $previousMonth)
+            ->where('year', $previousYear)
+            ->first();
+
+        if ($previousResponse) {
+            $previousData = $previousResponse->data->where('quality_id', $qualityId)->first();
+            return $previousData ? $previousData->price : null;
+        }
+
+        return null;
     }
 }

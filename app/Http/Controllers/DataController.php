@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Data;
 use App\Http\Requests\StoreDataRequest;
 use App\Http\Requests\UpdateDataRequest;
+use App\Models\Response;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -108,6 +110,12 @@ class DataController extends Controller
         $sectionId = $request->query('sectionId');
         $responseId = $request->query('responseId');
         $isChange = $request->query('isChange');
+
+        $response = Response::with('datas')->where('id', $responseId)->first();
+
+
+
+
         $data = Data::join('qualities', 'data.quality_id', 'qualities.id')
             ->join('commodities', 'qualities.commodity_id', 'commodities.id')
             ->join('groups', 'commodities.group_id', 'groups.id')
@@ -118,20 +126,41 @@ class DataController extends Controller
         if ($sectionId) {
             $data->where('sections.id', $sectionId);
         }
+
         if ($responseId) {
             $data->where('data.response_id', $responseId);
         }
 
-        // get prev price by id data and assign to current data
-        // get sample with bys 
+        $existingData = $data->get();
 
-        // get prev response
-        // get quality
-        // get prev data
+        if ($existingData->isEmpty()) {
+            $section = Section::with('groups.commodities.qualities')->findOrFail($sectionId);
+            $groups = $section->groups;
 
-        $data = $data->get();
-        if ($isChange == '1') {
+            foreach ($groups as $group) {
+                $commodities = $group->commodities;
+
+                foreach ($commodities as $commodity) {
+                    $qualities = $commodity->qualities()->get();
+
+                    foreach ($qualities as $quality) {
+                        $data = new Data([
+                            'response_id' => $responseId,
+                            'quality_id' => $quality->id,
+                            'price' => 0,
+                        ]);
+                        $response->datas()->save($data);
+                    }
+                }
+            }
+
+            $existingData = $response->datas;
         }
-        return response()->json($data, 200);
+
+        if ($isChange == '1') {
+            // Handle the case when $isChange is '1'
+        }
+
+        return response()->json($existingData, 200);
     }
 }

@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Space } from "antd";
 import styles from "../Document.module.css";
 import RowCommodity from "./RowCommodity";
 import { useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import RupiahInput from "../../../components/RupiahInput";
 
 const Blok3 = () => {
     const [changedCommodities, setChangedCommodities] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const dummyData = [
@@ -360,34 +361,39 @@ const Blok3 = () => {
                 </tr>
             </thead>
             <tbody>
-                {changedCommodities.map((quality) => (
-                    <tr>
-                        <td className={styles.data}>
-                            {quality.commodity_name}
-                        </td>
-                        <td className={styles.data}>{quality.quality_name}</td>
-                        <td className={styles.data}>{quality.satuan}</td>
-                        <td className={styles.data}>{quality.quality_code}</td>
-                        <td className={styles.data_right}>
-                            <RupiahInput
-                                className={styles.form_item}
-                                key={`rupiah-${quality.id}`}
-                                inputName={`${quality.id}-price`}
-                                initialValue={quality.price}
-                                readOnly
-                            />
-                        </td>
-                        <td className={styles.data_right}>
-                            <RupiahInput
-                                className={styles.form_item}
-                                inputName={`${quality.id}-price-prev`}
-                                key={`prev-rupiah-${quality.id}`}
-                                readOnly
-                                initialValue={0}
-                            />
-                        </td>
-                    </tr>
-                ))}
+                {!loading &&
+                    changedCommodities.map((quality) => (
+                        <tr>
+                            <td className={styles.data}>
+                                {quality.commodity_name}
+                            </td>
+                            <td className={styles.data}>
+                                {quality.quality_name}
+                            </td>
+                            <td className={styles.data}>{quality.satuan}</td>
+                            <td className={styles.data}>
+                                {quality.quality_code}
+                            </td>
+                            <td className={styles.data_right}>
+                                <RupiahInput
+                                    className={styles.form_item}
+                                    key={`rupiah-${quality.id}`}
+                                    inputName={`${quality.id}-price`}
+                                    initialValue={quality.price}
+                                    readOnly
+                                />
+                            </td>
+                            <td className={styles.data_right}>
+                                <RupiahInput
+                                    className={styles.form_item}
+                                    inputName={`${quality.id}-price-prev`}
+                                    key={`prev-rupiah-${quality.id}`}
+                                    readOnly
+                                    initialValue={0}
+                                />
+                            </td>
+                        </tr>
+                    ))}
             </tbody>
         </table>
     );

@@ -132,7 +132,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/responses/fetchSample', [ResponseController::class, 'fetchSample'])->name('responses.fetchSample');
     Route::post('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
     Route::get('/responses/edit/{response}', [ResponseController::class, 'edit'])->name('responses.edit');
-
+    Route::patch('/responses/{response}', [ResponseController::class, 'update'])->name('responses.update');
     // Database Backup
     Route::resource('database-backups', DatabaseBackupController::class);
     // Route::resource('responses', ResponseController::class);

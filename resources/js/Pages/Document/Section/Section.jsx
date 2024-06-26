@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Modal, Popconfirm, message } from "antd";
+import { Button, Form, Modal, Popconfirm, Spin, message } from "antd";
 import styles from "../Document.module.css";
 import { useEffect, useState } from "react";
 
@@ -19,6 +19,7 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [changes, setChanges] = useState([]);
+    const [DataLoading, setDataLoading] = useState(false);
 
     const [messageApi, contextHolder] = message.useMessage();
     const submitAddQuality = async () => {
@@ -125,13 +126,15 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
     const fetchQualities = async (sectionId) => {
         try {
             //start loading
+            setDataLoading(true);
             const { data } = await axios.get("/api/data", {
-                params: { sectionId: sectionId },
+                params: { sectionId: sectionId, responseId: response_id },
             });
             setQualities(data);
         } catch (error) {
         } finally {
             //finish loading
+            setDataLoading(false);
         }
     };
     useEffect(() => {
@@ -160,132 +163,162 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                 >
                     Tambah Kualitas
                 </Button>
-
-                <table className={styles.table}>
-                    <thead>
-                        <tr className={styles.row}>
-                            <td colSpan={8} className={styles.title}>
-                                {title}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                className={`${styles.data_center} min-w-[300px]`}
-                            >
-                                Nama Barang/Jasa
-                            </td>
-                            <td
-                                className={`${styles.data_center} min-w-[300px]`}
-                            >
-                                Kualitas
-                            </td>
-                            <td className={`${styles.data_center}`}>Satuan</td>
-                            <td className={`${styles.data_center}`}>
-                                Kode Kualitas
-                            </td>
-                            <td className={`${styles.data_center}`}>
-                                Harga Bulan Pencacahan (Rp)
-                            </td>
-                            <td className={`${styles.data_center}`}>
-                                Harga Bulan Sebelumnya (Rp)
-                            </td>
-                            <td
-                                className={`${styles.data_center} max-w-[20px]`}
-                            >
-                                Perubahan (%)
-                            </td>
-                            <td className={`${styles.data_center}`}>Hapus</td>
-                        </tr>
-                        <tr>
-                            <td
-                                className={`${styles.data_center} min-w-[300px]`}
-                            >
-                                (1)
-                            </td>
-                            <td
-                                className={`${styles.data_center} min-w-[300px]`}
-                            >
-                                (2)
-                            </td>
-                            <td className={`${styles.data_center}`}>(3)</td>
-                            <td className={`${styles.data_center}`}>(4)</td>
-                            <td className={`${styles.data_center}`}>(5)</td>
-                            <td className={`${styles.data_center}`}>(6)</td>
-                            <td
-                                className={`${styles.data_center} max-w-[20px]`}
-                            >
-                                (7)
-                            </td>
-                            <td className={`${styles.data_center}`}>(8)</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {groups.map((group) => (
-                            <React.Fragment key={group.id}>
-                                <tr>
-                                    <td className={styles.group} colSpan={8}>
-                                        {group.name}
-                                    </td>
-                                </tr>
-                                {qualities
-                                    .filter(
-                                        (quality) =>
-                                            quality.group_id === group.id
-                                    )
-                                    .map((quality) => (
-                                        <tr>
-                                            <td className={styles.data}>
-                                                {quality.commodity_name}
-                                            </td>
-                                            <td className={styles.data}>
-                                                {quality.quality_name}
-                                            </td>
-                                            <td className={styles.data}>
-                                                {quality.satuan}
-                                            </td>
-                                            <td className={styles.data}>
-                                                {quality.quality_code}
-                                            </td>
-                                            <td className={styles.data_right}>
-                                                <RupiahInput
-                                                    className={styles.form_item}
-                                                    key={`rupiah-${quality.id}`}
-                                                    inputName={`${quality.id}-price`}
-                                                    initialValue={quality.price}
-                                                />
-                                            </td>
-                                            <td className={styles.data_right}>
-                                                <RupiahInput
-                                                    className={styles.form_item}
-                                                    inputName={`${quality.id}-price-prev`}
-                                                    key={`prev-rupiah-${quality.id}`}
-                                                    readOnly
-                                                    initialValue={0}
-                                                />
-                                            </td>
-                                            <td className={styles.data_right}>
-                                                {qualityChanges[quality.id]}
-                                            </td>
-
-                                            <td className={styles.data_center}>
-                                                <Popconfirm
-                                                    title="Apakah anda yakin ingin menghapus"
-                                                    onConfirm={() =>
-                                                        confirmDeleteQuality(
-                                                            quality.id,
-                                                            id
-                                                        )
+                <Spin spinning={DataLoading} tip="Memuat data...">
+                    <table className={styles.table}>
+                        <thead>
+                            <tr className={styles.row}>
+                                <td colSpan={8} className={styles.title}>
+                                    {title}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    className={`${styles.data_center} min-w-[300px]`}
+                                >
+                                    Nama Barang/Jasa
+                                </td>
+                                <td
+                                    className={`${styles.data_center} min-w-[300px]`}
+                                >
+                                    Kualitas
+                                </td>
+                                <td className={`${styles.data_center}`}>
+                                    Satuan
+                                </td>
+                                <td className={`${styles.data_center}`}>
+                                    Kode Kualitas
+                                </td>
+                                <td className={`${styles.data_center}`}>
+                                    Harga Bulan Pencacahan (Rp)
+                                </td>
+                                <td className={`${styles.data_center}`}>
+                                    Harga Bulan Sebelumnya (Rp)
+                                </td>
+                                <td
+                                    className={`${styles.data_center} max-w-[20px]`}
+                                >
+                                    Perubahan (%)
+                                </td>
+                                <td className={`${styles.data_center}`}>
+                                    Hapus
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    className={`${styles.data_center} min-w-[300px]`}
+                                >
+                                    (1)
+                                </td>
+                                <td
+                                    className={`${styles.data_center} min-w-[300px]`}
+                                >
+                                    (2)
+                                </td>
+                                <td className={`${styles.data_center}`}>(3)</td>
+                                <td className={`${styles.data_center}`}>(4)</td>
+                                <td className={`${styles.data_center}`}>(5)</td>
+                                <td className={`${styles.data_center}`}>(6)</td>
+                                <td
+                                    className={`${styles.data_center} max-w-[20px]`}
+                                >
+                                    (7)
+                                </td>
+                                <td className={`${styles.data_center}`}>(8)</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {groups.map((group) => (
+                                <React.Fragment key={group.id}>
+                                    <tr>
+                                        <td
+                                            className={styles.group}
+                                            colSpan={8}
+                                        >
+                                            {group.name}
+                                        </td>
+                                    </tr>
+                                    {qualities
+                                        .filter(
+                                            (quality) =>
+                                                quality.group_id === group.id
+                                        )
+                                        .map((quality) => (
+                                            <tr>
+                                                <td className={styles.data}>
+                                                    {quality.commodity_name}
+                                                </td>
+                                                <td className={styles.data}>
+                                                    {quality.quality_name}
+                                                </td>
+                                                <td className={styles.data}>
+                                                    {quality.satuan}
+                                                </td>
+                                                <td className={styles.data}>
+                                                    {quality.quality_code}
+                                                </td>
+                                                <td
+                                                    className={
+                                                        styles.data_right
                                                     }
                                                 >
-                                                    <DeleteOutlined />
-                                                </Popconfirm>
-                                            </td>
-                                        </tr>
-                                    ))}
-                            </React.Fragment>
-                        ))}
-                    </tbody>
-                </table>
+                                                    <RupiahInput
+                                                        className={
+                                                            styles.form_item
+                                                        }
+                                                        key={`rupiah-${quality.id}`}
+                                                        inputName={`${quality.id}-price`}
+                                                        initialValue={
+                                                            quality.price
+                                                        }
+                                                    />
+                                                </td>
+                                                <td
+                                                    className={
+                                                        styles.data_right
+                                                    }
+                                                >
+                                                    <RupiahInput
+                                                        className={
+                                                            styles.form_item
+                                                        }
+                                                        inputName={`${quality.id}-price-prev`}
+                                                        key={`prev-rupiah-${quality.id}`}
+                                                        readOnly
+                                                        initialValue={100000}
+                                                    />
+                                                </td>
+                                                <td
+                                                    className={
+                                                        styles.data_right
+                                                    }
+                                                >
+                                                    {qualityChanges[quality.id]}
+                                                </td>
+
+                                                <td
+                                                    className={
+                                                        styles.data_center
+                                                    }
+                                                >
+                                                    <Popconfirm
+                                                        title="Apakah anda yakin ingin menghapus"
+                                                        onConfirm={() =>
+                                                            confirmDeleteQuality(
+                                                                quality.id,
+                                                                id
+                                                            )
+                                                        }
+                                                    >
+                                                        <DeleteOutlined />
+                                                    </Popconfirm>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </React.Fragment>
+                            ))}
+                        </tbody>
+                    </table>
+                </Spin>
             </div>
         </React.Fragment>
     );

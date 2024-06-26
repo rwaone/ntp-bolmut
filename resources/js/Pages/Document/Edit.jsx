@@ -8,6 +8,7 @@ import {
     message,
     Table,
     Input,
+    Spin,
 } from "antd";
 import Blok3 from "./Blok3/Blok3";
 import Blok4 from "./Blok4/Blok4";
@@ -152,8 +153,34 @@ const Edit = ({
         },
     ];
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         console.log({ values });
+        messageApi.open({
+            type: "loading",
+            content: "Menyimpan Dokumen...",
+            key: "document-save",
+        });
+        const response = await axios.patch(
+            `/responses/${values.response_id}`,
+            values,
+            {
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+        messageApi.open({
+            type: "success",
+            content: "Berhasil menyimpan dokumen",
+            key: "document-save",
+        });
+        try {
+        } catch (error) {
+            console.log({ error });
+            messageApi.open({
+                type: "error",
+                content: "An error occurred while saving",
+                key: "document-save",
+            });
+        }
     };
     const handleValuesChange = (_, allValues) => {
         // calculate quality changes
@@ -171,16 +198,17 @@ const Edit = ({
             const perubahan = harga - hargaSebelum;
             const persen =
                 Math.round((Math.abs(perubahan) / hargaSebelum) * 10000) / 100;
-            if (perubahan == 0) return "0 %";
+            if (perubahan == 0) return "= 0%";
             if (perubahan > 0)
                 return (
                     <>
-                        <ArrowUpOutlined color="green" /> {persen} %
+                        <ArrowUpOutlined className={styles.icon_green} />{" "}
+                        {persen} %
                     </>
                 );
             return (
                 <>
-                    <ArrowDownOutlined /> {persen} %
+                    <ArrowDownOutlined className={styles.icon_red} /> {persen} %
                 </>
             );
         }
@@ -212,7 +240,7 @@ const Edit = ({
         }
     };
     return (
-        <>
+        <Spin spinning={revalLoading} tip="memuat data...">
             <div>
                 {contextHolder}
                 <Space
@@ -239,11 +267,13 @@ const Edit = ({
                             type="primary"
                             style={{ backgroundColor: "#e64d00" }}
                             onClick={async () => {
+                                setRevalLoading(true);
                                 setOpenRevalModal(true);
-                                // if (!isOpen) {
-                                //     Revalidasi(form, response.id);
-                                //     setIsOpen(true);
-                                // }
+
+                                handleValuesChange("", form.getFieldsValue());
+                                setIsOpen(true);
+
+                                setRevalLoading(false);
                             }}
                         >
                             {/* <ContainerOutline /> */}
@@ -255,7 +285,7 @@ const Edit = ({
                 <Form
                     form={form}
                     onFinish={onFinish}
-                    onValuesChange={handleValuesChange}
+                    // onValuesChange={handleValuesChange}
                 >
                     <Form.Item name="response_id" hidden>
                         <Input readOnly />
@@ -342,7 +372,7 @@ const Edit = ({
                     />
                 </Space>
             </Modal>
-        </>
+        </Spin>
     );
 };
 
