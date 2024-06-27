@@ -14,8 +14,15 @@ import {
     PlusOutlined,
 } from "@ant-design/icons";
 
-const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
-    const [qualities, setQualities] = useState([]);
+const Section = ({
+    id,
+    title,
+    groups,
+    response_id,
+    qualities,
+    qualityChanges,
+}) => {
+    // const [qualities, setQualities] = useState([]);
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [changes, setChanges] = useState([]);
@@ -28,37 +35,6 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
         } catch (error) {}
     };
 
-    // Update status based on form values
-    const handleValuesChange = (_, allValues) => {
-        const newStatus = qualities.reduce((acc, quality) => {
-            const prevPrice = allValues[`${quality.id}-price-prev`];
-            const currentPrice = allValues[`${quality.id}-price`];
-            let changes = calculateChanges(currentPrice, prevPrice);
-            acc[quality.id] = changes;
-            return acc;
-        }, {});
-        setChanges(newStatus);
-    };
-    const calculateChanges = (harga, hargaSebelum) => {
-        if (hargaSebelum > 0) {
-            const perubahan = harga - hargaSebelum;
-            const persen =
-                Math.round((Math.abs(perubahan) / hargaSebelum) * 10000) / 100;
-            if (perubahan == 0) return "0 %";
-            if (perubahan > 0)
-                return (
-                    <>
-                        <ArrowUpOutlined color="green" /> {persen} %
-                    </>
-                );
-            return (
-                <>
-                    <ArrowDownOutlined /> {persen} %
-                </>
-            );
-        }
-        return "";
-    };
     const confirmAddQuality = async (values, sectionId) => {
         // console.log({ values, response_id });
         try {
@@ -138,7 +114,8 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
         }
     };
     useEffect(() => {
-        fetchQualities(id);
+        console.log({ qualities });
+        // fetchQualities(id);
     }, []);
 
     return (
@@ -167,7 +144,7 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                     <table className={styles.table}>
                         <thead>
                             <tr className={styles.row}>
-                                <td colSpan={8} className={styles.title}>
+                                <td colSpan={7} className={styles.title}>
                                     {title}
                                 </td>
                             </tr>
@@ -199,9 +176,9 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                 >
                                     Perubahan (%)
                                 </td>
-                                <td className={`${styles.data_center}`}>
+                                {/* <td className={`${styles.data_center}`}>
                                     Hapus
-                                </td>
+                                </td> */}
                             </tr>
                             <tr>
                                 <td
@@ -223,7 +200,7 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                 >
                                     (7)
                                 </td>
-                                <td className={`${styles.data_center}`}>(8)</td>
+                                {/* <td className={`${styles.data_center}`}>(8)</td> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -240,21 +217,22 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                     {qualities
                                         .filter(
                                             (quality) =>
-                                                quality.group_id === group.id
+                                                quality.commodity.group_id ===
+                                                group.id
                                         )
                                         .map((quality) => (
                                             <tr>
                                                 <td className={styles.data}>
-                                                    {quality.commodity_name}
+                                                    {quality.commodity.name}
                                                 </td>
                                                 <td className={styles.data}>
-                                                    {quality.quality_name}
+                                                    {quality.name}
                                                 </td>
                                                 <td className={styles.data}>
                                                     {quality.satuan}
                                                 </td>
                                                 <td className={styles.data}>
-                                                    {quality.quality_code}
+                                                    {quality.code}
                                                 </td>
                                                 <td
                                                     className={
@@ -265,8 +243,8 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                                         className={
                                                             styles.form_item
                                                         }
-                                                        key={`rupiah-${quality.id}`}
-                                                        inputName={`${quality.id}-price`}
+                                                        key={`rupiah-${quality.data_id}`}
+                                                        inputName={`${quality.data_id}-price`}
                                                         initialValue={
                                                             quality.price
                                                         }
@@ -281,10 +259,12 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                                         className={
                                                             styles.form_item
                                                         }
-                                                        inputName={`${quality.id}-price-prev`}
-                                                        key={`prev-rupiah-${quality.id}`}
+                                                        inputName={`${quality.data_id}-price-prev`}
+                                                        key={`prev-rupiah-${quality.data_id}`}
                                                         readOnly
-                                                        initialValue={100000}
+                                                        initialValue={
+                                                            quality.price_prev
+                                                        }
                                                     />
                                                 </td>
                                                 <td
@@ -292,10 +272,14 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                                         styles.data_right
                                                     }
                                                 >
-                                                    {qualityChanges[quality.id]}
+                                                    {
+                                                        qualityChanges[
+                                                            quality.data_id
+                                                        ]
+                                                    }
                                                 </td>
 
-                                                <td
+                                                {/* <td
                                                     className={
                                                         styles.data_center
                                                     }
@@ -304,14 +288,14 @@ const Section = ({ id, title, groups, response_id, form, qualityChanges }) => {
                                                         title="Apakah anda yakin ingin menghapus"
                                                         onConfirm={() =>
                                                             confirmDeleteQuality(
-                                                                quality.id,
+                                                                quality.data_id,
                                                                 id
                                                             )
                                                         }
                                                     >
                                                         <DeleteOutlined />
                                                     </Popconfirm>
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         ))}
                                 </React.Fragment>

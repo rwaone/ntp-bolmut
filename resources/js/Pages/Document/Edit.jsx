@@ -29,6 +29,7 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import dayjs from "dayjs";
+import { router } from "@inertiajs/react";
 
 const blok1 = {
     bulan: "Januari",
@@ -93,6 +94,7 @@ const Edit = ({
     ];
 
     useEffect(() => {
+        console.log({ qualities });
         blok1["respondent_name"] = sample.respondent_name;
         setBlok2({
             petugas_nip: "",
@@ -121,7 +123,7 @@ const Edit = ({
         {
             key: "2",
             label: "Blok III",
-            children: <Blok3 />,
+            children: <Blok3 qualities={qualities} />,
         },
         ...sections.map((section) => ({
             key: section.name,
@@ -130,6 +132,10 @@ const Edit = ({
                 <Section
                     id={section.id}
                     title={section.name}
+                    qualities={qualities.filter(
+                        (quality) =>
+                            quality.commodity.group.section_id === section.id
+                    )}
                     groups={groups.filter(
                         (group) => group.section_id == section.id
                     )}
@@ -155,26 +161,25 @@ const Edit = ({
         const filteredValues = Object.fromEntries(
             Object.entries(values).filter(([key]) => !key.includes("prev"))
         );
-        // console.log({ filteredValues });
-        // return;
-        messageApi.open({
-            type: "loading",
-            content: "Menyimpan Dokumen...",
-            key: "document-save",
-        });
-        const response = await axios.patch(
-            `/responses/${values.response_id}`,
-            filteredValues,
-            {
-                headers: { "Content-Type": "application/json" },
-            }
-        );
-        messageApi.open({
-            type: "success",
-            content: "Berhasil menyimpan dokumen",
-            key: "document-save",
-        });
+
         try {
+            messageApi.open({
+                type: "loading",
+                content: "Menyimpan Dokumen...",
+                key: "document-save",
+            });
+            const response = await axios.patch(
+                `/responses/${values.response_id}`,
+                filteredValues,
+                {
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+            messageApi.open({
+                type: "success",
+                content: "Berhasil menyimpan dokumen",
+                key: "document-save",
+            });
         } catch (error) {
             // console.log({ error });
             messageApi.open({
@@ -182,6 +187,15 @@ const Edit = ({
                 content: "An error occurred while saving",
                 key: "document-save",
             });
+        } finally {
+            router.get(
+                "/responses/edit/" + values.response_id,
+                {},
+                {
+                    preserveState: true,
+                    only: ["qualities"],
+                }
+            );
         }
     };
     const handleValuesChange = (_, allValues) => {
@@ -251,7 +265,9 @@ const Edit = ({
                 >
                     <Space>
                         <Button>
-                            <ArrowLeftOutlined /> Kembali
+                            <a href="/responses/index">
+                                <ArrowLeftOutlined /> Kembali
+                            </a>
                         </Button>
                     </Space>
                     <Space>

@@ -3,7 +3,7 @@ import BlokTitle from "../../../components/BlokTitle/BlokTitle";
 import { Form, DatePicker, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
-const Blok7 = ({ form }) => {
+const Blok7 = () => {
     return (
         <table className={styles.table}>
             <thead>
@@ -19,6 +19,7 @@ const Blok7 = ({ form }) => {
                         <TextArea
                             placeholder="Isi Catatan Sesuai Pedoman"
                             allowClear
+                            style={{ height: "400px" }}
                         />
                     </Form.Item>
                 </tr>

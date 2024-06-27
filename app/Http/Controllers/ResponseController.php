@@ -14,6 +14,7 @@ use App\Models\Quality;
 use App\Models\Sample;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Throwable;
@@ -131,7 +132,7 @@ class ResponseController extends Controller
             ]);
 
             // Redirect to the data entry form with the response ID and necessary data
-            return redirect()->route('response.edit', [
+            return redirect()->route('responses.edit', [
                 'response' => $response,
             ]);
         } catch (\Throwable $th) {
@@ -284,8 +285,22 @@ class ResponseController extends Controller
             });
 
             // Get the qualities associated with the commodities
-            $qualities = $commodities->flatMap(function ($commodity) {
-                return $commodity->qualities;
+            $qualities = $commodities->flatMap(function ($commodity) use ($response) {
+
+                return $commodity->qualities->map(function ($quality) use ($response) {
+                    $currentData = DB::table('data')->where('response_id', $response->id)
+                        ->where('quality_id', $quality->id)
+                        ->first();
+
+                    $price_prev = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $quality->id);
+                    $quality->price = $currentData->price;
+                    $quality->data_id = $currentData->id;
+                    $quality->price_prev = $price_prev;
+                    return $quality;
+                });
+
+                // $id = $response->id;
+                // return $commodity->qualities;
             });
 
             $bulanText = [
@@ -510,9 +525,9 @@ class ResponseController extends Controller
             ->where('month', $previousMonth)
             ->where('year', $previousYear)
             ->first();
-
+        // dd($previousResponse);
         if ($previousResponse) {
-            $previousData = $previousResponse->data->where('quality_id', $qualityId)->first();
+            $previousData = $previousResponse->datas->where('quality_id', $qualityId)->first();
             return $previousData ? $previousData->price : null;
         }
 
