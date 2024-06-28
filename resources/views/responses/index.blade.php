@@ -69,7 +69,7 @@
                             <div class="overflow-x-auto -mx-6">
                                 <div class="inline-block min-w-full align-middle">
                                     <div class="overflow-hidden">
-                                        @include('response.data-table-sample')
+                                        @include('responses.data-table-sample')
                                     </div>
                                 </div>
                             </div>

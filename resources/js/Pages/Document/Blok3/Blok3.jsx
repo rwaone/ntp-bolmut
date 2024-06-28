@@ -14,7 +14,7 @@ const Blok3 = ({ qualities }) => {
                 quality.price !== quality.price_prev && quality.price > 0
         );
         setChangedQualities(changedQualities);
-    }, []);
+    }, [qualities]); // Add qualities to the dependency array
 
     return (
         <table className={styles.table}>
