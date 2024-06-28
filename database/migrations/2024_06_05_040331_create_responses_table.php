@@ -18,15 +18,16 @@ return new class extends Migration
             $table->string('month');
             $table->year('year');
             $table->foreignId('document_id');
-            $table->foreignId('petugas_id');
-            $table->date('enumeration_date');
-            $table->foreignId('pengawas_id');
-            $table->date('review_date');
-            $table->foreignId('sample_id');
-            $table->text('commodities');
-            $table->text('notes');
-            $table->string('created_by');
-            $table->string('reviewed_by');
+            $table->foreignId('petugas_id')->nullable();
+            $table->date('enumeration_date')->nullable();
+            $table->foreignId('pengawas_id')->nullable();
+            $table->date('review_date')->nullable();
+            $table->string('sample_id', 36);
+            $table->text('commodities')->nullable();
+            $table->text('notes')->nullable();
+            $table->string('status')->default('B');
+            $table->string('created_by')->nullable();
+            $table->string('reviewed_by')->nullable();
             $table->timestamps();
         });
     }
