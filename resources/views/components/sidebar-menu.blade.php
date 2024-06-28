@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('pemeriksaan.index') }}" class="navItem {{ request()->is('pemeriksaan*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:print-preview"></iconify-icon>
                         <span>{{ __('Pemeriksaan Data') }}</span>
