@@ -6,7 +6,7 @@
         <x-slot name="head"></x-slot>
     </div>
     <div class="grid grid-cols-12 gap-5 mb-5">
-        <div class="2xl:col-span-12 lg:col-span- col-span-12">
+        <div class="2xl:col-span-12 lg:col-span-12 col-span-12">
             <div class="bg-no-repeat bg-cover bg-center p-4 rounded-[6px] relative" style="background-image: url(images/all-img/widget-bg-1.png)">
                 <div>
                     <div class="text-large font-medium text-slate-900 mb-2">
