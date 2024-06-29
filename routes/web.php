@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
     Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
     // Route::resource('petugas', PetugasController::class);
+    
     // Documents
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
@@ -98,8 +99,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Route::resource('documents', DocumentController::class);
     // Sections
     Route::resource('sections', SectionController::class);
+
     // Group
     Route::resource('groups', GroupController::class);
+
     // Commodities
     // Route::resource('commodities', CommodityController::class);
     Route::get('/komoditas', [CommodityController::class, 'index'])->name('komoditas.index');
@@ -107,6 +110,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/komoditas/store', [CommodityController::class, 'store'])->name('komoditas.store');
     Route::get('/komoditas/fetch/{id}', [CommodityController::class, 'fetch'])->name('komoditas.fetch');
     Route::delete('/komoditas/delete/{id}', [CommodityController::class, 'destroy'])->name('komoditas.destroy');
+
     // Qualities
     // Route::resource('qualities', QualityController::class);
     Route::get('/kualitas', [QualityController::class, 'index'])->name('kualitas.index');
