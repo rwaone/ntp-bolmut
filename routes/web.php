@@ -30,12 +30,8 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PemeriksaanController;
 use App\Http\Controllers\DatabaseBackupController;
 use App\Http\Controllers\DataController;
-use App\Http\Controllers\DesaController;
 use App\Http\Controllers\GeneralSettingController;
-use App\Http\Controllers\ResponseController;
 use Inertia\Inertia;
-use App\Models\Desa;
-use App\Models\Kecamatan;
 
 require __DIR__ . '/auth.php';
 

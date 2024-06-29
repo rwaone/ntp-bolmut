@@ -13,7 +13,6 @@ use App\Models\Kabupaten;
 use App\Models\Quality;
 use App\Models\Sample;
 use App\Models\Section;
-use App\Models\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
