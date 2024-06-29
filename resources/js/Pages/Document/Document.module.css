@@ -1,0 +1,65 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+.data {
+    padding: 5px;
+    border: 1px solid #c0c0c0;
+}
+.group {
+    padding: 10px;
+    background-color: darkgoldenrod;
+    border: 1px solid #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+.data_right {
+    padding: 10px;
+    border: 1px solid #c0c0c0;
+    text-align: right;
+}
+.data_center {
+    padding: 10px;
+    border: 1px solid #c0c0c0;
+    text-align: center;
+}
+.title {
+    padding: 10px;
+    background-color: rgb(9, 82, 82);
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.9rem;
+    color: #fff;
+}
+
+.button {
+    background-color: rgb(9, 82, 82);
+    /* margin-bottom: 1rem; */
+}
+
+.body {
+    min-height: 500px;
+}
+
+.form_item {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.rupiah_input .ant-input-number-input {
+    text-align: right;
+}
+
+.rupiah_input .ant-input-number-handler-wrap {
+    display: none;
+}
+
+.icon_red {
+    color: #f5222d;
+}
+.icon_green {
+    color: #389e0d;
+}

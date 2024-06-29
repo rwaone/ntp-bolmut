@@ -57,3 +57,30 @@
          </div>
      </div>
  </div>
+
+ <script>
+     (() => {
+         const hapusConfirmButton = document.getElementById('hapus-confirm-button')
+         hapusConfirmButton.addEventListener('click', async () => {
+             const hapusLoading = document.getElementById('hapus-loading');
+             hapusLoading.classList.remove('hidden');
+             try {
+                 const sampleDeleteId = document.getElementById('sample-delete-id');
+                 const response = await axios.delete(
+                     `/master/samples/${sampleDeleteId.textContent}`);
+
+
+             } catch (error) {
+                 console.log({
+                     error
+                 });
+             } finally {
+                 hapusLoading.classList.add('hidden');
+                 $('[data-bs-dismiss=modal]').click();
+                 window.location.reload();
+
+             }
+
+         })
+     })();
+ </script>

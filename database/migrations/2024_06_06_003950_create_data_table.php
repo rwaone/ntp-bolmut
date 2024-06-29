@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('response_id');
             $table->foreignId('quality_id');
-            $table->bigInteger('price');
+            $table->bigInteger('price')->default(0);
+            $table->unique(['response_id', 'quality_id']);
             $table->timestamps();
         });
     }

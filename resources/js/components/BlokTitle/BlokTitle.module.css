@@ -1,0 +1,11 @@
+.container {
+    background-color: rgb(9, 82, 82);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-weight: 600;
+    font-size: 1.9rem;
+    color: #fff;
+}

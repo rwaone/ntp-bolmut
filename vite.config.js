@@ -1,5 +1,8 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
+import react from "@vitejs/plugin-react";
+
+import { resolve } from "path";
 
 export default defineConfig({
     plugins: [
@@ -10,7 +13,29 @@ export default defineConfig({
                 "resources/js/main.js",
                 "resources/js/app.js",
             ],
-            refresh: true,
+            // refresh: true,
         }),
+        react(),
     ],
+    resolve: (name) => {
+        const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
+        return pages[`./Pages/${name}.jsx`];
+    },
+    esbuild: {
+        loader: "jsx",
+        include: /resources\/js\/.*\.jsx?$/,
+        exclude: [],
+    },
+    optimizeDeps: {
+        esbuildOptions: {
+            loader: {
+                ".js": "jsx",
+            },
+        },
+    },
+    server: {
+        hmr: {
+            host: "localhost",
+        },
+    },
 });

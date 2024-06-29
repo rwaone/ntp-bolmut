@@ -59,10 +59,10 @@ class PetugasController extends Controller
      */
     public function store(StorePetugasRequest $request)
     {
-         // Validate the request data
-         $validatedData = $request->validated();
+        // Validate the request data
+        $validatedData = $request->validated();
 
-         try {
+        try {
             // Create a new Petugas record
             $petugas = Petugas::create($validatedData);
 
@@ -103,7 +103,7 @@ class PetugasController extends Controller
     public function edit($id)
     {
         $petugas = Petugas::find($id);
-    
+
         if ($petugas) {
             return response()->json($petugas, 200);
         } else {
@@ -148,7 +148,7 @@ class PetugasController extends Controller
                 return response()->json(['error' => 'Petugas not found.'], 404);
             } catch (\Exception $e) {
                 // Log the exception message or details
-                \Log::error('Error updating petugas: ' . $e->getMessage());
+                Log::error('Error updating petugas: ' . $e->getMessage());
 
                 // Return an error response
                 return response()->json(['error' => 'An error occurred while updating the petugas.'], 500);
@@ -176,9 +176,9 @@ class PetugasController extends Controller
         $pageSize = $request->query('size', 10);
         $searchQuery = $request->query('search', '');
         $officers = Petugas::where('name', 'like', "%$searchQuery%")
-                    ->orWhere('nip', 'like', "%$searchQuery%")
-                    ->orWhere('jabatan', 'like', "%$searchQuery%")
-                    ->paginate($pageSize);
+            ->orWhere('nip', 'like', "%$searchQuery%")
+            ->orWhere('jabatan', 'like', "%$searchQuery%")
+            ->paginate($pageSize);
 
         $startingIndex = ($officers->currentPage() - 1) * $officers->perPage() + 1;
 
@@ -190,5 +190,16 @@ class PetugasController extends Controller
             'total' => $officers->total(),
             'per_page' => $officers->perPage(),
         ]);
+    }
+
+    public function getPengawas()
+    {
+        $daftar_pengawas = Petugas::where('jabatan', 'Pengawas')->get();
+        return response()->json($daftar_pengawas, 200,);
+    }
+    public function getPencacah()
+    {
+        $daftar_pencacah = Petugas::where('jabatan', 'Pencacah')->get();
+        return response()->json($daftar_pencacah, 200,);
     }
 }
