@@ -131,8 +131,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::singleton('general-settings', GeneralSettingController::class);
     Route::post('general-settings-logo', [GeneralSettingController::class, 'logoUpdate'])->name('general-settings.logo');
 
-    //Responses
+    //Pemeriksaan
     Route::get('/pemeriksaan', [PemeriksaanController::class, 'index'])->name('pemeriksaan.index');
+
      //Response
     Route::get('/responses/index', [ResponseController::class, 'index'])->name('responses.index');
     Route::get('/responses/fetchSample', [ResponseController::class, 'fetchSample'])->name('responses.fetchSample');
