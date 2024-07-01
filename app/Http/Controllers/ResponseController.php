@@ -198,7 +198,7 @@ class ResponseController extends Controller
                     $currentData = DB::table('data')->where('response_id', $response->id)
                         ->where('quality_id', $quality->id)
                         ->first();
-                    
+
                     if (!$currentData) {
                         $data = new Data([
                             'response_id' => $response->id,
@@ -206,7 +206,7 @@ class ResponseController extends Controller
                             'price' => 0,
                         ]);
                         $response->datas()->save($data);
-                        $currentData= $data;
+                        $currentData = $data;
                     }
                     $price_prev = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $quality->id);
                     $quality->price = $currentData->price;
@@ -334,7 +334,7 @@ class ResponseController extends Controller
                 'commodities' => $request->has('commodities') ? $commodities : $response->commodities,
                 'notes' => $request->has('notes') ? $notes : $response->notes,
             ]);
-                        $warnings = [];
+            $warnings = [];
 
             // Update the data records
             foreach ($dataRecords as $data) {
@@ -342,11 +342,11 @@ class ResponseController extends Controller
                 $commodity = $quality->commodity;
                 $dataId = $data->id;
                 $priceKey = $dataId . '-price';
-            
+
                 // Check if the '-price' key exists in the request
                 if (array_key_exists($priceKey, $request->all())) {
                     $value = $request->input($priceKey);
-            
+
                     // Validate price range based on quality
                     if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
                         $warnings[] = [
@@ -354,12 +354,12 @@ class ResponseController extends Controller
                             'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
                         ];
                     }
-            
+
                     // Validate price change based on commodity
                     if ($commodity) {
                         $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
                         $change = ($previousMonthPrice - $value) / 100;
-            
+
                         if ($change < 0 && abs($change) > abs($commodity->min_change)) {
                             $warnings[] = [
                                 'id' => $dataId,
@@ -372,7 +372,7 @@ class ResponseController extends Controller
                             ];
                         }
                     }
-            
+
                     $data->price = $value;
                     $data->save();
                 } else {
@@ -383,12 +383,12 @@ class ResponseController extends Controller
                             'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
                         ];
                     }
-            
+
                     // Validate price change based on commodity
                     if ($commodity) {
                         $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
                         $change = ($previousMonthPrice - $data->price) / 100;
-            
+
                         if ($change < 0 && abs($change) > abs($commodity->min_change)) {
                             $warnings[] = [
                                 'id' => $dataId,
@@ -423,9 +423,9 @@ class ResponseController extends Controller
                 $response->update([
                     'status' => 'E'
                 ]);
-            
+
                 $errors = $validator->errors()->toArray();
-            
+
                 // Customize the error messages for specific fields
                 $customErrors = [];
                 foreach ($errors as $field => $messages) {
@@ -443,20 +443,18 @@ class ResponseController extends Controller
                         }
                     }
                 }
-            
+
                 return response()->json(['errors' => $customErrors, 'warnings' => $warnings], 422);
-            }
-            elseif(!empty($warnings)){
+            } elseif (!empty($warnings)) {
                 $response->update([
                     'status' => 'W'
                 ]);
-                return response()->json(['warnings' => $warnings], 201);
-            }
-            else {
+                return response()->json(['warnings' => $warnings, 'errors' => []], 201);
+            } else {
                 $response->update([
                     'status' => 'C'
                 ]);
-                return response()->json(['message' => 'Data berhasil disimpan dengan status clean'], 201);
+                return response()->json(['warnings' => [], 'errors' => [], 'message' => 'Data berhasil disimpan dengan status clean'], 201);
             }
         } catch (Throwable $th) {
             throw $th;
