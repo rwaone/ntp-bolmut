@@ -313,29 +313,40 @@ class ResponseController extends Controller
                 'commodities.required' => 'Komoditas harus terisi',
             ];
 
-            $response = Response::findOrFail($request->input('response_id'));
+            // Retrieve the response and its associated data records
+            $response = Response::with('datas.quality.commodity')->findOrFail($request->input('response_id'));
+            $dataRecords = $response->datas;
 
             // Update the response record
+            $petugas_id = $request->input('petugas_id');
+            $pengawas_id = $request->input('pengawas_id');
+            $enumeration_date = $request->input('enumeration_date');
+            $review_date = $request->input('review_date');
+            $commodities = $request->input('commodities');
+            $notes = $request->input('notes');
+
             $response->update([
-                'petugas_id' => $request->input('petugas_id') ?? null,
-                'pengawas_id' => $request->input('pengawas_id') ?? null,
-                'enumeration_date' => $request->input('enumeration_date') ?? null,
-                'review_date' => $request->input('review_date') ?? null,
-                'commodities' => $request->input('commodities') ?? null,
-                'notes' => $request->input('notes') ?? null,
+                'petugas_id' => isset($petugas_id) ? $petugas_id : $response->petugas_id,
+                'pengawas_id' => isset($pengawas_id) ? $pengawas_id : $response->pengawas_id,
+                'enumeration_date' => isset($enumeration_date) ? $enumeration_date : $response->enumeration_date,
+                'review_date' => isset($review_date) ? $review_date : $response->review_date,
+                'commodities' => isset($commodities) ? $commodities : $response->commodities,
+                'notes' => isset($notes) ? $notes : $response->notes,
             ]);
 
             $warnings = [];
 
             // Update the data records
-            foreach ($request->all() as $key => $value) {
-                if (str_contains($key, '-price')) {
-                    $dataId = explode('-', $key)[0];
-                    $data = Data::where('id', $dataId)->first();
-
-                    $quality = Quality::find($data->quality_id);
-                    $commodity = Commodity::find($quality->commodity_id);
-
+            foreach ($dataRecords as $data) {
+                $quality = $data->quality;
+                $commodity = $quality->commodity;
+                $dataId = $data->id;
+                $priceKey = $dataId . '-price';
+            
+                // Check if the '-price' key exists in the request
+                if (array_key_exists($priceKey, $request->all())) {
+                    $value = $request->input($priceKey);
+            
                     // Validate price range based on quality
                     if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
                         $warnings[] = [
@@ -343,12 +354,12 @@ class ResponseController extends Controller
                             'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
                         ];
                     }
-
+            
                     // Validate price change based on commodity
                     if ($commodity) {
                         $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
                         $change = ($previousMonthPrice - $value) / 100;
-
+            
                         if ($change < 0 && abs($change) > abs($commodity->min_change)) {
                             $warnings[] = [
                                 'id' => $dataId,
@@ -361,8 +372,35 @@ class ResponseController extends Controller
                             ];
                         }
                     }
+            
                     $data->price = $value;
                     $data->save();
+                } else {
+                    // Validate price range based on quality
+                    if ($quality && ($data->price < $quality->min_price || $data->price > $quality->max_price)) {
+                        $warnings[] = [
+                            'id' => $dataId,
+                            'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
+                        ];
+                    }
+            
+                    // Validate price change based on commodity
+                    if ($commodity) {
+                        $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
+                        $change = ($previousMonthPrice - $data->price) / 100;
+            
+                        if ($change < 0 && abs($change) > abs($commodity->min_change)) {
+                            $warnings[] = [
+                                'id' => $dataId,
+                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_change}%",
+                            ];
+                        } elseif ($change > 0 && $change > $commodity->max_change) {
+                            $warnings[] = [
+                                'id' => $dataId,
+                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_change}%",
+                            ];
+                        }
+                    }
                 }
             }
 
