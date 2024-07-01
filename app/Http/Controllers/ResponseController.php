@@ -312,6 +312,7 @@ class ResponseController extends Controller
                 'review_date.required' => 'Tanggal pemeriksaan harus terisi',
                 'commodities.required' => 'Komoditas harus terisi',
             ];
+            // dd($request->all());
 
             // Retrieve the response and its associated data records
             $response = Response::with('datas.quality.commodity')->findOrFail($request->input('response_id'));
@@ -326,15 +327,14 @@ class ResponseController extends Controller
             $notes = $request->input('notes');
 
             $response->update([
-                'petugas_id' => isset($petugas_id) ? $petugas_id : $response->petugas_id,
-                'pengawas_id' => isset($pengawas_id) ? $pengawas_id : $response->pengawas_id,
-                'enumeration_date' => isset($enumeration_date) ? $enumeration_date : $response->enumeration_date,
-                'review_date' => isset($review_date) ? $review_date : $response->review_date,
-                'commodities' => isset($commodities) ? $commodities : $response->commodities,
-                'notes' => isset($notes) ? $notes : $response->notes,
+                'petugas_id' => $request->has('petugas_id') ? $petugas_id : $response->petugas_id,
+                'pengawas_id' => $request->has('pengawas_id') ? $pengawas_id : $response->pengawas_id,
+                'enumeration_date' => $request->has('enumeration_date') ? $enumeration_date : $response->enumeration_date,
+                'review_date' => $request->has('review_date') ? $review_date : $response->review_date,
+                'commodities' => $request->has('commodities') ? $commodities : $response->commodities,
+                'notes' => $request->has('notes') ? $notes : $response->notes,
             ]);
-
-            $warnings = [];
+                        $warnings = [];
 
             // Update the data records
             foreach ($dataRecords as $data) {
@@ -423,8 +423,28 @@ class ResponseController extends Controller
                 $response->update([
                     'status' => 'E'
                 ]);
-    
-                return response()->json(['errors' => $validator->errors(), 'warnings' => $warnings], 422);
+            
+                $errors = $validator->errors()->toArray();
+            
+                // Customize the error messages for specific fields
+                $customErrors = [];
+                foreach ($errors as $field => $messages) {
+                    if ($field === 'commodities') {
+                        $customErrors[] = [
+                            'id' => $field,
+                            'message' => 'Komoditas harus terisi',
+                        ];
+                    } else {
+                        foreach ($messages as $message) {
+                            $customErrors[] = [
+                                'id' => $field,
+                                'message' => $message,
+                            ];
+                        }
+                    }
+                }
+            
+                return response()->json(['errors' => $customErrors, 'warnings' => $warnings], 422);
             }
             elseif(!empty($warnings)){
                 $response->update([
