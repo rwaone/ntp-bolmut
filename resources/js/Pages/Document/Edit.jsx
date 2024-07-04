@@ -17,7 +17,7 @@ import Tab1 from "./Tab1/Tab1";
 import Tab5 from "./Tab5/Tab5";
 import Status from "../../components/Status";
 import styles from "./Document.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Section from "./Section/Section";
 import {
     ArrowDownOutlined,
@@ -54,7 +54,7 @@ const Edit = ({
     selectedQualities,
     previousPrices,
 }) => {
-    // console.log({ response });
+    console.log({ response });
     const [form] = Form.useForm();
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -68,6 +68,31 @@ const Edit = ({
 
     const [errorList, setErrorList] = useState([]);
     const [warningList, setWarningList] = useState([]);
+    const [activeTab, setActiveTab] = useState("1");
+
+    const formRef = useRef(null);
+
+    // Create refs for form items
+    const itemKeys = {
+        pengawas_id: "1",
+        petugas_id: "1",
+        enumeration_date: "1",
+        review_date: "1",
+        commodities: "9",
+        notes: "9",
+        ...qualities.reduce((acc, quality) => {
+            acc[`${quality.data_id}-price`] =
+                quality.commodity.group.section.name;
+            return acc;
+        }, {}),
+    };
+
+    const handleScrollTo = (itemKey) => {
+        console.log(itemKey);
+        setActiveTab(itemKeys[itemKey]);
+        form.scrollToField(itemKey);
+        setOpenRevalModal(false);
+    };
 
     const errorColumns = [
         {
@@ -79,22 +104,51 @@ const Edit = ({
         },
         {
             title: "Variabel",
-            dataIndex: "variable",
+            dataIndex: "id",
             key: "variable",
-            // render: (_: any, record: any) => record.variable,
+            render: (value, record) => (
+                <Button onClick={() => handleScrollTo(value)}>{value}</Button>
+            ),
         },
         {
             title: "Deskripsi",
-            dataIndex: "rincian",
+            dataIndex: "message",
             key: "rincian",
-            // render: (text: string) => (
-            //     <TextRupiah color="#000" value={Number(text)} />
+            // render: (text) => (
+
+            // ),
+        },
+    ];
+    const warningColumns = [
+        {
+            title: "Nomor",
+            dataIndex: "nomor",
+            key: "nomor",
+            width: 15,
+            render: (text, record, index) => index + 1,
+        },
+        {
+            title: "Variabel",
+            dataIndex: "id",
+            key: "variable",
+            render: (value, record) => (
+                <Button onClick={() => handleScrollTo(`${value}-price`)}>
+                    {value}
+                </Button>
+            ),
+        },
+        {
+            title: "Deskripsi",
+            dataIndex: "message",
+            key: "rincian",
+            // render: (text) => (
+
             // ),
         },
     ];
 
     useEffect(() => {
-        console.log({ qualities });
+        // console.log({ qualities });
         blok1["respondent_name"] = sample.respondent_name;
         setBlok2({
             petugas_nip: "",
@@ -108,10 +162,17 @@ const Edit = ({
             response_id: response.id,
             petugas_id: response.petugas_id,
             pengawas_id: response.pengawas_id,
-            enumeration_date: dayjs(new Date(response.enumeration_date)),
-            review_date: dayjs(new Date(response.review_date)),
         });
-        // console.log({ qualities });
+        if (response.enumeration_date)
+            form.setFieldValue(
+                "enumeration_date",
+                dayjs(new Date(response.enumeration_date))
+            );
+        if (response.review_date)
+            form.setFieldValue(
+                "review_date",
+                dayjs(new Date(response.review_date))
+            );
     }, []);
 
     const tabs = [
@@ -145,7 +206,7 @@ const Edit = ({
             ),
         })),
         {
-            key: "5",
+            key: "9",
             label: "Blok VI-VII",
             children: (
                 <Tab5
@@ -168,26 +229,76 @@ const Edit = ({
                 content: "Menyimpan Dokumen...",
                 key: "document-save",
             });
-            const response = await axios.patch(
+            const {data} = await axios.patch(
                 `/responses/${values.response_id}`,
                 filteredValues,
                 {
                     headers: { "Content-Type": "application/json" },
                 }
             );
-            messageApi.open({
-                type: "success",
-                content: "Berhasil menyimpan dokumen",
-                key: "document-save",
+            setErrorList(data.errors)
+            setWarningList(data.warnings)
+            let warningFields = data.warnings.map((warning) => {
+                let priceField = `${warning.id}-price`;
+                return {
+                    name: priceField,
+                    warnings: [warning.message],
+                };
             });
+            let errorFields = data.errors.map(({ id, message }) => ({
+                name: id,
+                errors: [message],
+            }));
+            form.setFields(warningFields);
+            form.setFields(errorFields);
+            setWarningList(warnings);
+            setErrorList(errors);
+            if(data.errors.length===0&& data.warnings.length===0) {
+                messageApi.open({
+                    type: "success",
+                    content: "Berhasil menyimpan dokumen dengan status CLEAN",
+                    key: "document-save",
+                });
+            } else {
+                messageApi.open({
+                    type: "warning",
+                    content: "Berhasil menyimpan dokumen dengan status WARNING",
+                    key: "document-save",
+                });
+
+            }
         } catch (error) {
-            // console.log({ error });
+            let errorMessage = error.message;
+            if (error.response.status === 422) {
+                errorMessage = "Tersimpan dengan error";
+                let errors = error.response.data.errors;
+                let warnings = error.response.data.warnings;
+                // set warning into field
+                let warningFields = warnings.map((warning) => {
+                    let priceField = `${warning.id}-price`;
+                    return {
+                        name: priceField,
+                        warnings: [warning.message],
+                    };
+                });
+                let errorFields = errors.map(({ id, message }) => ({
+                    name: id,
+                    errors: [message],
+                }));
+                form.setFields(warningFields);
+                form.setFields(errorFields);
+                setWarningList(warnings);
+                setErrorList(errors);
+            }
+            
             messageApi.open({
                 type: "error",
-                content: "An error occurred while saving",
+                content: errorMessage,
                 key: "document-save",
             });
         } finally {
+            // setErrorList([]);
+            setOpenRevalModal(true);
             router.get(
                 "/responses/edit/" + values.response_id,
                 {},
@@ -308,7 +419,12 @@ const Edit = ({
                     <Form.Item name="response_id" hidden>
                         <Input readOnly />
                     </Form.Item>
-                    <Tabs items={tabs} className={styles.body} />
+                    <Tabs
+                        activeKey={activeTab}
+                        onChange={setActiveTab}
+                        items={tabs}
+                        className={styles.body}
+                    />
                 </Form>
                 <Status status="error" />
             </div>
@@ -379,7 +495,7 @@ const Edit = ({
                                         </Space>
                                         <Table
                                             bordered
-                                            columns={errorColumns}
+                                            columns={warningColumns}
                                             dataSource={warningList}
                                             style={{ width: "100%" }}
                                         />

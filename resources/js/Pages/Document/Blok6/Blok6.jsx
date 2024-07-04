@@ -2,7 +2,7 @@ import RupiahInput from "../../../components/RupiahInput";
 import styles from "../Document.module.css";
 import { Form, Input } from "antd";
 
-const Blok6 = ({ respondent_name, nama_desa }) => {
+const Blok6 = ({ respondent_name, nama_desa, commoditiesRef }) => {
     return (
         <table className={styles.table}>
             <thead>
@@ -33,6 +33,7 @@ const Blok6 = ({ respondent_name, nama_desa }) => {
                         <Form.Item
                             name="commodities"
                             className={styles.form_item}
+
                             // initialValue={komoditas}
                         >
                             <Input />

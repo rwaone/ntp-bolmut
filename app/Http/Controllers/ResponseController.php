@@ -198,7 +198,7 @@ class ResponseController extends Controller
                     $currentData = DB::table('data')->where('response_id', $response->id)
                         ->where('quality_id', $quality->id)
                         ->first();
-                    
+
                     if (!$currentData) {
                         $data = new Data([
                             'response_id' => $response->id,
@@ -206,7 +206,7 @@ class ResponseController extends Controller
                             'price' => 0,
                         ]);
                         $response->datas()->save($data);
-                        $currentData= $data;
+                        $currentData = $data;
                     }
                     $price_prev = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $quality->id);
                     $quality->price = $currentData->price;
@@ -312,29 +312,40 @@ class ResponseController extends Controller
                 'review_date.required' => 'Tanggal pemeriksaan harus terisi',
                 'commodities.required' => 'Komoditas harus terisi',
             ];
+            // dd($request->all());
 
-            $response = Response::findOrFail($request->input('response_id'));
+            // Retrieve the response and its associated data records
+            $response = Response::with('datas.quality.commodity')->findOrFail($request->input('response_id'));
+            $dataRecords = $response->datas;
 
             // Update the response record
-            $response->update([
-                'petugas_id' => $request->input('petugas_id') ?? null,
-                'pengawas_id' => $request->input('pengawas_id') ?? null,
-                'enumeration_date' => $request->input('enumeration_date') ?? null,
-                'review_date' => $request->input('review_date') ?? null,
-                'commodities' => $request->input('commodities') ?? null,
-                'notes' => $request->input('notes') ?? null,
-            ]);
+            $petugas_id = $request->input('petugas_id');
+            $pengawas_id = $request->input('pengawas_id');
+            $enumeration_date = $request->input('enumeration_date');
+            $review_date = $request->input('review_date');
+            $commodities = $request->input('commodities');
+            $notes = $request->input('notes');
 
+            $response->update([
+                'petugas_id' => $request->has('petugas_id') ? $petugas_id : $response->petugas_id,
+                'pengawas_id' => $request->has('pengawas_id') ? $pengawas_id : $response->pengawas_id,
+                'enumeration_date' => $request->has('enumeration_date') ? $enumeration_date : $response->enumeration_date,
+                'review_date' => $request->has('review_date') ? $review_date : $response->review_date,
+                'commodities' => $request->has('commodities') ? $commodities : $response->commodities,
+                'notes' => $request->has('notes') ? $notes : $response->notes,
+            ]);
             $warnings = [];
 
             // Update the data records
-            foreach ($request->all() as $key => $value) {
-                if (str_contains($key, '-price')) {
-                    $dataId = explode('-', $key)[0];
-                    $data = Data::where('id', $dataId)->first();
+            foreach ($dataRecords as $data) {
+                $quality = $data->quality;
+                $commodity = $quality->commodity;
+                $dataId = $data->id;
+                $priceKey = $dataId . '-price';
 
-                    $quality = Quality::find($data->quality_id);
-                    $commodity = Commodity::find($quality->commodity_id);
+                // Check if the '-price' key exists in the request
+                if (array_key_exists($priceKey, $request->all())) {
+                    $value = $request->input($priceKey);
 
                     // Validate price range based on quality
                     if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
@@ -361,8 +372,35 @@ class ResponseController extends Controller
                             ];
                         }
                     }
+
                     $data->price = $value;
                     $data->save();
+                } else {
+                    // Validate price range based on quality
+                    if ($quality && ($data->price < $quality->min_price || $data->price > $quality->max_price)) {
+                        $warnings[] = [
+                            'id' => $dataId,
+                            'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
+                        ];
+                    }
+
+                    // Validate price change based on commodity
+                    if ($commodity) {
+                        $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
+                        $change = ($previousMonthPrice - $data->price) / 100;
+
+                        if ($change < 0 && abs($change) > abs($commodity->min_change)) {
+                            $warnings[] = [
+                                'id' => $dataId,
+                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_change}%",
+                            ];
+                        } elseif ($change > 0 && $change > $commodity->max_change) {
+                            $warnings[] = [
+                                'id' => $dataId,
+                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_change}%",
+                            ];
+                        }
+                    }
                 }
             }
 
@@ -385,20 +423,38 @@ class ResponseController extends Controller
                 $response->update([
                     'status' => 'E'
                 ]);
-    
-                return response()->json(['errors' => $validator->errors(), 'warnings' => $warnings], 422);
-            }
-            elseif(!empty($warnings)){
+
+                $errors = $validator->errors()->toArray();
+
+                // Customize the error messages for specific fields
+                $customErrors = [];
+                foreach ($errors as $field => $messages) {
+                    if ($field === 'commodities') {
+                        $customErrors[] = [
+                            'id' => $field,
+                            'message' => 'Komoditas harus terisi',
+                        ];
+                    } else {
+                        foreach ($messages as $message) {
+                            $customErrors[] = [
+                                'id' => $field,
+                                'message' => $message,
+                            ];
+                        }
+                    }
+                }
+
+                return response()->json(['errors' => $customErrors, 'warnings' => $warnings], 422);
+            } elseif (!empty($warnings)) {
                 $response->update([
                     'status' => 'W'
                 ]);
-                return response()->json(['warnings' => $warnings], 201);
-            }
-            else {
+                return response()->json(['warnings' => $warnings, 'errors' => []], 201);
+            } else {
                 $response->update([
                     'status' => 'C'
                 ]);
-                return response()->json(['message' => 'Data berhasil disimpan dengan status clean'], 201);
+                return response()->json(['warnings' => [], 'errors' => [], 'message' => 'Data berhasil disimpan dengan status clean'], 201);
             }
         } catch (Throwable $th) {
             throw $th;

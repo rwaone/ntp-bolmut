@@ -50,14 +50,20 @@ const Blok2 = ({ petugas_id, pengawas_id }) => {
                 <tr className={styles.row}>
                     <td className={styles.data}>1. Identitas Petugas</td>
                     <td className={styles.data}>
-                        <Form.Item name="petugas_id">
-                            <Select options={daftarPencacah} />
+                        <Form.Item
+                            name="petugas_id"
+                          
+                        >
+                            <Select options={daftarPencacah} allowClear />
                         </Form.Item>
                     </td>
 
-                    <td className={styles.data}>
+                    <td
+                        className={styles.data}
+
+                    >
                         <Form.Item name="pengawas_id">
-                            <Select options={daftarPengawas} />
+                            <Select options={daftarPengawas} allowClear />
                         </Form.Item>
                     </td>
                 </tr>
