@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('responses.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
+                <a href="{{ route('responses.index') }}" class="navItem {{ request()->is('responses*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="material-symbols:keyboard-external-input"></iconify-icon>
                         <span>{{ __('Entri Data') }}</span>
