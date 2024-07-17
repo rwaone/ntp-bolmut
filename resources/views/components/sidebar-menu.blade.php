@@ -141,7 +141,7 @@
             </li>
             <li class="sidebar-menu-title">{{ __('SETTINGS') }}</li>
             <!-- Database -->
-            <li>
+            {{-- <li>
                 <a href="{{ route('database-backups.index') }}"
                     class="navItem {{ request()->is('database-backups*') ? 'active' : '' }}">
                     <span class="flex items-center">
@@ -149,7 +149,7 @@
                         <span>{{ __('Database Backup') }}</span>
                     </span>
                 </a>
-            </li>
+            </li> --}}
             <!-- Settings -->
             <li>
                 <a href="{{ route('general-settings.show') }}"
