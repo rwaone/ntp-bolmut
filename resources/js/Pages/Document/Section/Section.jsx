@@ -32,7 +32,7 @@ const Section = ({
     const submitAddQuality = async () => {
         try {
             setOpen(false);
-        } catch (error) {}
+        } catch (error) { }
     };
 
     const confirmAddQuality = async (values, sectionId) => {
@@ -132,14 +132,14 @@ const Section = ({
                 <AddSection sectionId={id} confirm={confirmAddQuality} />
             </Modal>
             <div>
-                <Button
+                {/*<Button
                     type="primary"
                     className={styles.button}
                     onClick={() => setOpen(true)}
                     icon={<PlusOutlined />}
                 >
                     Tambah Kualitas
-                </Button>
+                </Button>*/}
                 <Spin spinning={DataLoading} tip="Memuat data...">
                     <table className={styles.table}>
                         <thead>
@@ -274,7 +274,7 @@ const Section = ({
                                                 >
                                                     {
                                                         qualityChanges[
-                                                            quality.data_id
+                                                        quality.data_id
                                                         ]
                                                     }
                                                 </td>
