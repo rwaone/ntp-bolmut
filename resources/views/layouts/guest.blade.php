@@ -20,9 +20,9 @@
                             <x-application-logo />
                         </div>
                         <h4>
-                            {{ __('Unlock your project') }}
+                            {{ __('Pengolahan') }}
                             <span class="text-slate-800 dark:text-slate-400 font-bold">
-                                {{ __('Performance') }}
+                                {{ __('Data NTP') }}
                             </span>
                         </h4>
                     </div>
@@ -38,7 +38,7 @@
                             <script>
                                 document.write(new Date().getFullYear())
                             </script>
-                            , <a href="#">{{ __('Dashcode') }}</a>
+                            , <a href="#">{{ __('') }}</a>
                             {{ __('All Rights Reserved.') }}
                         </div>
                     </div>
