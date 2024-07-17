@@ -42,14 +42,14 @@
                     </span>
                 </a>
             </li>
-            <li>
+            {{-- <li>
                 <a href="{{ route('pemeriksaan.index') }}" class="navItem {{ request()->is('pemeriksaan*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:print-preview"></iconify-icon>
                         <span>{{ __('Pemeriksaan Data') }}</span>
                     </span>
                 </a>
-            </li>
+            </li> --}}
             <li>
                 <a href="{{ route('dashboard.index') }}"
                     class="navItem {{ request()->is('analysis*') ? 'active' : '' }}">
@@ -63,7 +63,7 @@
             <!-- Wilayah -->
             <li>
                 <a href="{{ route('wilayah.index') }}"
-                    class="navItem {{ request()->is('wilayah*') ? 'active' : '' }}">
+                    class="navItem {{ request()->is('master/wilayah*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="oui:vis-map-region"></iconify-icon>
                         <span>{{ __('Wilayah') }}</span>
@@ -73,7 +73,7 @@
             <!-- Sample -->
             <li>
                 <a href="{{ route('samples.index') }}"
-                    class="navItem {{ request()->is('samples*') ? 'active' : '' }}">
+                    class="navItem {{ request()->is('master/samples*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:person-multiple"></iconify-icon>
                         <span>{{ __('Sample') }}</span>
