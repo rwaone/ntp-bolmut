@@ -10,7 +10,7 @@
             <div class="bg-no-repeat bg-cover bg-center p-4 rounded-[6px] relative" style="background-image: url(images/all-img/widget-bg-1.png)">
                 <div>
                     <div class="text-large font-medium text-slate-900 mb-2">
-                        Selamat Datang di Aplikasi Pengolahan Data Harga Perdesaan 
+                        Selamat Datang di Aplikasi Pengolahan Data Harga Perdesaan (NTP)
                     </div>
                     <p class="text-sm text-slate-800">
                         Kabupaten Bolaang Mongondow Utara
