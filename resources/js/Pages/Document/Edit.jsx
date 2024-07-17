@@ -232,8 +232,8 @@ const Edit = ({
 
         const updatedValues = {
             ...filteredValues,
-            enumeration_date: filteredValues.enumeration_date.toISOString().slice(0, 10), // Format as YYYY-MM-DD
-            review_date: filteredValues.review_date.toISOString().slice(0, 10), // Format as YYYY-MM-DD
+            enumeration_date: filteredValues.enumeration_date ? filteredValues.enumeration_date.toISOString().slice(0, 10) : null, // Format as YYYY-MM-DD
+            review_date: filteredValues.review_date ? filteredValues.review_date.toISOString().slice(0, 10) : null, // Format as YYYY-MM-DD
         };
 
         // ... rest of your code ...
