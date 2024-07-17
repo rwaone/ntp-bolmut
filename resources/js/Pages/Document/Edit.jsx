@@ -222,6 +222,21 @@ const Edit = ({
         const filteredValues = Object.fromEntries(
             Object.entries(values).filter(([key]) => !key.includes("prev"))
         );
+        // const updatedValues = {
+        //     ...filteredValues,
+        //     enumeration_date: new Date(filteredValues.enumeration_date),
+        //     review_date: new Date(filteredValues.review_date),
+
+        // };
+        // console.log({ updatedValues // ... other code ...
+
+        const updatedValues = {
+            ...filteredValues,
+            enumeration_date: filteredValues.enumeration_date.toISOString().slice(0, 10), // Format as YYYY-MM-DD
+            review_date: filteredValues.review_date.toISOString().slice(0, 10), // Format as YYYY-MM-DD
+        };
+
+        // ... rest of your code ...
 
         try {
             messageApi.open({
@@ -229,9 +244,9 @@ const Edit = ({
                 content: "Menyimpan Dokumen...",
                 key: "document-save",
             });
-            const {data} = await axios.patch(
+            const { data } = await axios.patch(
                 `/responses/${values.response_id}`,
-                filteredValues,
+                updatedValues,
                 {
                     headers: { "Content-Type": "application/json" },
                 }
@@ -253,7 +268,7 @@ const Edit = ({
             form.setFields(errorFields);
             setWarningList(warnings);
             setErrorList(errors);
-            if(data.errors.length===0&& data.warnings.length===0) {
+            if (data.errors.length === 0 && data.warnings.length === 0) {
                 messageApi.open({
                     type: "success",
                     content: "Berhasil menyimpan dokumen dengan status CLEAN",
@@ -290,7 +305,7 @@ const Edit = ({
                 setWarningList(warnings);
                 setErrorList(errors);
             }
-            
+
             messageApi.open({
                 type: "error",
                 content: errorMessage,
@@ -414,7 +429,7 @@ const Edit = ({
                 <Form
                     form={form}
                     onFinish={onFinish}
-                    // onValuesChange={handleValuesChange}
+                // onValuesChange={handleValuesChange}
                 >
                     <Form.Item name="response_id" hidden>
                         <Input readOnly />
