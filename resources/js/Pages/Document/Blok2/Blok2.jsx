@@ -52,17 +52,27 @@ const Blok2 = ({ petugas_id, pengawas_id }) => {
                     <td className={styles.data}>
                         <Form.Item
                             name="petugas_id"
-                          
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Isian ini harus terisi",
+                                },
+                            ]}
                         >
                             <Select options={daftarPencacah} allowClear />
                         </Form.Item>
                     </td>
 
-                    <td
-                        className={styles.data}
-
-                    >
-                        <Form.Item name="pengawas_id">
+                    <td className={styles.data}>
+                        <Form.Item
+                            name="pengawas_id"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Isian ini harus terisi",
+                                },
+                            ]}
+                        >
                             <Select options={daftarPengawas} allowClear />
                         </Form.Item>
                     </td>
@@ -71,12 +81,28 @@ const Blok2 = ({ petugas_id, pengawas_id }) => {
                 <tr className={styles.row}>
                     <td className={styles.data}>1. Tanggal</td>
                     <td className={styles.data}>
-                        <Form.Item name="enumeration_date">
+                        <Form.Item
+                            name="enumeration_date"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Isian ini harus terisi",
+                                },
+                            ]}
+                        >
                             <DatePicker />
                         </Form.Item>
                     </td>
                     <td className={styles.data}>
-                        <Form.Item name="review_date">
+                        <Form.Item
+                            name="review_date"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Isian ini harus terisi",
+                                },
+                            ]}
+                        >
                             <DatePicker />
                         </Form.Item>
                     </td>

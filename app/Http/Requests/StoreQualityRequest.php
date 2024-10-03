@@ -29,6 +29,7 @@ class StoreQualityRequest extends FormRequest
             'code' => ['required', 'string'],
             'commodity_id' => ['required', 'integer'],
             'name' => ['required', 'string'],
+            'satuan' => ['required', 'string'],
             'min_price' => [
                 'required',
                 // 'regex:/^\d{1,3}(\.\d{1,2})?$/',

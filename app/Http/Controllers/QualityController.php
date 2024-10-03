@@ -20,7 +20,8 @@ class QualityController extends Controller
     {
         //
         $query = Quality::query();
-        $query->join('users as u', 'u.id', '=', 'qualities.created_by');
+        // dd($query);
+        $query->leftJoin('users as u', 'u.id', '=', 'qualities.created_by');
         $query->leftJoin('users as us', 'us.id', '=', 'qualities.reviewed_by');
         $forCount = $query->select(['qualities.*', 'u.name as createdBy', 'us.name as reviewedBy']);
         $countData = $forCount->count();
@@ -123,7 +124,7 @@ class QualityController extends Controller
         else $currentPage = 1;
         // dd($paginated, $currentPage);
 
-        $query->join('users as u', 'u.id', '=', 'qualities.created_by');
+        $query->leftJoin('users as u', 'u.id', '=', 'qualities.created_by');
         $query->leftJoin('users as us', 'us.id', '=', 'qualities.reviewed_by');
         if (!empty($request->value)) {
             $filter = $request->value;
@@ -133,8 +134,8 @@ class QualityController extends Controller
             $query->orWhere('u.name', 'like', '%' . $filter . '%');
             $query->orWhere('us.name', 'like', '%' . $filter . '%');
             $query->orWhere('commodities.name', 'like', '%' . $filter . '%');
-            $query->orWhere('min_price', 'like', '%' . $filter . '%');
-            $query->orWhere('max_price', 'like', '%' . $filter . '%');
+            $query->orWhere('qualities.min_price', 'like', '%' . $filter . '%');
+            $query->orWhere('qualities.max_price', 'like', '%' . $filter . '%');
             $query->orWhere('qualities.status', 'like', '%' . $filter . '%');
             $query->orWhere('qualities.updated_at', 'like', '%' . $filter . '%');
         }

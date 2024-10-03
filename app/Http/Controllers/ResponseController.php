@@ -360,15 +360,15 @@ class ResponseController extends Controller
                         $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
                         $change = ($previousMonthPrice - $value) / 100;
 
-                        if ($change < 0 && abs($change) > abs($commodity->min_change)) {
+                        if ($change < 0 && abs($change) > abs($commodity->min_price)) {
                             $warnings[] = [
                                 'id' => $dataId,
-                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_change}%",
+                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_price}%",
                             ];
-                        } elseif ($change > 0 && $change > $commodity->max_change) {
+                        } elseif ($change > 0 && $change > $commodity->max_price) {
                             $warnings[] = [
                                 'id' => $dataId,
-                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_change}%",
+                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_price}%",
                             ];
                         }
                     }
@@ -389,15 +389,15 @@ class ResponseController extends Controller
                         $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
                         $change = ($previousMonthPrice - $data->price) / 100;
 
-                        if ($change < 0 && abs($change) > abs($commodity->min_change)) {
+                        if ($change < 0 && abs($change) > abs($commodity->min_price)) {
                             $warnings[] = [
                                 'id' => $dataId,
-                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_change}%",
+                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_price}%",
                             ];
-                        } elseif ($change > 0 && $change > $commodity->max_change) {
+                        } elseif ($change > 0 && $change > $commodity->max_price) {
                             $warnings[] = [
                                 'id' => $dataId,
-                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_change}%",
+                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_price}%",
                             ];
                         }
                     }
@@ -409,8 +409,8 @@ class ResponseController extends Controller
 
             // Validate the updated response data
             $validator = Validator::make($updatedResponse->toArray(), [
-                'petugas_id' => 'required|exists:users,id',
-                'pengawas_id' => 'required|exists:users,id',
+                'petugas_id' => 'required',
+                'pengawas_id' => 'required',
                 'enumeration_date' => 'required|date',
                 'review_date' => 'required|date',
                 'commodities' => 'required|string',

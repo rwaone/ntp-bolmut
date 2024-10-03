@@ -26,17 +26,15 @@ class StoreCommodityRequest extends FormRequest
         return [
             //
             'id' => ['nullable', 'integer'],
-            'name' => ['required','string'],
-            'code' => ['required','string'],
-            'group_id' => ['required','integer'],
-            'min_change' => [
+            'name' => ['required', 'string'],
+            'code' => ['required', 'string'],
+            'group_id' => ['required', 'integer'],
+            'min_price' => [
                 'required',
-                'regex:/^\d{1,3}(\.\d{1,2})?$/',
                 'numeric',
             ],
-            'max_change' => [
+            'max_price' => [
                 'required',
-                'regex:/^\d{1,3}(\.\d{1,2})?$/',
                 'numeric',
             ],
         ];
@@ -47,10 +45,10 @@ class StoreCommodityRequest extends FormRequest
             'name.required' => 'Nama tidak boleh kosong.',
             'code.required' => 'Kode tidak boleh kosong.',
             'group_id.required' => 'Kelompok Komoditas tidak boleh kosong.',
-            'min_change.required' => 'Isian tidak boleh kosong.',
-            'min_change.regex' => 'Isian tidak sesuai format.',
-            'max_change.required' => 'Isian tidak boleh kosong.',
-            'max_change.regex' => 'Isian tidak sesuai format.',
+            'min_price.required' => 'Isian tidak boleh kosong.',
+            'min_price.regex' => 'Isian tidak sesuai format.',
+            'max_price.required' => 'Isian tidak boleh kosong.',
+            'max_price.regex' => 'Isian tidak sesuai format.',
         ];
     }
 }

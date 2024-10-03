@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('petugas', function (Blueprint $table) {
             $table->id();
-            $table->string('nip');
+            $table->string('nip')->nullable();
             $table->string('name');
             $table->string('jabatan');
             $table->timestamps();

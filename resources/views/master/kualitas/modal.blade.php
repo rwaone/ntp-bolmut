@@ -61,7 +61,8 @@
                             <label for="min_price" class="form-label">Harga Minimum (Rp)</label>
                             <div class="input-area">
                                 <div class="relative group">
-                                    <input type="text" id="min_price" name="min_price" class="form-control !pl-12" placeholder="10.000">
+                                    <input type="text" id="min_price" name="min_price" class="form-control !pl-12"
+                                        placeholder="10.000">
                                     <div
                                         class="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full border-r border-r-slate-200 dark:border-r-slate-700 flex items-center justify-center">
                                         Rp
@@ -75,7 +76,8 @@
                             <label for="max_price" class="form-label">Harga Maksimum (Rp)</label>
                             <div class="input-area">
                                 <div class="relative group">
-                                    <input type="text" id="max_price" name="max_price" class="form-control !pl-12" placeholder="75.000">
+                                    <input type="text" id="max_price" name="max_price" class="form-control !pl-12"
+                                        placeholder="75.000">
                                     <div
                                         class="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full border-r border-r-slate-200 dark:border-r-slate-700 flex items-center justify-center">
                                         Rp
@@ -83,6 +85,13 @@
                                 </div>
                             </div>
                             <div id="error-max_price" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
+                        </div>
+                        <div class="label-area mb-3">
+                            <label for="satuan" class="form-label">Satuan</label>
+                            <input id="satuan" name="satuan" type="text" class="form-control"
+                                placeholder="1 Potong">
+                            <div id="error-satuan" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
                             </div>
                         </div>
                         <div class="label-area mb-3">

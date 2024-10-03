@@ -46,8 +46,8 @@
                             <label for="jabatan" class="form-label">Jabatan</label>
                             <select id="jabatan" name="jabatan" class="form-control select2">
                                 <option disabled selected>-- Pilih Jabatan --</option>
-                                <option value="Pencacah">Pencacah</option>
-                                <option value="Pengawas">Pengawas</option>
+                                <option value="Pencacah">Pencacah (PCL)</option>
+                                <option value="Pengawas">Pengawas (PML)</option>
                             </select>
                             <div class="error-message text-red-500 text-sm mt-1" id="jabatan-error"></div>
                         </div>

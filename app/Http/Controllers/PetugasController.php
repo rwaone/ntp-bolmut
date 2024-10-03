@@ -7,7 +7,7 @@ use App\Http\Requests\StorePetugasRequest;
 use App\Http\Requests\UpdatePetugasRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 class PetugasController extends Controller
 {
@@ -164,11 +164,19 @@ class PetugasController extends Controller
      */
     public function destroy(Petugas $petugas)
     {
-        $petugas->delete();
+        try {
+            //code...
+            DB::beginTransaction();
+            $petugas->delete();
+            DB::commit();
 
-        return response()->json([
-            'message' => 'Petugas deleted successfully.'
-        ], 200);
+            return response()->json([
+                'message' => 'Petugas deleted successfully.'
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     public function getTableData(Request $request)

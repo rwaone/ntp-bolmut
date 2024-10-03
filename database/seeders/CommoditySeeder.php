@@ -526,8 +526,7 @@ class CommoditySeeder extends Seeder
             ],
         ];
 
-        foreach ($commodities as $commoditiy)
-        {
+        foreach ($commodities as $commoditiy) {
             Commodity::create($commoditiy);
         }
     }

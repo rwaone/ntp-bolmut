@@ -109,8 +109,8 @@
                     $('#name').val(result.name);
                     $('#code').val(result.code);
                     $('#group_id').val(result.group_id);
-                    $('#min_change').val(result.min_change);
-                    $('#max_change').val(result.max_change);
+                    $('#min_price').val(result.min_price);
+                    $('#max_price').val(result.max_price);
                 },
                 error: (error) => {
                     console.log(error.responseJSON.errors)
@@ -131,12 +131,12 @@
             var list, currentPage, paginated, beforePage, showTheData
             $('#button-create').on('click', (e) => {
                 e.preventDefault();
-                let min_change = $('#min_change').val()
-                let max_change = $('#max_change').val()
-                min_change = setNumberPrice(min_change)
-                max_change = setNumberPrice(max_change)
-                $('#min_change').val(min_change)
-                $('#max_change').val(max_change)
+                let min_price = $('#min_price').val()
+                let max_price = $('#max_price').val()
+                min_price = setNumberPrice(min_price)
+                max_price = setNumberPrice(max_price)
+                $('#min_price').val(min_price)
+                $('#max_price').val(max_price)
                 let data = $('#form-create').serialize();
                 document.getElementById('paginationList').querySelectorAll('li').forEach((node) => {
                     if (node.querySelector('a').classList.contains('p-active')) currentPage =

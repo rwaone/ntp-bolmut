@@ -9,16 +9,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Commodity extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = ['id'];
     protected $load = ['qualities'];
     protected $with = ['group'];
 
-    public function qualities(){
+    public function qualities()
+    {
         return $this->hasMany(Quality::class);
     }
 
-    public function group(){
+    public function group()
+    {
         return $this->belongsTo(Group::class);
     }
 }

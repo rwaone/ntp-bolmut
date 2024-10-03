@@ -93,6 +93,7 @@
                 $('#hidden-id').val(response.data.id);
                 $('#name').val(response.data.name);
                 $('#code').val(response.data.code);
+                $('#satuan').val(response.data.satuan);
                 $('#commodity_id').val(response.data.commodity_id);
                 $('#min_price').val(response.data.min_price);
                 $('#max_price').val(response.data.max_price);

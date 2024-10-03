@@ -84,11 +84,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/petugas', [PetugasController::class, 'index'])->name('petugas.index');
     Route::post('/petugas', [PetugasController::class, 'store'])->name('petugas.store');
     Route::get('/petugas/{petugas}/edit', [PetugasController::class, 'edit'])->name('petugas.edit');
-    // Route::put('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
-    // Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
+    Route::put('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
+    Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
     Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
     // Route::resource('petugas', PetugasController::class);
-    
+
     // Documents
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
@@ -134,7 +134,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     //Pemeriksaan
     Route::get('/pemeriksaan', [PemeriksaanController::class, 'index'])->name('pemeriksaan.index');
 
-     //Response
+    //Response
     Route::get('/responses/index', [ResponseController::class, 'index'])->name('responses.index');
     Route::get('/responses/fetchSample', [ResponseController::class, 'fetchSample'])->name('responses.fetchSample');
     Route::post('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');

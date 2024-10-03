@@ -69,8 +69,8 @@ class CommodityController extends Controller
                         'code' => $validated['code'],
                         'group_id' => $validated['group_id'],
                         'name' => $validated['name'],
-                        'min_change' => $validated['min_change'],
-                        'max_change' => $validated['max_change']
+                        'min_price' => $validated['min_price'],
+                        'max_price' => $validated['max_price']
                     ]);
                     $message = 'Berhasil mengedit data komoditas';
                 } else {
@@ -122,14 +122,14 @@ class CommodityController extends Controller
             $query->orWhere('code', 'like', '%' . $filter . '%');
             $query->join('groups', 'groups.id', '=', 'commodities.group_id');
             $query->orWhere('groups.name', 'like', '%' . $filter . '%');
-            $query->orWhere('min_change', 'like', '%' . $filter . '%');
-            $query->orWhere('max_change', 'like', '%' . $filter . '%');
+            $query->orWhere('min_price', 'like', '%' . $filter . '%');
+            $query->orWhere('max_price', 'like', '%' . $filter . '%');
             $query->orWhere('commodities.updated_at', 'like', '%' . $filter . '%');
         }
         $countData = $query->count();
         $query->select(['commodities.*']);
         $data = $query->paginate($paginated, ['*'], 'page', $currentPage);
-        $html = view('master/komoditas/data-table-komoditas', compact('data'))->render(); 
+        $html = view('master/komoditas/data-table-komoditas', compact('data'))->render();
         return response()->json([
             'countData' => $countData,
             'html' => $html,

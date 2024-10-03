@@ -26,7 +26,7 @@ class UpdatePetugasRequest extends FormRequest
         $rules = [
             // 'id' => ['integer'],
             'name' => ['string', 'required', 'regex:/^[\pL\s,\.]+$/u'],
-            'nip' => ['string', 'required', 'size:18', 'regex:/^(\d{4})(\d{2})(\d{2})(\d{4})(\d{2})([12])\d{3}$/'],
+            'nip' => ['string', 'nullable', 'size:18', 'regex:/^(\d{4})(\d{2})(\d{2})(\d{4})(\d{2})([12])\d{3}$/'],
             'jabatan' => ['string', 'required'],
         ];
 

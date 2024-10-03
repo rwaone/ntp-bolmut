@@ -35,13 +35,15 @@
                             <label for="name" class="form-label">Nama Komoditas</label>
                             <input id="name" name="name" type="text" class="form-control"
                                 placeholder="Nama Komoditas">
-                            <div id="error-name" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
+                            <div id="error-name" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
                         </div>
                         <div class="label-area mb-3">
                             <label for="code" class="form-label">Kode Komoditas</label>
                             <input id="code" name="code" type="text" class="form-control"
                                 placeholder="Kode Komoditas">
-                            <div id="error-code" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
+                            <div id="error-code" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
                         </div>
                         <div class="label-area mb-3">
                             <label for="group_id" class="form-label">Kelompok Komoditas</label>
@@ -51,19 +53,22 @@
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
-                            <div id="error-group_id" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
+                            <div id="error-group_id" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
                         </div>
                         <div class="label-area mb-3">
-                            <label for="min_change" class="form-label">Perubahan Minimum (%)</label>
-                            <input id="min_change" name="min_change" type="text" class="form-control"
-                                placeholder="ex: 1,00">
-                            <div id="error-min_change" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
+                            <label for="min_price" class="form-label">Harga Minimum Rupiah)</label>
+                            <input id="min_price" name="min_price" type="text" class="form-control"
+                                placeholder="ex: 50.000">
+                            <div id="error-min_price" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
                         </div>
                         <div class="label-area mb-3">
-                            <label for="max_change" class="form-label">Perubahan Maksimum (%)</label>
-                            <input id="max_change" name="max_change" type="text" class="form-control"
-                                placeholder="ex: 7,00">
-                            <div id="error-max_change" class="error-message mt-2 text-sm text-red-600 dark:text-red-500"></div>
+                            <label for="max_price" class="form-label">Harga Maksimum Rupiah)</label>
+                            <input id="max_price" name="max_price" type="text" class="form-control"
+                                placeholder="ex: 70.000">
+                            <div id="error-max_price" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
                         </div>
                 </div>
                 <!-- Modal footer -->

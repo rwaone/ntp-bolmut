@@ -88,7 +88,7 @@ const Edit = ({
     };
 
     const handleScrollTo = (itemKey) => {
-        console.log(itemKey);
+        // console.log(itemKey);
         setActiveTab(itemKeys[itemKey]);
         form.scrollToField(itemKey);
         setOpenRevalModal(false);
@@ -219,20 +219,16 @@ const Edit = ({
 
     const onFinish = async (values) => {
         // filter previous prices
+
         const filteredValues = Object.fromEntries(
             Object.entries(values).filter(([key]) => !key.includes("prev"))
         );
-        // const updatedValues = {
-        //     ...filteredValues,
-        //     enumeration_date: new Date(filteredValues.enumeration_date),
-        //     review_date: new Date(filteredValues.review_date),
-
-        // };
-        // console.log({ updatedValues // ... other code ...
 
         const updatedValues = {
             ...filteredValues,
-            enumeration_date: filteredValues.enumeration_date.toISOString().slice(0, 10), // Format as YYYY-MM-DD
+            enumeration_date: filteredValues.enumeration_date
+                .toISOString()
+                .slice(0, 10), // Format as YYYY-MM-DD
             review_date: filteredValues.review_date.toISOString().slice(0, 10), // Format as YYYY-MM-DD
         };
 
@@ -251,8 +247,8 @@ const Edit = ({
                     headers: { "Content-Type": "application/json" },
                 }
             );
-            setErrorList(data.errors)
-            setWarningList(data.warnings)
+            setErrorList(data.errors);
+            setWarningList(data.warnings);
             let warningFields = data.warnings.map((warning) => {
                 let priceField = `${warning.id}-price`;
                 return {
@@ -280,7 +276,6 @@ const Edit = ({
                     content: "Berhasil menyimpan dokumen dengan status WARNING",
                     key: "document-save",
                 });
-
             }
         } catch (error) {
             let errorMessage = error.message;
@@ -429,7 +424,7 @@ const Edit = ({
                 <Form
                     form={form}
                     onFinish={onFinish}
-                // onValuesChange={handleValuesChange}
+                    // onValuesChange={handleValuesChange}
                 >
                     <Form.Item name="response_id" hidden>
                         <Input readOnly />
@@ -461,7 +456,7 @@ const Edit = ({
                         justifyContent: "end",
                     }}
                 >
-                    <Button type="primary" onClick={Revalidasi}>
+                    <Button type="primary" onClick={() => form.submit()}>
                         <ReloadOutlined /> Revalidasi
                     </Button>
                     <p>Klik ini untuk melakukan revalidasi ulang</p>
