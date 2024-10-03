@@ -56,20 +56,7 @@
                             <div id="error-group_id" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
                             </div>
                         </div>
-                        <div class="label-area mb-3">
-                            <label for="min_price" class="form-label">Harga Minimum Rupiah)</label>
-                            <input id="min_price" name="min_price" type="text" class="form-control"
-                                placeholder="ex: 50.000">
-                            <div id="error-min_price" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
-                            </div>
-                        </div>
-                        <div class="label-area mb-3">
-                            <label for="max_price" class="form-label">Harga Maksimum Rupiah)</label>
-                            <input id="max_price" name="max_price" type="text" class="form-control"
-                                placeholder="ex: 70.000">
-                            <div id="error-max_price" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
-                            </div>
-                        </div>
+
                 </div>
                 <!-- Modal footer -->
                 <div
