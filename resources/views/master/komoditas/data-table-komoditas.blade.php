@@ -13,12 +13,7 @@
             <th scope="col" class="table-th ">
                 KELOMPOK KOMODITAS
             </th>
-            <th scope="col" class="table-th ">
-                HARGA MINIMUM (Rupiah)
-            </th>
-            <th scope="col" class="table-th ">
-                HARGA MAKSIMUM (Rupiah)
-            </th>
+
             <th scope="col" class="table-th ">
                 TERAKHIR DI-EDIT
             </th>
@@ -42,12 +37,7 @@
                 <td class="table-td">
                     {{ $value->group->name }}
                 </td>
-                <td class="table-td change-attributes">
-                    {{ $value->min_price }}
-                </td>
-                <td class="table-td change-attributes">
-                    {{ $value->max_price }}
-                </td>
+
                 <td class="table-td">
                     {{ $value->updated_at }}
                 </td>

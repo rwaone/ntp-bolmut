@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('code')->nullable();
             $table->foreignId('group_id');
             $table->string('name');
-            $table->integer('min_price')->default(0);
-            $table->integer('max_price')->default(0);
             $table->timestamps();
         });
     }

@@ -29,14 +29,7 @@ class StoreCommodityRequest extends FormRequest
             'name' => ['required', 'string'],
             'code' => ['required', 'string'],
             'group_id' => ['required', 'integer'],
-            'min_price' => [
-                'required',
-                'numeric',
-            ],
-            'max_price' => [
-                'required',
-                'numeric',
-            ],
+
         ];
     }
     public function messages()
@@ -45,10 +38,7 @@ class StoreCommodityRequest extends FormRequest
             'name.required' => 'Nama tidak boleh kosong.',
             'code.required' => 'Kode tidak boleh kosong.',
             'group_id.required' => 'Kelompok Komoditas tidak boleh kosong.',
-            'min_price.required' => 'Isian tidak boleh kosong.',
-            'min_price.regex' => 'Isian tidak sesuai format.',
-            'max_price.required' => 'Isian tidak boleh kosong.',
-            'max_price.regex' => 'Isian tidak sesuai format.',
+
         ];
     }
 }
