@@ -163,7 +163,7 @@ class DesaController extends Controller
             }
         }
 
-        return redirect('master/wilayah/desa', 302)->with('message', 'berhasil menambahkan wilayah baru');
+        return redirect('master/wilayah', 302)->with('message', 'berhasil menambahkan wilayah baru');
     }
 
     /**

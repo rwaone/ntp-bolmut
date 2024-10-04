@@ -1,4 +1,7 @@
 <x-app-layout>
+    <style>
+
+    </style>
     <div class="space-y-8">
         {{-- <div> --}}
         <x-breadcrumb :page-title="$pageTitle" :breadcrumb-items="$breadcrumbItems" />
@@ -62,7 +65,7 @@
                                                 <th scope="col" class="table-th ">
                                                     Provinsi
                                                 </th>
-                                                <th scope="col" class="table-th ">
+                                                <th scope="col" class="table-th sticky-right">
                                                     ACTION
                                                 </th>
                                             </tr>
@@ -126,7 +129,7 @@
                                                             </div>
                                                         </td>
 
-                                                        <td class="table-td">
+                                                        <td class="table-td sticky-right">
                                                             <div class="dropstart relative">
                                                                 <button class="inline-flex justify-center items-center"
                                                                     type="button" id="tableDropdownMenuButton"
