@@ -20,13 +20,14 @@
                     </li>
                 </ul>
                 @php
-                 $properties = [
-                    ['value'=>'kecamatan_name','label'=>'Kecamatan'],
-                    ['value'=>'desa_name','label'=>'Desa'],
-                    ['value'=>'stat_pem','label'=>'Status Pemerintahan']];
-                $query = request()->query();   
+                    $properties = [
+                        ['value' => 'kecamatan_name', 'label' => 'Kecamatan'],
+                        ['value' => 'desa_name', 'label' => 'Desa'],
+                        ['value' => 'stat_pem', 'label' => 'Status Pemerintahan'],
+                    ];
+                    $query = request()->query();
                 @endphp
-                <x-filter-table :properties="$properties" :query="$query" ></x-filter-table>
+                <x-filter-table :properties="$properties" :query="$query"></x-filter-table>
                 <a href="{{ url('master/wilayah/create') }}"
                     class="btn inline-flex justify-center btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 ">
                     <span class="flex items-center">
@@ -194,12 +195,16 @@
                         <!-- Modal body -->
                         <div class="p-6 space-y-4">
                             <h6 class="text-base text-slate-900 dark:text-white leading-6">
-                                Apakah anda yakin akan menghapus data ini?
+                                Apakah anda yakin akan menghapus wilayah ini?
                             </h6>
-                            <p class="text-base text-slate-600 dark:text-slate-400 leading-6">
-                                Oat cake ice cream candy chocolate cake apple pie. Brownie carrot cake candy canes. Cake
-                                sweet roll cake cheesecake cookie chocolate cake liquorice.
-                            </p>
+                            <div style="margin-left: 10px">
+
+                                <i>Sudah terhapus, data hilang sia-sia, <br>
+                                    Seperti cinta yang pergi tanpa berita. <br>
+                                    Ingin kembali, sudah terlambat, sia-sia, <br>
+                                    Cinta yang hilang, bikin hati merana. <br>
+                                    <i>
+                            </div>
                             <span id="desa-delete-id" class="hidden"></span>
 
 
