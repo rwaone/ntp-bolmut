@@ -91,7 +91,7 @@
                                                         <td class="table-td">
                                                             <div
                                                                 class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                                {{ $sample->document_type }}
+                                                                {{ $sample->document_code }}
                                                             </div>
                                                         </td>
                                                         <td class="table-td">

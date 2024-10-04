@@ -21,7 +21,7 @@ class SampleController extends Controller
     {
         $query = Sample::join('desas', 'samples.desa_id', 'desas.id')
             ->join('kecamatans', 'desas.kecamatan_id', 'kecamatans.id')
-            ->join('documents','samples.document_id','documents.id')
+            ->join('documents', 'samples.document_id', 'documents.id')
             ->select(
                 'samples.id',
                 'samples.respondent_name',
@@ -29,6 +29,7 @@ class SampleController extends Controller
                 'samples.document_id',
                 'documents.name as document_name',
                 'documents.type as document_type',
+                'documents.code as document_code',
                 'desas.name as desa_name',
                 'desas.code as desa_code',
                 'kecamatans.id as kecamatan_id',
@@ -37,24 +38,24 @@ class SampleController extends Controller
             );
 
 
-            $kecamatan = $request->query('kecamatan_name');
-            $desa = $request->query('desa_name');
-            $respondent_name = $request->query('respondent_name');
-            $document = $request->query('document_name');
+        $kecamatan = $request->query('kecamatan_name');
+        $desa = $request->query('desa_name');
+        $respondent_name = $request->query('respondent_name');
+        $document = $request->query('document_name');
 
-            if($kecamatan) {
-                $query->where('kecamatans.name','like','%'.$kecamatan.'%');
-            }
+        if ($kecamatan) {
+            $query->where('kecamatans.name', 'like', '%' . $kecamatan . '%');
+        }
 
-            if($desa) {
-                $query->where('desas.name','like','%'.$desa.'%');
-            }
-            if($respondent_name) {
-                $query->where('samples.respondent_name','like','%'.$respondent_name.'%');
-            }
-            if($document) {
-                $query->where('documents.name','like','%'.$document.'%')->orWhere('documents.type','like','%'.$document.'%');
-            }
+        if ($desa) {
+            $query->where('desas.name', 'like', '%' . $desa . '%');
+        }
+        if ($respondent_name) {
+            $query->where('samples.respondent_name', 'like', '%' . $respondent_name . '%');
+        }
+        if ($document) {
+            $query->where('documents.name', 'like', '%' . $document . '%')->orWhere('documents.type', 'like', '%' . $document . '%');
+        }
 
 
         $samples = $query->paginate(10);
@@ -75,7 +76,7 @@ class SampleController extends Controller
         return view('master/samples/index', [
             'pageTitle' => 'Master Sampel',
             'breadcrumbItems' => $breadcrumbsItems,
-            'samples' => $samples, 
+            'samples' => $samples,
             'kecamatans' => $kecamatans,
             'documents' => $documents
 
