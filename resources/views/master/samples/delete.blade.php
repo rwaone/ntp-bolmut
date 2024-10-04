@@ -14,7 +14,7 @@
                      <iconify-icon class="text-xl text-white spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]"
                          icon="material-symbols:warning-rounded"></iconify-icon>
                      <h3 class="text-xl font-medium text-white dark:text-white capitalize">
-                         Hapus Wilayah </h3>
+                         Hapus Dokumen </h3>
                      <button type="button"
                          class="text-slate-400 bg-transparent hover:text-slate-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center
                  dark:hover:bg-slate-600 dark:hover:text-white"
@@ -33,10 +33,14 @@
                      <h6 class="text-base text-slate-900 dark:text-white leading-6">
                          Apakah anda yakin akan menghapus data ini?
                      </h6>
-                     <p class="text-base text-slate-600 dark:text-slate-400 leading-6">
-                         Oat cake ice cream candy chocolate cake apple pie. Brownie carrot cake candy canes. Cake
-                         sweet roll cake cheesecake cookie chocolate cake liquorice.
-                     </p>
+                     <div style="margin-left: 10px">
+
+                         <i>Data hilang takkan kembali, <br>
+                             Hapusnya cepat, tak pikir panjang. <br>
+                             Dicari-cari, kini kau sedih sendiri, <br>
+                             Sudah terlambat, cuma bisa bilang "Sayang!" <br>
+                             <i>
+                     </div>
                      <span id="sample-delete-id" class="hidden"></span>
 
 

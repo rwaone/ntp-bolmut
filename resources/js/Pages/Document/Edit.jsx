@@ -54,7 +54,7 @@ const Edit = ({
     selectedQualities,
     previousPrices,
 }) => {
-    console.log({ response });
+    // console.log({ document });
     const [form] = Form.useForm();
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -69,6 +69,14 @@ const Edit = ({
     const [errorList, setErrorList] = useState([]);
     const [warningList, setWarningList] = useState([]);
     const [activeTab, setActiveTab] = useState("1");
+
+    const [statusDokumen, setStatusDokumen] = useState(
+        {
+            E: "error",
+            C: "clean",
+            W: "warning",
+        }[response.status]
+    );
 
     const formRef = useRef(null);
 
@@ -247,6 +255,8 @@ const Edit = ({
                     headers: { "Content-Type": "application/json" },
                 }
             );
+            // console.log({ data });
+
             setErrorList(data.errors);
             setWarningList(data.warnings);
             let warningFields = data.warnings.map((warning) => {
@@ -262,15 +272,17 @@ const Edit = ({
             }));
             form.setFields(warningFields);
             form.setFields(errorFields);
-            setWarningList(warnings);
-            setErrorList(errors);
+            setWarningList(data.warnings);
+            setErrorList(data.errors);
             if (data.errors.length === 0 && data.warnings.length === 0) {
+                setStatusDokumen("clean");
                 messageApi.open({
                     type: "success",
                     content: "Berhasil menyimpan dokumen dengan status CLEAN",
                     key: "document-save",
                 });
             } else {
+                setStatusDokumen("warning");
                 messageApi.open({
                     type: "warning",
                     content: "Berhasil menyimpan dokumen dengan status WARNING",
@@ -278,8 +290,11 @@ const Edit = ({
                 });
             }
         } catch (error) {
+            // console.log({ error });
+
             let errorMessage = error.message;
             if (error.response.status === 422) {
+                setStatusDokumen("error");
                 errorMessage = "Tersimpan dengan error";
                 let errors = error.response.data.errors;
                 let warnings = error.response.data.warnings;
@@ -392,6 +407,8 @@ const Edit = ({
                         </Button>
                     </Space>
                     <Space>
+                        <Status status={statusDokumen} />
+
                         <Button
                             type="primary"
                             className={styles.button}
@@ -404,7 +421,7 @@ const Edit = ({
                         </Button>
                         <Button
                             type="primary"
-                            style={{ backgroundColor: "#e64d00" }}
+                            // style={{ backgroundColor: "#e64d00" }}
                             onClick={async () => {
                                 setRevalLoading(true);
                                 setOpenRevalModal(true);
@@ -436,7 +453,6 @@ const Edit = ({
                         className={styles.body}
                     />
                 </Form>
-                <Status status="error" />
             </div>
             <Modal
                 loading={revalLoading}

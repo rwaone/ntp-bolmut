@@ -35,7 +35,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('responses.index') }}" class="navItem {{ request()->is('responses*') ? 'active' : '' }}">
+                <a href="{{ route('responses.index') }}"
+                    class="navItem {{ request()->is('responses*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="material-symbols:keyboard-external-input"></iconify-icon>
                         <span>{{ __('Entri Data') }}</span>
@@ -153,10 +154,18 @@
             <!-- Settings -->
             <li>
                 <a href="{{ route('general-settings.show') }}"
-                    class="navItem {{ request()->is('general-settings*') || request()->is('users*') || request()->is('roles*') || request()->is('profiles*') || request()->is('permissions*') ? 'active' : '' }}">
+                    class="navItem {{ request()->is('general-settings*') || request()->is('roles*') || request()->is('profiles*') || request()->is('permissions*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="material-symbols:settings-outline"></iconify-icon>
                         <span>{{ __('Settings') }}</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('users.index') }}" class="navItem {{ request()->is('users*') ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="mdi:users-group-outline"></iconify-icon>
+                        <span>{{ __('Users') }}</span>
                     </span>
                 </a>
             </li>

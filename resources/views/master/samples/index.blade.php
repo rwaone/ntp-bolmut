@@ -69,96 +69,106 @@
                                         </thead>
                                         <tbody
                                             class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                                            @foreach ($samples as $sample)
-                                                <tr class="even:bg-slate-50 dark:even:bg-slate-700">
+                                            @if (count($samples) > 0)
+                                                @foreach ($samples as $sample)
+                                                    <tr class="even:bg-slate-50 dark:even:bg-slate-700">
 
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            {{ $sample->id }}
-                                                        </div>
-                                                    </td>
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            {{ $sample->respondent_name }}
-                                                        </div>
-                                                    </td>
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            {{ $sample->document_type }}
-                                                        </div>
-                                                    </td>
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            {{ $sample->document_name }}
-                                                        </div>
-                                                    </td>
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            {{ '[' . $sample->desa_code . '] ' . $sample->desa_name }}
-                                                        </div>
-                                                    </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ $sample->id }}
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ $sample->respondent_name }}
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ $sample->document_type }}
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ $sample->document_name }}
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ '[' . $sample->desa_code . '] ' . $sample->desa_name }}
+                                                            </div>
+                                                        </td>
 
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            {{ '[' . $sample->kecamatan_code . '] ' . $sample->kecamatan_name }}
-                                                        </div>
-                                                    </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                {{ '[' . $sample->kecamatan_code . '] ' . $sample->kecamatan_name }}
+                                                            </div>
+                                                        </td>
 
-                                                    </td>
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            [7107] BOLAANG MONGONDOW UTARA
-                                                        </div>
-                                                    </td>
+                                                        </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                [7107] BOLAANG MONGONDOW UTARA
+                                                            </div>
+                                                        </td>
 
-                                                    <td class="table-td">
-                                                        <div
-                                                            class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-                                                            [7100] SULAWESI UTARA
-                                                        </div>
-                                                    </td>
+                                                        <td class="table-td">
+                                                            <div
+                                                                class="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+                                                                [7100] SULAWESI UTARA
+                                                            </div>
+                                                        </td>
 
-                                                    <td class="table-td">
-                                                        <div class="dropstart relative">
-                                                            <button class="inline-flex justify-center items-center"
-                                                                type="button" id="tableDropdownMenuButton"
-                                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                                <iconify-icon class="text-xl ltr:ml-2 rtl:mr-2"
-                                                                    icon="heroicons-outline:dots-vertical"></iconify-icon>
-                                                            </button>
-                                                            <ul
-                                                                class="dropdown-menu min-w-max absolute text-sm text-slate-700 dark:text-white hidden bg-white dark:bg-slate-700 shadow z-[2] float-left overflow-hidden list-none text-left rounded-lg mt-1 m-0 bg-clip-padding border-none">
+                                                        <td class="table-td">
+                                                            <div class="dropstart relative">
+                                                                <button class="inline-flex justify-center items-center"
+                                                                    type="button" id="tableDropdownMenuButton"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <iconify-icon class="text-xl ltr:ml-2 rtl:mr-2"
+                                                                        icon="heroicons-outline:dots-vertical"></iconify-icon>
+                                                                </button>
+                                                                <ul
+                                                                    class="dropdown-menu min-w-max absolute text-sm text-slate-700 dark:text-white hidden bg-white dark:bg-slate-700 shadow z-[2] float-left overflow-hidden list-none text-left rounded-lg mt-1 m-0 bg-clip-padding border-none">
 
-                                                                <li>
-                                                                    <a href="#" data-bs-toggle="modal"
-                                                                        data-bs-target="#sample-edit-modal"
-                                                                        data-value="{{ $sample }}"
-                                                                        class="sample-edit hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
-                                                                        <iconify-icon
-                                                                            icon="clarity:note-edit-line"></iconify-icon>
-                                                                        <span>Edit</span></a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" data-bs-toggle="modal"
-                                                                        data-bs-target="#sample-delete-confirm"
-                                                                        data-value="{{ $sample->id }}"
-                                                                        class="sample-delete hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
-                                                                        <iconify-icon
-                                                                            icon="fluent:delete-28-regular"></iconify-icon>
-                                                                        <span>Delete</span></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                                    <li>
+                                                                        <a href="#" data-bs-toggle="modal"
+                                                                            data-bs-target="#sample-edit-modal"
+                                                                            data-value="{{ $sample }}"
+                                                                            class="sample-edit hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
+                                                                            <iconify-icon
+                                                                                icon="clarity:note-edit-line"></iconify-icon>
+                                                                            <span>Edit</span></a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" data-bs-toggle="modal"
+                                                                            data-bs-target="#sample-delete-confirm"
+                                                                            data-value="{{ $sample->id }}"
+                                                                            class="sample-delete hover:bg-slate-900 dark:hover:bg-slate-600 dark:hover:bg-opacity-70 hover:text-white w-full border-b border-b-gray-500 border-opacity-10 px-4 py-2 text-sm dark:text-slate-300 last:mb-0 cursor-pointer first:rounded-t last:rounded-b flex space-x-2 items-center capitalize rtl:space-x-reverse">
+                                                                            <iconify-icon
+                                                                                icon="fluent:delete-28-regular"></iconify-icon>
+                                                                            <span>Delete</span></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+
+                                                    <td colspan="9" style="text-align: center">
+                                                        No Data
+
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @endif
 
                                         </tbody>
                                     </table>
@@ -175,7 +185,7 @@
     </div>
     @include('master.samples.create')
     @include('master.samples.edit')
-    {{-- @include('master.samples.delete') --}}
+    @include('master.samples.delete')
 
     @push('scripts')
     @endpush
@@ -195,7 +205,7 @@
             });
 
             // hapus confirm 
-            
+
 
             // edit
             const editSampleLinks = document.querySelectorAll('.sample-edit');

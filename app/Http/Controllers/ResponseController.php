@@ -275,6 +275,7 @@ class ResponseController extends Controller
                 'desa_name' => $nama_desa,
                 'commodities' => $response['commodities'],
                 'notes' => $response['notes'],
+                'status' => $response['status'],
 
             ];
 
@@ -346,9 +347,10 @@ class ResponseController extends Controller
                 // Check if the '-price' key exists in the request
                 if (array_key_exists($priceKey, $request->all())) {
                     $value = $request->input($priceKey);
+                    $notNull = $value > 0 && !is_null($value);
 
                     // Validate price range based on quality
-                    if ($quality && ($value < $quality->min_price || $value > $quality->max_price)) {
+                    if ($notNull && $quality && ($value < $quality->min_price || $value > $quality->max_price)) {
                         $warnings[] = [
                             'id' => $dataId,
                             'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
@@ -356,50 +358,18 @@ class ResponseController extends Controller
                     }
 
                     // Validate price change based on commodity
-                    if ($commodity) {
-                        $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
-                        $change = ($previousMonthPrice - $value) / 100;
-
-                        if ($change < 0 && abs($change) > abs($commodity->min_price)) {
-                            $warnings[] = [
-                                'id' => $dataId,
-                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_price}%",
-                            ];
-                        } elseif ($change > 0 && $change > $commodity->max_price) {
-                            $warnings[] = [
-                                'id' => $dataId,
-                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_price}%",
-                            ];
-                        }
-                    }
 
                     $data->price = $value;
                     $data->save();
                 } else {
                     // Validate price range based on quality
-                    if ($quality && ($data->price < $quality->min_price || $data->price > $quality->max_price)) {
+                    $value = $data->price;
+                    $notNull = $value > 0 && !is_null($value);
+                    if ($notNull && $quality && ($value < $quality->min_price || $value > $quality->max_price)) {
                         $warnings[] = [
                             'id' => $dataId,
                             'message' => "Harga untuk kualitas '{$quality->name}' harus antara {$quality->min_price} dan {$quality->max_price}",
                         ];
-                    }
-
-                    // Validate price change based on commodity
-                    if ($commodity) {
-                        $previousMonthPrice = $this->getPreviousMonthPrice($response->sample_id, $response->month, $response->year, $data->quality_id);
-                        $change = ($previousMonthPrice - $data->price) / 100;
-
-                        if ($change < 0 && abs($change) > abs($commodity->min_price)) {
-                            $warnings[] = [
-                                'id' => $dataId,
-                                'message' => "Perubahan harga negatif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->min_price}%",
-                            ];
-                        } elseif ($change > 0 && $change > $commodity->max_price) {
-                            $warnings[] = [
-                                'id' => $dataId,
-                                'message' => "Perubahan harga positif untuk komoditas '{$commodity->name}' tidak boleh melebihi {$commodity->max_price}%",
-                            ];
-                        }
                     }
                 }
             }
