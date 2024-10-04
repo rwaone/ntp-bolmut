@@ -32,7 +32,7 @@ const Section = ({
     const submitAddQuality = async () => {
         try {
             setOpen(false);
-        } catch (error) { }
+        } catch (error) {}
     };
 
     const confirmAddQuality = async (values, sectionId) => {
@@ -114,7 +114,7 @@ const Section = ({
         }
     };
     useEffect(() => {
-        console.log({ qualities });
+        // console.log({ qualities });
         // fetchQualities(id);
     }, []);
 
@@ -248,6 +248,12 @@ const Section = ({
                                                         initialValue={
                                                             quality.price
                                                         }
+                                                        min_price={
+                                                            quality.min_price
+                                                        }
+                                                        max_price={
+                                                            quality.max_price
+                                                        }
                                                     />
                                                 </td>
                                                 <td
@@ -274,7 +280,7 @@ const Section = ({
                                                 >
                                                     {
                                                         qualityChanges[
-                                                        quality.data_id
+                                                            quality.data_id
                                                         ]
                                                     }
                                                 </td>
