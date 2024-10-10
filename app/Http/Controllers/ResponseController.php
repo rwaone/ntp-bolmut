@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Response;
 use App\Http\Requests\StoreResponseRequest;
 use App\Http\Requests\UpdateResponseRequest;
+use App\Imports\ResponseImport;
 use App\Models\Commodity;
 use App\Models\Data;
 use App\Models\Desa;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
 class ResponseController extends Controller
@@ -489,5 +491,19 @@ class ResponseController extends Controller
         }
 
         return null;
+    }
+
+    public function ImportExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx'
+        ]);
+    
+        // Process the uploaded file
+        $import = new ResponseImport;
+        Excel::import($import, $request->file('file'));
+    
+        // Return the import report to the user
+        return view('import_result', ['report' => $import->importReport]);
     }
 }
