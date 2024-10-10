@@ -52,6 +52,7 @@
         "simplebar": "^6.2.3",
         "sweetalert2": "^11.6.10",
         "tippy.js": "^6.3.7",
-        "tw-elements": "1.0.0-alpha13"
+        "tw-elements": "1.0.0-alpha13",
+        "xlsx": "^0.18.5"
     }
 }

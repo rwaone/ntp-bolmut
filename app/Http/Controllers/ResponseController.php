@@ -493,6 +493,15 @@ class ResponseController extends Controller
         return null;
     }
 
+    public function Import()
+    {
+        
+        // Process the uploaded file
+        $import = new ResponseImport;
+        
+        // Return the import report to the user
+        return Inertia::render('Import/index');
+    }
     public function ImportExcel(Request $request)
     {
         $request->validate([
@@ -504,6 +513,6 @@ class ResponseController extends Controller
         Excel::import($import, $request->file('file'));
     
         // Return the import report to the user
-        return view('import_result', ['report' => $import->importReport]);
+        return response()->json(['report' => $import->importReport]);
     }
 }

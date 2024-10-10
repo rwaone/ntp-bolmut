@@ -127,7 +127,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('general-settings-logo', [GeneralSettingController::class, 'logoUpdate'])->name('general-settings.logo');
 
     //Responses
-    //Response
     Route::get('/responses/index', [ResponseController::class, 'index'])->name('responses.index');
     Route::get('/responses/fetchSample', [ResponseController::class, 'fetchSample'])->name('responses.fetchSample');
     Route::post('/responses/create', [ResponseController::class, 'storeInitialResponse'])->name('responses.create');
@@ -137,9 +136,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('database-backups', DatabaseBackupController::class);
     // Route::resource('responses', ResponseController::class);
     Route::get('database-backups-download/{fileName}', [DatabaseBackupController::class, 'databaseBackupDownload'])->name('database-backups.download');
-
+    
     // data 
     Route::post('/data', [DataController::class, 'store'])->name('data.store');
     Route::delete('/data/{data}', [DataController::class, 'destroy'])->name('data.destroy');
+    
+    Route::get('/responses/import/index', [ResponseController::class, 'import'])->name('responses.import.index');
+    Route::post('/responses/import/excel', [ResponseController::class, 'ImportExcel'])->name('responses.import.excel');
     // Route::resource('data', DataController::class);
 });

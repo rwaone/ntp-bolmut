@@ -13,6 +13,8 @@
 </head>
 
 <body>
-    @inertia
+    {{-- <x-app-layout> --}}
 
+    @inertia
+    {{-- </x-app-layout> --}}
 </body>

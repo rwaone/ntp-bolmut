@@ -43,6 +43,14 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('responses.import.index') }}" class="navItem {{ request()->is('responses/import*') ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="carbon:document-import"></iconify-icon>
+                        <span>{{ __('Import Data') }}</span>
+                    </span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('dashboard.index') }}" class="navItem {{ request()->is('entry*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="mdi:print-preview"></iconify-icon>
