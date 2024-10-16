@@ -202,4 +202,16 @@ class PetugasController extends Controller
         $daftar_pencacah = Petugas::where('jabatan', 'Pencacah')->get();
         return response()->json($daftar_pencacah, 200,);
     }
+    public function fetch(Request $request)
+    {
+        try {
+            //code...
+            $daftar_petugas = Petugas::get();
+            return response()->json($daftar_petugas,200);
+
+        } catch (\Throwable $th) {
+            return response()->json(["message"=>"something was wrong"],500);
+            //throw $th;
+        }
+    }
 }

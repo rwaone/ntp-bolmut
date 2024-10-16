@@ -1,15 +1,31 @@
 import {
+    ClearOutlined,
     DownloadOutlined,
     InboxOutlined,
+    SendOutlined,
     UploadOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Space, Table, Typography, Upload, message } from "antd";
+import {
+    Button,
+    Form,
+    Modal,
+    Space,
+    Table,
+    Typography,
+    Upload,
+    message,
+} from "antd";
 import * as XLSX from "xlsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Unduh from "./Unduh";
 const index = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
+    const [openUnduhModal, setOpenUnduhModal] = useState(false);
+
+    const [form] = Form.useForm();
 
     const handleFileUpload = (file) => {
         const reader = new FileReader();
@@ -27,6 +43,11 @@ const index = () => {
                 dataIndex: row,
                 key: row,
             }));
+            currentColumns.push({
+                title: "Status Import",
+                dataIndex: "_status",
+                key: "_status",
+            });
             setColumns(currentColumns);
             const formData = jsonData.slice(1);
 
@@ -49,9 +70,10 @@ const index = () => {
                 jsonData[0].forEach((column, index) => {
                     data[column] = row[index];
                 });
+                data["_status"] = "preview";
                 return data;
             });
-            console.log({ currentData });
+            // console.log({ currentData });
 
             setDataSource(currentData);
             messageApi.success(`${file.name} upload completed`);
@@ -64,7 +86,17 @@ const index = () => {
         reader.readAsArrayBuffer(file);
         return false; // Prevent default upload behavior
     };
-    const handleDownload = () => {
+
+    const handleDownload = (values) => {
+        const _data = values.months.map((month) => ({
+            sample_id: values.sample_id,
+            year: values.year,
+            month: month,
+            document_id: values.document_id,
+            pencacah_id: values.petugas_id,
+            pengawas_id: values.pengawas_id,
+        }));
+
         const data = [
             [
                 "id",
@@ -78,36 +110,20 @@ const index = () => {
                 "review_date",
                 "commodities",
                 "notes",
-                "status",
             ],
-            [
-                "id",
-                "sample_id",
-                "month",
-                "year",
-                "document_id",
-                "petugas_id",
-                "pengawas_id",
-                "enumeration_date",
-                "review_date",
-                "commodities",
-                "notes",
-                "status",
-            ],
-            [
-                "id",
-                "sample_id",
-                "month",
-                "year",
-                "document_id",
-                "petugas_id",
-                "pengawas_id",
-                "enumeration_date",
-                "review_date",
-                "commodities",
-                "notes",
-                "status",
-            ],
+            ..._data.map((data) => [
+                null,
+                data.sample_id,
+                data.month,
+                data.year,
+                data.document_id,
+                data.pencacah_id,
+                data.pengawas_id,
+                "yyyy/mm/dd",
+                "yyyy/mm/dd",
+                "komoditas...",
+                "catatan...",
+            ]),
         ];
 
         const workbook = XLSX.utils.book_new();
@@ -115,30 +131,90 @@ const index = () => {
 
         XLSX.utils.book_append_sheet(workbook, worksheet, "respondent");
 
-        XLSX.writeFile(workbook, "template_import.xlsx");
+        // XLSX.writeFile(workbook, "template_import.xlsx");
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+        });
+
+        const blob = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        // Create a URL for the Blob
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "template.xlsx"; // Use the filename from state
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        setOpenUnduhModal(false);
     };
+    const handleSend = async (data) => {
+        try {
+            const response = await axios.post("/import", {responses:data}, {
+                headers: { "Content-Type": "application/json" },
+            });
+            console.log({ response });
+            setDataSource(response.data.responses);
+        } catch (error) {
+            console.error({ error });
+        }
+    };
+
+    useEffect(() => {
+        console.log({ dataSource });
+    }, [dataSource]);
+
     return (
         <div>
             {contextHolder}
-            <Space className="">
-                <Button onClick={handleDownload} icon={<DownloadOutlined />}>
+            <Typography.Title level={3}>Impor Data CSV/Excel</Typography.Title>
+            <Space className="mb-4">
+                <Button
+                    onClick={() => setOpenUnduhModal(true)}
+                    icon={<DownloadOutlined />}
+                    type="primary"
+                >
                     Unduh Template
                 </Button>
-                
-                        <Upload
-                            name="files"
-                            beforeUpload={handleFileUpload}
-                            accept=".xlsx, .xls"
-                        >
-                            <Button icon={<UploadOutlined />}>Upload</Button>
-                        </Upload>
-                
+
+                <Upload
+                    name="files"
+                    beforeUpload={handleFileUpload}
+                    accept=".xlsx, .xls"
+                    showUploadList={false} // Hide the upload list
+                    type="success"
+                >
+                    <Button icon={<UploadOutlined />}>Upload</Button>
+                </Upload>
+                <Button
+                    icon={<ClearOutlined />}
+                    onClick={() => setDataSource([])}
+                >
+                    Bersihkan Data
+                </Button>
+                <Button
+                    icon={<SendOutlined />}
+                    onClick={() => handleSend(dataSource)}
+                >
+                    Kirim Data
+                </Button>
             </Space>
-            
-            <Typography.Title level={3}>
-                Daftar Hasil Ekspor
-            </Typography.Title>
-            <Table  dataSource={dataSource} columns={columns} />
+
+            <Table dataSource={dataSource} columns={columns} />
+            <Modal
+                open={openUnduhModal}
+                title="Generate Template"
+                onOk={() => form.submit()}
+                onCancel={()=>setOpenUnduhModal(false)}
+                onClose={()=>setOpenUnduhModal(false)}
+            >
+                <Unduh onFinish={handleDownload} form={form} />
+            </Modal>
         </div>
     );
 };

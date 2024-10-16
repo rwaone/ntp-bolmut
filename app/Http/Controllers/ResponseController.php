@@ -492,27 +492,4 @@ class ResponseController extends Controller
 
         return null;
     }
-
-    public function Import()
-    {
-        
-        // Process the uploaded file
-        $import = new ResponseImport;
-        
-        // Return the import report to the user
-        return Inertia::render('Import/index');
-    }
-    public function ImportExcel(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx'
-        ]);
-    
-        // Process the uploaded file
-        $import = new ResponseImport;
-        Excel::import($import, $request->file('file'));
-    
-        // Return the import report to the user
-        return response()->json(['report' => $import->importReport]);
-    }
 }

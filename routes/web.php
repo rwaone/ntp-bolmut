@@ -27,6 +27,7 @@ use App\Http\Controllers\DatabaseBackupController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ResponseController;
 use Inertia\Inertia;
 use App\Models\Desa;
@@ -59,7 +60,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('master/samples/edit/{sample}', [SampleController::class, 'edit'])->name('samples.edit');
     Route::patch('master/samples/update', [SampleController::class, 'update'])->name('samples.update');
     Route::delete('master/samples/{sample}', [SampleController::class, 'destroy'])->name('samples.destroy');
-
+    
+    Route::get('master/samples/fetch', [SampleController::class, 'fetch'])->name('samples.fetch');
+    
     // Kecamatan
     Route::get('master/wilayah/desa/fetch-by-kecamatan/{kecamatan}', [DesaController::class, 'fetch_by_kecamatan'])->name('wilayah.desa.fetch_by_kecamatan');
     Route::get('fetch-kec/{id_kab}', function (String $id_kab) {
@@ -86,6 +89,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Route::put('/petugas/{petugas}', [PetugasController::class, 'update'])->name('petugas.update');
     // Route::delete('/petugas/{petugas}', [PetugasController::class, 'destroy'])->name('petugas.destroy');
     Route::get('/petugas/table', [PetugasController::class, 'getTableData'])->name('petugas.table');
+    Route::get('/petugas/fetch', [PetugasController::class, 'fetch'])->name('petugas.fetch');
     // Route::resource('petugas', PetugasController::class);
     // Documents
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
@@ -141,7 +145,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/data', [DataController::class, 'store'])->name('data.store');
     Route::delete('/data/{data}', [DataController::class, 'destroy'])->name('data.destroy');
     
-    Route::get('/responses/import/index', [ResponseController::class, 'import'])->name('responses.import.index');
-    Route::post('/responses/import/excel', [ResponseController::class, 'ImportExcel'])->name('responses.import.excel');
+    Route::get('/import', [ImportController::class, 'index'])->name('import.index');
+    Route::post('/import', [ImportController::class, 'store'])->name('import.store');
     // Route::resource('data', DataController::class);
 });

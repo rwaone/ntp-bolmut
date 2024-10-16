@@ -182,4 +182,14 @@ class SampleController extends Controller
             throw $th;
         }
     }
+    public function fetch(Request $request)
+    {
+        try {
+            //code...
+            $samples = Sample::get();
+            return response()->json($samples,200); 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

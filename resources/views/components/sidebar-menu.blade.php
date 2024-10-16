@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('responses.import.index') }}" class="navItem {{ request()->is('responses/import*') ? 'active' : '' }}">
+                <a href="{{ route('import.index') }}" class="navItem {{ request()->is('import*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="carbon:document-import"></iconify-icon>
                         <span>{{ __('Import Data') }}</span>
