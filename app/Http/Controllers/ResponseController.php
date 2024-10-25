@@ -340,7 +340,7 @@ class ResponseController extends Controller
             // Update the data records
             foreach ($dataRecords as $data) {
                 $quality = $data->quality;
-                $commodity = $quality->commodity;
+                // $commodity = $quality->commodity;
                 $dataId = $data->id;
                 $priceKey = $dataId . '-price';
 

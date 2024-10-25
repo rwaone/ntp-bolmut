@@ -59,7 +59,7 @@ const Blok2 = ({ petugas_id, pengawas_id }) => {
                                 },
                             ]}
                         >
-                            <Select options={daftarPencacah} allowClear />
+                            <Select showSearch optionFilterProp="label" options={daftarPencacah} allowClear />
                         </Form.Item>
                     </td>
 
@@ -73,7 +73,7 @@ const Blok2 = ({ petugas_id, pengawas_id }) => {
                                 },
                             ]}
                         >
-                            <Select options={daftarPengawas} allowClear />
+                            <Select showSearch optionFilterProp="label" options={daftarPengawas} allowClear />
                         </Form.Item>
                     </td>
                 </tr>
