@@ -23,7 +23,8 @@ class HomeController extends Controller
 
         return view('Index', [
             'pageTitle' => '',
-            'breadcrumbItems' => $breadcrumbsItems
+            'breadcrumbItems' => $breadcrumbsItems,
+            'data' => [100, 100, 100, 100, 100, 100, 100, 100, 100],
         ]);
     }
 
