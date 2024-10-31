@@ -1,7 +1,8 @@
 (function ($) {
   const isDark = localStorage.theme === "dark" ? true : false;
   const isRtl = localStorage.dir === "rtl" ? true : false;
-  var query = JSON.parse(sessionStorage.getItem("mondata"));
+
+  var data_mon_hd = JSON.parse(sessionStorage.getItem("mon_hd"));
 
   function generateData(baseval, count, yrange) {
     var i = 0;
@@ -63,24 +64,7 @@
             show: false,
           },
         },
-        series: [
-          {
-            name: "HD-1",
-            data: query,
-          },
-          {
-            name: "HD-3",
-            data: [76, 85, 100, 98, 87, 100, 91, 100, 94],
-          },
-          {
-            name: "HD-4",
-            data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
-          },
-          {
-            name: "HD-5.1",
-            data: [45, 32, 21, 98, 87, 33, 44, 77, 87],
-          },
-        ],
+        series: data_mon_hd,
         plotOptions: {
           bar: {
             horizontal: false,

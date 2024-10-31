@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
 use App\Models\Desa;
 use App\Models\Sample;
 use App\Models\Kecamatan;
@@ -149,4 +150,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/data', [DataController::class, 'store'])->name('data.store');
     Route::delete('/data/{data}', [DataController::class, 'destroy'])->name('data.destroy');
     // Route::resource('data', DataController::class);
+    
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 });

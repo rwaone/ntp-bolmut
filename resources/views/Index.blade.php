@@ -138,7 +138,10 @@
     </div>
 
     @push('scripts')
-    <script> sessionStorage.setItem("mondata", JSON.stringify(@json($data))) </script>
+    <script> 
+        sessionStorage.setItem("mon_hd", JSON.stringify(@json($mon_hd)));
+        sessionStorage.setItem("mon_hkd", JSON.stringify(@json($mon_hkd)));
+    </script>
         @vite(['resources/js/custom/monentri-hd-chart.js'])
         @vite(['resources/js/custom/monentri-hkd-chart.js'])
     @endpush

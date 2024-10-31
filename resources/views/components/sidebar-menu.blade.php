@@ -52,8 +52,8 @@
                 </a>
             </li> --}}
             <li>
-                <a href="{{ route('dashboard.index') }}"
-                    class="navItem {{ request()->is('analysis*') ? 'active' : '' }}">
+                <a href="{{ route('analytics.index') }}"
+                    class="navItem {{ request()->is('analytics*') ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="icon-park-outline:analysis"></iconify-icon>
                         <span>{{ __('Analisis Data') }}</span>

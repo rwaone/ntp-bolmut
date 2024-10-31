@@ -2,6 +2,8 @@
   const isDark = localStorage.theme === "dark" ? true : false;
   const isRtl = localStorage.dir === "rtl" ? true : false;
 
+  var data_mon_hkd = JSON.parse(sessionStorage.getItem("mon_hkd"));
+
   function generateData(baseval, count, yrange) {
     var i = 0;
     var series = [];
@@ -62,20 +64,9 @@
             show: false,
           },
         },
-        series: [
-          {
-            name: "HKD-1",
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-          },
-          {
-            name: "HKD-2.1",
-            data: [76, 85, 100, 98, 87, 100, 91, 100, 94],
-          },
-          {
-            name: "HKD-2.2",
-            data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
-          },
-        ],
+        
+        series: data_mon_hkd,
+
         plotOptions: {
           bar: {
             horizontal: false,
@@ -175,7 +166,7 @@
             },
           },
         },
-        colors: ["#4669FA", "#0CE7FA", "#FA916B"],
+        colors: ["#091057", "#024CAA", "#EC8305"],
         grid: {
           show: true,
           borderColor: isDark ? "#334155" : "#E2E8F0",
@@ -239,7 +230,7 @@
           },
         },
         labels: ["HKD-1", "HKD-2.1", "HKD-2.2"],
-        colors: ["#4669FA", "#0CE7FA", "#FA916B"],
+        colors: ["#091057", "#024CAA", "#EC8305"],
       },
     },
     

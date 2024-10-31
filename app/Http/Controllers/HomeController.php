@@ -20,12 +20,51 @@ class HomeController extends Controller
                 'active' => true
             ],
         ];
+        
+        $mon_hd = $this->getMonitoringHD();
+        $mon_hkd = $this->getMonitoringHKD();
 
         return view('Index', [
             'pageTitle' => '',
             'breadcrumbItems' => $breadcrumbsItems,
-            'data' => [100, 100, 100, 100, 100, 100, 100, 100, 100],
+            'mon_hd' => $mon_hd,
+            'mon_hkd' => $mon_hkd,
         ]);
+    }
+
+    private function getMonitoringHD()
+    {
+        $mon_hd1 = (object) array('name'=> "HD-1",
+        'data' => [100, 100, 100, 100, 100, 100, 100, 100, 100]);
+
+        $mon_hd3 = (object) array('name'=> "HD-3",
+        'data' => [76, 85, 100, 98, 87, 100, 91, 100, 94]);
+
+        $mon_hd4 = (object) array('name'=> "HD-4",
+        'data' => [35, 41, 36, 26, 45, 48, 52, 53, 41]);
+
+        $mon_hd51 = (object) array('name'=> "HD-5.1",
+        'data' => [45, 32, 21, 98, 87, 33, 44, 77, 87]);
+
+        $mon_hd = array($mon_hd1, $mon_hd3, $mon_hd4, $mon_hd51);
+
+        return $mon_hd;
+    }
+
+    private function getMonitoringHKD()
+    {
+        $mon_hkd1 = (object) array('name'=> "HKD-1",
+        'data' => [100, 98, 99, 97, 61, 67, 63, 60, 66]);
+
+        $mon_hkd21 = (object) array('name'=> "HKD-2.1",
+        'data' => [90, 85, 100, 98, 87, 99, 91, 100, 94]);
+
+        $mon_hkd22 = (object) array('name'=> "HKD-2.2",
+        'data' => [99, 98,99, 26, 45, 48, 52, 53, 41]);
+
+        $mon_hkd = array($mon_hkd1, $mon_hkd21, $mon_hkd22);
+
+        return $mon_hkd;
     }
 
     /**
