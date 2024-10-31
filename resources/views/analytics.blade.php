@@ -116,7 +116,7 @@
 
             <div class="card">
                 <header class=" card-header">
-                    <h4 class="card-title">Nilai NTP dan NTUP
+                    <h4 class="card-title">Series data NTP dan NTUP
                     </h4>
                 </header>
                 <div class="card-body px-6 pb-6">
@@ -129,7 +129,10 @@
     </div>
 
     @push('scripts')
-        @vite(['resources/js/custom/chart-active.js'])
+    <script> 
+        sessionStorage.setItem("index_series", JSON.stringify(@json($index_series)));
+    </script>
+        @vite(['resources/js/custom/analytics-chart.js'])
     @endpush
 
 </x-app-layout>
