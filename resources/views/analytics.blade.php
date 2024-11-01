@@ -138,7 +138,7 @@
                     </h4>
                 </header>
                 <div class="card-body px-6 pb-6">
-                    <div id="areaSpaline"></div>
+                    <div id="series-chart"></div>
                 </div>
             </div>
             <!-- end single card -->

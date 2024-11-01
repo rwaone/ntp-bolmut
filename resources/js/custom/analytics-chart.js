@@ -54,11 +54,11 @@
 
   const chartOptions = [
     {
-      id: "areaSpaline",
+      id: "series-chart",
       options: {
         chart: {
           height: 350,
-          type: "area",
+          type: "line",
           toolbar: {
             show: false,
           },
