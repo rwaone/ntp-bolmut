@@ -5,6 +5,24 @@
                 <x-breadcrumb :breadcrumb-items="$breadcrumbItems" :page-title="$pageTitle" />
             </div>
             <x-slot name="head"></x-slot>
+            <div class="flex sm:space-x-4 space-x-2 sm:justify-start items-center rtl:space-x-reverse">
+                <button
+                    class="btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal">
+                    <span class="flex items-center">
+                        <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light"
+                            icon="heroicons-outline:calendar"></iconify-icon>
+                        <span>Weekly</span>
+                    </span>
+                </button>
+                <button
+                    class="btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal">
+                    <span class="flex items-center">
+                        <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light"
+                            icon="heroicons-outline:filter"></iconify-icon>
+                        <span>Select Date</span>
+                    </span>
+                </button>
+            </div>
         </div>
 
         <div class="space-y-5">
@@ -129,9 +147,9 @@
     </div>
 
     @push('scripts')
-    <script> 
-        sessionStorage.setItem("index_series", JSON.stringify(@json($index_series)));
-    </script>
+        <script>
+            sessionStorage.setItem("index_series", JSON.stringify(@json($index_series)));
+        </script>
         @vite(['resources/js/custom/analytics-chart.js'])
     @endpush
 
