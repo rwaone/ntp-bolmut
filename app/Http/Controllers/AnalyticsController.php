@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Analytic;
 
 class AnalyticsController extends Controller
 {
@@ -27,7 +28,21 @@ class AnalyticsController extends Controller
 
     private function getIndexSeries()
     {
-        
+                
+        $ntp = (object) array('name'=> "NTP",
+        'data' => [101, 105, 103, 100, 106, 112, 102, 100, 107]);
+
+        $ntup = (object) array('name'=> "NTUP",
+        'data' => [98, 104, 103, 98, 102, 110, 101, 100, 104]);
+
+        $index_series = array($ntp, $ntup);
+
+        return $index_series;
+    }
+
+    private function getIndexData()
+    {
+                
         $ntp = (object) array('name'=> "NTP",
         'data' => [101, 105, 103, 100, 106, 112, 102, 100, 107]);
 

@@ -11,7 +11,7 @@
                     <span class="flex items-center">
                         <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light"
                             icon="heroicons-outline:calendar"></iconify-icon>
-                        <span>Weekly</span>
+                        <span>Tahun</span>
                     </span>
                 </button>
                 <button
@@ -19,7 +19,7 @@
                     <span class="flex items-center">
                         <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light"
                             icon="heroicons-outline:filter"></iconify-icon>
-                        <span>Select Date</span>
+                        <span>Bulan</span>
                     </span>
                 </button>
             </div>
