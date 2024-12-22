@@ -151,5 +151,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::delete('/data/{data}', [DataController::class, 'destroy'])->name('data.destroy');
     // Route::resource('data', DataController::class);
     
+    Route::get('/analytics/filter/{year}/{month}', [AnalyticsController::class, 'filter'])->name('analytics.filter');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 });

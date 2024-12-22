@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('month');
             $table->year('year');
+            $table->decimal('it', $precision = 5, $scale = 2)->default(0);
+            $table->decimal('ib', $precision = 5, $scale = 2)->default(0);
             $table->decimal('ntp', $precision = 5, $scale = 2)->default(0);
             $table->decimal('ntup', $precision = 5, $scale = 2)->default(0);
-            $table->decimal('ib', $precision = 5, $scale = 2)->default(0);
-            $table->decimal('it', $precision = 5, $scale = 2)->default(0);
             $table->timestamps();
         });
     }

@@ -16,41 +16,70 @@ class AnalyticsController extends Controller
                 'active' => true
             ],
         ];
+
+        $this_month = date('m');
+        $this_year = date('Y');
         
-        $index_series = $this->getIndexSeries();
+        $index_data = $this->getIndexData(2024, '06');
+        $index_series = $this->getIndexSeries(2024);
 
         return view('analytics', [
             'pageTitle' => 'Analytics',
             'breadcrumbItems' => $breadcrumbsItems,
-            'index_series' => $index_series
+            'index_series' => $index_series,
+            'index_data' => $index_data,
+            'this_year' => $this_year,
+            'this_month' => $this_month,
         ]);
     }
 
-    private function getIndexSeries()
+    public function filter($year, $month)
+    {        
+        $breadcrumbsItems = [
+            [
+                'name' => 'Analytics',
+                'url' => '/analytics',
+                'active' => true
+            ],
+        ];
+        
+        $index_data = $this->getIndexData($year, $month);
+        $index_series = $this->getIndexSeries($year);
+        
+
+        return view('analytics', [
+            'pageTitle' => 'Analytics',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'index_series' => $index_series,
+            'index_data' => $index_data,
+        ]);
+    }
+
+    private function getIndexSeries($year)
     {
+        $ntp_array = Analytic::whereYear('year', $year)->pluck('ntp')->toArray();
+        $ntup_array = Analytic::whereYear('year', $year)->pluck('ntup')->toArray();
+        // dd($ntp_array);
                 
         $ntp = (object) array('name'=> "NTP",
-        'data' => [101, 105, 103, 100, 106, 112, 102, 100, 107]);
+        'data' => $ntp_array);
 
         $ntup = (object) array('name'=> "NTUP",
-        'data' => [98, 104, 103, 98, 102, 110, 101, 100, 104]);
+        'data' => $ntup_array);
 
         $index_series = array($ntp, $ntup);
 
         return $index_series;
     }
 
-    private function getIndexData()
+    private function getIndexData($year, $month)
     {
-                
-        $ntp = (object) array('name'=> "NTP",
-        'data' => [101, 105, 103, 100, 106, 112, 102, 100, 107]);
 
-        $ntup = (object) array('name'=> "NTUP",
-        'data' => [98, 104, 103, 98, 102, 110, 101, 100, 104]);
+        $current_data = Analytic::whereYear('year', $year)->where('month',$month)->first();
+        $previous_data = Analytic::whereYear('year', $year)->where('month',$month-1)->first();
+        // dd($previous_data);
+        $index_data = ['current_data' => $current_data, 'previous_data' => $previous_data];
 
-        $index_series = array($ntp, $ntup);
-
-        return $index_series;
+        return $index_data;
     }
 }
