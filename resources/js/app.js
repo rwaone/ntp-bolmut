@@ -39,6 +39,9 @@ window.Chart = Chart;
 import ApexCharts from "apexcharts";
 window.ApexCharts = ApexCharts;
 
+import "./custom/monentri-hd-chart.js";
+import "./custom/monentri-hkd-chart.js";
+
 import "country-select-js";
 
 // Drag and Drop for kenban
