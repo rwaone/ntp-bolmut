@@ -41,6 +41,7 @@ window.ApexCharts = ApexCharts;
 
 import "./custom/monentri-hd-chart.js";
 import "./custom/monentri-hkd-chart.js";
+import "./custom/analytics-chart.js";
 
 import "country-select-js";
 

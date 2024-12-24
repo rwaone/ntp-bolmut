@@ -34,27 +34,27 @@
                     </button>
                     <ul class="dropdown-menu min-w-max absolute text-sm text-slate-700 dark:text-white hidden bg-white dark:bg-slate-700 shadow z-[2] float-left overflow-hidden list-none text-left rounded-lg mt-1 m-0 bg-clip-padding border-none"
                         style="">
-                        <li> <a href="{{route('analytics.filter',[2024,'06'])}}"
+                        <li> <a href="{{ route('analytics.filter', [2024, '06']) }}"
                                 class="text-slate-600 dark:text-white block font-Inter font-normal px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600
                                             dark:hover:text-white">
                                 06</a> </li>
-                        <li> <a href="{{route('analytics.filter',[2024,'05'])}}"
+                        <li> <a href="{{ route('analytics.filter', [2024, '05']) }}"
                                 class="text-slate-600 dark:text-white block font-Inter font-normal px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600
                                             dark:hover:text-white">
                                 05</a> </li>
-                        <li> <a href="{{route('analytics.filter',[2024,'04'])}}"
+                        <li> <a href="{{ route('analytics.filter', [2024, '04']) }}"
                                 class="text-slate-600 dark:text-white block font-Inter font-normal px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600
                                             dark:hover:text-white">
                                 04</a> </li>
-                        <li> <a href="{{route('analytics.filter',[2024,'03'])}}"
+                        <li> <a href="{{ route('analytics.filter', [2024, '03']) }}"
                                 class="text-slate-600 dark:text-white block font-Inter font-normal px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600
                                                 dark:hover:text-white">
                                 03</a> </li>
-                        <li> <a href="{{route('analytics.filter',[2024,'02'])}}"
+                        <li> <a href="{{ route('analytics.filter', [2024, '02']) }}"
                                 class="text-slate-600 dark:text-white block font-Inter font-normal px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600
                                                 dark:hover:text-white">
                                 02</a> </li>
-                        <li> <a href="{{route('analytics.filter',[2024,'01'])}}"
+                        <li> <a href="{{ route('analytics.filter', [2024, '01']) }}"
                                 class="text-slate-600 dark:text-white block font-Inter font-normal px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600
                                                 dark:hover:text-white">
                                 01</a> </li>
@@ -69,7 +69,7 @@
             <div class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3">
                 <div class="bg-warning-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-25 relative z-[1]">
                     <div class="overlay absolute left-0 top-0 w-full h-full z-[-1]">
-                        <img src="{{url('images/all-img/shade-1.png')}}" alt="" draggable="false"
+                        <img src="{{ url('images/all-img/shade-1.png') }}" alt="" draggable="false"
                             class="w-full h-full object-contain">
                     </div>
                     <span class="block mb-6 text-sm text-slate-900 dark:text-white font-medium">
@@ -84,7 +84,7 @@
                         </div>
                         <div class="flex-1 text-sm">
                             <span class="block mb-[2px] text-primary-500">
-                                {{round(100 * ($index_data['current_data']->ntp - $index_data['previous_data']->ntp) / $index_data['previous_data']->ntp, 2)}}%
+                                {{ round((100 * ($index_data['current_data']->ntp - $index_data['previous_data']->ntp)) / $index_data['previous_data']->ntp, 2) }}%
                             </span>
                             <span class="block mb-1 text-slate-600 dark:text-slate-300">
                                 Dari bulan sebelumnya (m to m)
@@ -94,7 +94,7 @@
                 </div>
                 <div class="bg-info-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-25 relative z-[1]">
                     <div class="overlay absolute left-0 top-0 w-full h-full z-[-1]">
-                        <img src="{{url('images/all-img/shade-2.png')}}" alt="" draggable="false"
+                        <img src="{{ url('images/all-img/shade-2.png') }}" alt="" draggable="false"
                             class="w-full h-full object-contain">
                     </div>
                     <span class="block mb-6 text-sm text-slate-900 dark:text-white font-medium">
@@ -109,7 +109,7 @@
                         </div>
                         <div class="flex-1 text-sm">
                             <span class="block mb-[2px] text-primary-500">
-                                {{round(100 * ($index_data['current_data']->ntup - $index_data['previous_data']->ntup) / $index_data['previous_data']->ntup, 2)}}%
+                                {{ round((100 * ($index_data['current_data']->ntup - $index_data['previous_data']->ntup)) / $index_data['previous_data']->ntup, 2) }}%
                             </span>
                             <span class="block mb-1 text-slate-600 dark:text-slate-300">
                                 Dari bulan sebelumnya (m to m)
@@ -119,7 +119,7 @@
                 </div>
                 <div class="bg-primary-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-25 relative z-[1]">
                     <div class="overlay absolute left-0 top-0 w-full h-full z-[-1]">
-                        <img src="{{url('images/all-img/shade-3.png')}}" alt="" draggable="false"
+                        <img src="{{ url('images/all-img/shade-3.png') }}" alt="" draggable="false"
                             class="w-full h-full object-contain">
                     </div>
                     <span class="block mb-6 text-sm text-slate-900 dark:text-white font-medium">
@@ -134,7 +134,7 @@
                         </div>
                         <div class="flex-1 text-sm">
                             <span class="block mb-[2px] text-primary-500">
-                                {{round(100 * ($index_data['current_data']->ib - $index_data['previous_data']->ib) / $index_data['previous_data']->ib, 2)}}%
+                                {{ round((100 * ($index_data['current_data']->ib - $index_data['previous_data']->ib)) / $index_data['previous_data']->ib, 2) }}%
                             </span>
                             <span class="block mb-1 text-slate-600 dark:text-slate-300">
                                 Dari bulan sebelumnya (m to m)
@@ -144,7 +144,7 @@
                 </div>
                 <div class="bg-success-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-25 relative z-[1]">
                     <div class="overlay absolute left-0 top-0 w-full h-full z-[-1]">
-                        <img src="{{url('images/all-img/shade-4.png')}}" alt="" draggable="false"
+                        <img src="{{ url('images/all-img/shade-4.png') }}" alt="" draggable="false"
                             class="w-full h-full object-contain">
                     </div>
                     <span class="block mb-6 text-sm text-slate-900 dark:text-white font-medium">
@@ -159,7 +159,7 @@
                         </div>
                         <div class="flex-1 text-sm">
                             <span class="block mb-[2px] text-primary-500">
-                                {{round(100 * ($index_data['current_data']->it - $index_data['previous_data']->it) / $index_data['previous_data']->it, 2)}}%
+                                {{ round((100 * ($index_data['current_data']->it - $index_data['previous_data']->it)) / $index_data['previous_data']->it, 2) }}%
                             </span>
                             <span class="block mb-1 text-slate-600 dark:text-slate-300">
                                 Dari bulan sebelumnya (m to m)
@@ -188,7 +188,6 @@
         <script>
             sessionStorage.setItem("index_series", JSON.stringify(@json($index_series)));
         </script>
-        @vite(['resources/js/custom/analytics-chart.js'])
     @endpush
 
 </x-app-layout>
