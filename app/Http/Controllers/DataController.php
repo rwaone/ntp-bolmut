@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DataExport;
 use App\Models\Data;
-use App\Http\Requests\StoreDataRequest;
-use App\Http\Requests\UpdateDataRequest;
-use App\Models\Response;
+use App\Models\Month;
 use App\Models\Section;
+use App\Models\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreDataRequest;
+use App\Http\Requests\UpdateDataRequest;
+use App\Models\Document;
 
 class DataController extends Controller
 {
@@ -162,5 +165,38 @@ class DataController extends Controller
         }
 
         return response()->json($existingData, 200);
+    }
+
+    public function exportIndex()
+    {
+        $breadcrumbsItems = [
+            [
+                'name' => 'Export',
+                'url' => '/export',
+                'active' => true
+            ],
+        ];
+
+        $currentYear = date("Y");
+        $years = [
+            $currentYear - 1,
+            $currentYear,
+            $currentYear + 1
+        ];
+
+        return view('export', [
+            'pageTitle' => 'Ekspor Data',
+            'breadcrumbItems' => $breadcrumbsItems,
+            'months' => Month::all(),
+            'years' => $years,
+            'documents' => Document::all(),
+        ]);
+    }
+
+    public function exportData(Request $request)
+    {
+        // dd($request);
+        $document =  Document::where($request['document'])->first();
+        return (new DataExport)->forYear($request['year'])->forMonth($request['month'])->forDocument($request['document_id'])->download('Data ' . $document->code . ' tahun ' . $request['year'] . ' bulan ' . $request['month'] . '.xlsx');
     }
 }

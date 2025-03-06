@@ -147,6 +147,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('database-backups-download/{fileName}', [DatabaseBackupController::class, 'databaseBackupDownload'])->name('database-backups.download');
 
     // data 
+    Route::get('/export', [DataController::class, 'exportIndex'])->name('export.index');
+    Route::post('/export/get', [DataController::class, 'exportData'])->name('export.get');
     Route::post('/data', [DataController::class, 'store'])->name('data.store');
     Route::delete('/data/{data}', [DataController::class, 'destroy'])->name('data.destroy');
     // Route::resource('data', DataController::class);

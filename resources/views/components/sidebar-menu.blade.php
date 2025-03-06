@@ -52,6 +52,15 @@
                 </a>
             </li> --}}
             <li>
+                <a href="{{ route('export.index') }}"
+                    class="navItem {{ request()->is('export*') ? 'active' : '' }}">
+                    <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="material-symbols:export-notes"></iconify-icon>
+                        <span>{{ __('Ekspor Data') }}</span>
+                    </span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('analytics.index') }}"
                     class="navItem {{ request()->is('analytics*') ? 'active' : '' }}">
                     <span class="flex items-center">
