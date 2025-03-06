@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 
-class DataExport implements FromQuery, WithHeadings, WithProgressBar
+class DataExport implements FromQuery, WithHeadings
 {
     use Exportable;
 
