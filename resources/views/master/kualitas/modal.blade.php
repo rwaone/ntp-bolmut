@@ -95,9 +95,11 @@
                             </div>
                         </div>
                         <div class="label-area mb-3">
-                            <label for="status" class="form-label">Status??</label>
+                            <label for="status" class="form-label">Status</label>
                             <input id="status" name="status" type="text" class="form-control"
-                                placeholder="Status??">
+                                placeholder="Status">
+                            <option value="Digunakan">Digunakan</option>
+                            <option value="Tidak Digunakan">Tidak Digunakan</option>
                             <div id="error-status" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
                             </div>
                         </div>
