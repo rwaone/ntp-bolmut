@@ -23,7 +23,7 @@
                 HARGA MAKSIMUM (Rp)
             </th>
             <th scope="col" class="table-th ">
-                STATUS???
+                STATUS
             </th>
             </th>
             <th scope="col" class="table-th ">
