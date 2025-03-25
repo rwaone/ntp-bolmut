@@ -6,6 +6,9 @@ use App\Models\Quality;
 use App\Http\Requests\StoreQualityRequest;
 use App\Http\Requests\UpdateQualityRequest;
 use App\Models\Commodity;
+use App\Models\Document;
+use App\Models\Group;
+use App\Models\Section;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -20,7 +23,10 @@ class QualityController extends Controller
     {
         //
         $query = Quality::query();
-        // dd($query);
+        $commodities = Commodity::get();
+        $sections = Section::get();
+        $documents = Document::get();
+        $groups = Group::get();
         $query->leftJoin('users as u', 'u.id', '=', 'qualities.created_by');
         $query->leftJoin('users as us', 'us.id', '=', 'qualities.reviewed_by');
         $forCount = $query->select(['qualities.*', 'u.name as createdBy', 'us.name as reviewedBy']);
@@ -39,6 +45,10 @@ class QualityController extends Controller
             'pageTitle' => 'Master Kualitas',
             'breadcrumbItems' => $breadcrumbsItems,
             'data' => $data,
+            'sections' => $sections,
+            'documents' => $documents,
+            'groups' => $groups,
+            'commodities' => $commodities,
             'countData' => $countData,
             'forCommodityId' => $forCommodityId,
         ]);
@@ -126,18 +136,53 @@ class QualityController extends Controller
 
         $query->leftJoin('users as u', 'u.id', '=', 'qualities.created_by');
         $query->leftJoin('users as us', 'us.id', '=', 'qualities.reviewed_by');
-        if (!empty($request->value)) {
-            $filter = $request->value;
-            $query->orWhere('qualities.name', 'like', '%' . $filter . '%');
-            $query->orWhere('qualities.code', 'like', '%' . $filter . '%');
-            $query->join('commodities', 'commodities.id', '=', 'qualities.commodity_id');
-            $query->orWhere('u.name', 'like', '%' . $filter . '%');
-            $query->orWhere('us.name', 'like', '%' . $filter . '%');
-            $query->orWhere('commodities.name', 'like', '%' . $filter . '%');
-            $query->orWhere('qualities.min_price', 'like', '%' . $filter . '%');
-            $query->orWhere('qualities.max_price', 'like', '%' . $filter . '%');
-            $query->orWhere('qualities.status', 'like', '%' . $filter . '%');
-            $query->orWhere('qualities.updated_at', 'like', '%' . $filter . '%');
+        if ($request->ArrayFilter) {
+            $filter = $request->ArrayFilter;
+            if (!empty($filter['document_id']) || !empty($filter['section_id']) || !empty($filter['group_id']) || !empty($filter['nama_komoditas'])) {
+                $query->join('commodities', 'commodities.id', '=', 'qualities.commodity_id')
+                    ->join('groups', 'groups.id', '=', 'commodities.group_id')
+                    ->join('sections', 'sections.id', '=', 'groups.section_id');
+            }
+            if (!empty($filter['document_id'])) {
+                $query->join('documents', 'documents.id', '=', 'sections.document_id');
+                $query->where('documents.id', $filter['document_id']);
+            }
+            if (!empty($filter['section_id'])) {
+                $query->where('sections.id', $filter['section_id']);
+            }
+            if (!empty($filter['group_id'])) {
+                $query->where('commodities.group_id', $filter['group_id']);
+            }
+            if (!empty($filter['commodity_id'])) {
+                $query->where('qualities.commodity_id', $filter['commodity_id']);
+            }
+            if (!empty($filter['nama_komoditas'])) {
+                $query->where('commodities.name', 'like', '%' . $filter['nama_komoditas'] . '%');
+            }
+            if (!empty($filter['kualitas'])) {
+                $query->where('qualities.name', 'like', '%' . $filter['kualitas'] . '%');
+            }
+            if (!empty($filter['kode_kualitas'])) {
+                $query->where('qualities.code', 'like', '%' . $filter['kode_kualitas'] . '%');
+            }
+            if (!empty($filter['satuan'])) {
+                $query->where('qualities.satuan', 'like', '%' . $filter['satuan'] . '%');
+            }
+            if (!empty($filter['min_price'])) {
+                $query->where('qualities.min_price', 'like', '%' . $filter['min_price'] . '%');
+            }
+            if (!empty($filter['max_price'])) {
+                $query->where('qualities.max_price', 'like', '%' . $filter['max_price'] . '%');
+            }
+            if (!empty($filter['create_review'])) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('us.name', 'like', '%' . $filter['create_review'] . '%')
+                        ->orWhere('u.name', 'like', '%' . $filter['create_review'] . '%');
+                });
+            }
+            if (!empty($filter['updated_at'])) {
+                $query->where('qualities.updated_at', 'like', '%' . $filter['updated_at'] . '%');
+            }
         }
         $countData = $query->count();
         $query->select(['qualities.*', 'u.name as createdBy', 'us.name as reviewedBy']);

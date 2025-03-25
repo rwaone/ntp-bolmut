@@ -7,12 +7,25 @@
         <div class="md:flex justify-between items-center">
             <div>
             </div>
-            <div class="flex flex-wrap">
-
-                <span class="flex items-center">
-                    <input id="kualitas-search" name="search" type="text" class="form-control"
-                        placeholder="Cari Kualitas">
-                </span>
+            <div class="flex flex-items items-center space-x-2">
+            <select id="filter_doc" class="form-control select2">
+                    <option>-- Pilih Document --</option>
+                    @foreach ($documents as $doc)
+                    <option value="{{ $doc->id }}">{{ $doc->name }}</option>
+                    @endforeach
+                </select>
+                <select id="filter_sec" class="form-control select2">
+                    <option>-- Pilih Section --</option>
+            
+                </select>
+                <select id="filter_group" class="form-control select2">
+                    <option>-- Pilih Group --</option>
+                    
+                </select>
+                <select id="filter_commodity" class="form-control select2">
+                    <option>-- Pilih Commodity --</option>
+                    
+                </select>
                 <button class="btn inline-flex justify-center btn-sm btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 "
                     data-bs-toggle="modal" data-bs-target="#modalCreate">
                     <span class="flex items-center">
@@ -30,7 +43,79 @@
                             <div class="overflow-x-auto -mx-6">
                                 <div class="inline-block min-w-full align-middle">
                                     <div class="overflow-hidden ">
+                                    <table  class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
+    <thead class="bg-slate-200 dark:bg-slate-700">
+        <tr>
+            <th scope="col" class="table-th ">
+                NO.
+            </th>
+            <th scope="col" class="table-th ">
+                NAMA KOMODITAS
+            </th>
+            <th scope="col" class="table-th ">
+                KUALITAS
+            </th>
+            <th scope="col" class="table-th ">
+                KODE KUALITAS
+            </th>
+            <th scope="col" class="table-th ">
+                SATUAN
+            </th>
+            <th scope="col" class="table-th ">
+                HARGA MINIMUM (Rp)
+            </th>
+            <th scope="col" class="table-th ">
+                HARGA MAKSIMUM (Rp)
+            </th>
+            <th scope="col" class="table-th ">
+                STATUS
+            </th>
+            </th>
+            <th scope="col" class="table-th ">
+                DIBUAT - DIREVIEW
+            </th>
+            <th scope="col" class="table-th ">
+                TERAKHIR DI-EDIT
+            </th>
+            <th scope="col" class="table-th ">
+                EDIT/HAPUS
+            </th>
+        </tr>
+        <tr>
+        <td></td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="nama_komoditas" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="kualitas" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="kode_kualitas" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="satuan" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="min_price" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="max_price" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="status" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="create_review" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="updated_at" />
+            </td>
+            <td class="px-2 py-1">
+            </td>
+        </tr>
+    </thead>
                                         @include('master.kualitas.data-table-kualitas')
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -184,12 +269,123 @@
 
             document.getElementById('totalPages').textContent = {{ Js::from($countData) }}
             document.getElementById('currentPages').textContent = rowsLength
+            var section_id = '',document_id = '', group_id = '', commodity_id = ''
+            document.getElementById('filter_doc').addEventListener('change', (e) => {
+                document_id = e.target.value
+                if (isNaN(document_id)) {
+                    document_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+                if(document_id) {
+                    $.ajax({
+                        type:'GET',
+                        url: '/fetch-section/' + document_id,
+                        success: (response) => {
+                            let select = $('#filter_sec');
+                            select.html('<option value="">-- Pilih Section --</option>');
+                            // Loop through response data and append options
+                            response.data.forEach((item) => {
+                                select.append(`<option value="${item.id}">${item.name}</option>`);
+                            });
+                            select.trigger('change'); 
+                        },error: (jqXHR, textStatus, errorThrown) => {
+            console.error("Error fetching sections:", errorThrown);
+        }
+                    })
+                }
+            })
+            document.getElementById('filter_sec').addEventListener('change', (e) => {
+                section_id = e.target.value
+                if (isNaN(section_id)) {
+                    section_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+                if (section_id) {
+                    $.ajax({
+                        type:'GET',
+                        url: '/fetch-group/' + section_id,
+                        success: (response) => {
+                            let select = $('#filter_group');
+                            select.html('<option value="">-- Pilih Group --</option>');
+                            // Loop through response data and append options
+                            response.data.forEach((item) => {
+                                select.append(`<option value="${item.id}">${item.name}</option>`);
+                            });
+                            select.trigger('change'); 
+                        },error: (jqXHR, textStatus, errorThrown) => {
+            console.error("Error fetching sections:", errorThrown);
+        }
+                    })
+                }
+            })
+            document.getElementById('filter_group').addEventListener('change', (e) => {
+                group_id = e.target.value
+                if (isNaN(group_id)) {
+                    group_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+                if (group_id) {
+                    $.ajax({
+                        type:'GET',
+                        url: '/fetch-commodity/' + group_id,
+                        success: (response) => {
+                            let select = $('#filter_commodity');
+                            select.html('<option value="">-- Pilih Commodity --</option>');
+                            // Loop through response data and append options
+                            response.data.forEach((item) => {
+                                select.append(`<option value="${item.id}">${item.name}</option>`);
+                            });
+                            select.trigger('change'); 
+                        },error: (jqXHR, textStatus, errorThrown) => {
+            console.error("Error fetching sections:", errorThrown);
+        }
+                    })
+                }
+            })
+            document.getElementById('filter_commodity').addEventListener('change', (e) => {
+                commodity_id = e.target.value
+                if (isNaN(commodity_id)) {
+                    commodity_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+            })
             const fetchData = async (cP, p) => {
-                let data = document.getElementById('kualitas-search').value
+                let nama_komoditas = document.getElementById('nama_komoditas').value
+                let kualitas = document.getElementById('kualitas').value
+                let kode_kualitas = document.getElementById('kode_kualitas').value
+                let satuan = document.getElementById('satuan').value
+                let min_price = document.getElementById('min_price').value
+                let max_price = document.getElementById('max_price').value
+                let status = document.getElementById('status').value
+                let create_review = document.getElementById('create_review').value
+                let update_at = document.getElementById('updated_at').value
+                
                 try {
                     const response = await axios.get('kualitas/search', {
                         params: {
-                            value: data,
+                            ArrayFilter: {
+                                document_id:document_id,
+                                section_id:section_id,
+                                group_id:group_id,
+                                commodity_id:commodity_id,
+                                nama_komoditas:nama_komoditas,
+                                kualitas:kualitas,
+                                kode_kualitas:kode_kualitas,
+                                satuan:satuan,
+                                min_price:min_price,
+                                max_price:max_price,
+                                status:status,
+                                create_review:create_review,
+                                update_at:update_at
+                            },
                             currentPage: cP,
                             paginated: p,
                         }
@@ -234,13 +430,14 @@
                     $('#form-create')[0].reset();
                 })
             })
-            document.getElementById('kualitas-search').addEventListener('input', (e) => {
-                let data = e.target.value
-                delayedFetchData()
-            })
             const updateList = (data) => {
-                $('#data-table-kualitas').html(data.html)
+                $('#data-table-kualitas').replaceWith(data.html)
             }
+            document.querySelectorAll('.group-search').forEach((element) => {
+                element.addEventListener('input', (e) => {
+                    delayedFetchData()
+                })
+            })
             const changeOnDocument = () => {
                 window.targetView.querySelectorAll('.price-attributes').forEach((node) => {
                     node.textContent = formatThreeDigit(node.textContent)

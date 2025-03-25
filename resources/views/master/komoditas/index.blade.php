@@ -7,12 +7,19 @@
         <div class="md:flex justify-between items-center">
             <div>
             </div>
-            <div class="flex flex-wrap">
-
-                <span class="flex items-center">
-                    <input id="komoditas-search" name="search" type="text" class="form-control"
-                        placeholder="Cari Komoditas">
-                </span>
+            <div class="flex flex-items items-center space-x-2">
+                <select id="filter_doc" class="form-control select2">
+                    <option>-- Pilih Document --</option>
+                    @foreach ($documents as $doc)
+                    <option value="{{ $doc->id }}">{{ $doc->name }}</option>
+                    @endforeach
+                </select>
+                <select id="filter_sec" class="form-control select2">
+                    <option>-- Pilih Section --</option>
+                </select>
+                <select id="filter_group" class="form-control select2">
+                    <option>-- Pilih Group --</option>
+                </select>
                 <button class="btn inline-flex justify-center btn-sm btn-dark dark:bg-slate-700 dark:text-slate-300 m-1 "
                     data-bs-toggle="modal" data-bs-target="#modalCreate">
                     <span class="flex items-center">
@@ -30,7 +37,50 @@
                             <div class="overflow-x-auto -mx-6">
                                 <div class="inline-block min-w-full align-middle">
                                     <div class="overflow-hidden ">
-                                        @include('master.komoditas.data-table-komoditas')
+                                    <table  class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
+    <thead class="bg-slate-200 dark:bg-slate-700">
+        <tr>
+            <th scope="col" class="table-th ">
+                NO.
+            </th>
+            <th scope="col" class="table-th ">
+                NAMA KOMODITAS
+            </th>
+            <th scope="col" class="table-th ">
+                KODE KOMODITAS
+            </th>
+            <th scope="col" class="table-th ">
+                KELOMPOK KOMODITAS
+            </th>
+
+            <th scope="col" class="table-th ">
+                TERAKHIR DI-EDIT
+            </th>
+            <th scope="col" class="table-th ">
+                EDIT/HAPUS
+            </th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="nama_komoditas" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="kode_komoditas" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="kelompok_komoditas" />
+            </td>
+            <td class="px-2 py-1">
+                <input class="form-control group-search" id="updated_at" />
+            </td>
+            <td class="px-2 py-1">
+            </td>
+        </tr>
+    </thead>
+    
+    @include('master.komoditas.data-table-komoditas')
+</table>
                                     </div>
                                 </div>
                             </div>
@@ -191,14 +241,87 @@
 
             document.getElementById('totalPages').textContent = {{ Js::from($countData) }}
             document.getElementById('currentPages').textContent = rowsLength
+            var section_id = '',document_id = '', group_id = ''
+            document.getElementById('filter_doc').addEventListener('change', (e) => {
+                document_id = e.target.value
+                if (isNaN(document_id)) {
+                    document_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+                if (document_id) {
+                    $.ajax({
+                        type:'GET',
+                        url: '/fetch-section/' + document_id,
+                        success: (response) => {
+                            let select = $('#filter_sec');
+                            select.html('<option value="">-- Pilih Section --</option>');
+                            // Loop through response data and append options
+                            response.data.forEach((item) => {
+                                select.append(`<option value="${item.id}">${item.name}</option>`);
+                            });
+                            select.trigger('change'); 
+                        },error: (jqXHR, textStatus, errorThrown) => {
+            console.error("Error fetching sections:", errorThrown);
+        }
+                    })
+                }
+            })
+            document.getElementById('filter_sec').addEventListener('change', (e) => {
+                section_id = e.target.value
+                if (isNaN(section_id)) {
+                    section_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+                if (section_id) {
+                    $.ajax({
+                        type:'GET',
+                        url: '/fetch-group/' + section_id,
+                        success: (response) => {
+                            let select = $('#filter_group');
+                            select.html('<option value="">-- Pilih Group --</option>');
+                            // Loop through response data and append options
+                            response.data.forEach((item) => {
+                                select.append(`<option value="${item.id}">${item.name}</option>`);
+                            });
+                            select.trigger('change'); 
+                        },error: (jqXHR, textStatus, errorThrown) => {
+            console.error("Error fetching sections:", errorThrown);
+        }
+                    })
+                }
+            })
+            document.getElementById('filter_group').addEventListener('change', (e) => {
+                group_id = e.target.value
+                if (isNaN(group_id)) {
+                    group_id = ''
+                    delayedFetchData()
+                    return
+                }
+                delayedFetchData()
+            })
             const fetchData = (cP, p) => {
-                let data = document.getElementById('komoditas-search').value;
+            let nama_komoditas = document.getElementById('nama_komoditas').value
+                let kode_komoditas = document.getElementById('kode_komoditas').value
+                let kelompok_komoditas = document.getElementById('kelompok_komoditas').value
+                let updated_at = document.getElementById('updated_at').value
                 return new Promise((resolve, reject) => {
                     $.ajax({
                         type: 'GET',
                         url: 'komoditas/search',
                         data: {
-                            value: data,
+                            ArrayFilter: {
+                                document_id:document_id,
+                                section_id:section_id,
+                                group_id:group_id,
+                                nama_komoditas:nama_komoditas,
+                                kode_komoditas:kode_komoditas,
+                                kelompok_komoditas:kelompok_komoditas,
+                                updated_at:updated_at
+                            },
                             currentPage: cP,
                             paginated: p,
                         },
@@ -250,12 +373,17 @@
                     $('#form-create')[0].reset();
                 })
             })
-            document.getElementById('komoditas-search').addEventListener('input', (e) => {
-                let data = e.target.value
-                delayedFetchData()
+            // document.getElementById('komoditas-search').addEventListener('input', (e) => {
+            //     let data = e.target.value
+            //     delayedFetchData()
+            // })
+            document.querySelectorAll('.group-search').forEach((element) => {
+                element.addEventListener('input', (e) => {
+                    delayedFetchData()
+                })
             })
             const updateList = (data) => {
-                $('#data-table-komoditas').html(data.html)
+                $('#data-table-komoditas').replaceWith(data.html)
             }
             const changeOnDocument = () => {
                 window.targetView.querySelectorAll('.price-attributes').forEach((node) => {
