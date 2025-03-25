@@ -32,6 +32,9 @@ use App\Http\Controllers\PemeriksaanController;
 use App\Http\Controllers\DatabaseBackupController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Models\Commodity;
+use App\Models\Group;
+use App\Models\Section;
 use Inertia\Inertia;
 
 require __DIR__ . '/auth.php';
@@ -152,7 +155,21 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/data', [DataController::class, 'store'])->name('data.store');
     Route::delete('/data/{data}', [DataController::class, 'destroy'])->name('data.destroy');
     // Route::resource('data', DataController::class);
-    
+
     Route::get('/analytics/filter/{year}/{month}', [AnalyticsController::class, 'filter'])->name('analytics.filter');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+    //fetch
+    Route::get('/fetch-section/{document_id}', function ($document_id) {
+        $data = Section::where('document_id', $document_id)->get();
+        return response()->json(['data' => $data]);
+    });
+    Route::get('/fetch-group/{section_id}', function ($section_id) {
+        $data = Group::where('section_id', $section_id)->get();
+        return response()->json(['data' => $data]);
+    });
+    Route::get('/fetch-commodity/{group_id}', function ($group_id) {
+        $data = Commodity::where('group_id', $group_id)->get();
+        return response()->json(['data' => $data]);
+    });
 });

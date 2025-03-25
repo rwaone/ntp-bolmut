@@ -1,43 +1,5 @@
-<table id="data-table-kualitas" class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 ">
-    <thead class="bg-slate-200 dark:bg-slate-700">
-        <tr>
-            <th scope="col" class="table-th ">
-                NO.
-            </th>
-            <th scope="col" class="table-th ">
-                NAMA KOMODITAS
-            </th>
-            <th scope="col" class="table-th ">
-                KUALITAS
-            </th>
-            <th scope="col" class="table-th ">
-                KODE KUALITAS
-            </th>
-            <th scope="col" class="table-th ">
-                SATUAN
-            </th>
-            <th scope="col" class="table-th ">
-                HARGA MINIMUM (Rp)
-            </th>
-            <th scope="col" class="table-th ">
-                HARGA MAKSIMUM (Rp)
-            </th>
-            <th scope="col" class="table-th ">
-                STATUS
-            </th>
-            </th>
-            <th scope="col" class="table-th ">
-                DIBUAT - DIREVIEW
-            </th>
-            <th scope="col" class="table-th ">
-                TERAKHIR DI-EDIT
-            </th>
-            <th scope="col" class="table-th ">
-                EDIT/HAPUS
-            </th>
-        </tr>
-    </thead>
-    <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+
+    <tbody id="data-table-kualitas" class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
         @foreach ($data as $key => $value)
             <tr class="even:bg-slate-50 dark:even:bg-slate-700">
                 <td class="table-td">
@@ -83,4 +45,3 @@
             </tr>
         @endforeach
     </tbody>
-</table>

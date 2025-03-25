@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Commodity;
 use App\Http\Requests\StoreCommodityRequest;
 use App\Http\Requests\UpdateCommodityRequest;
+use App\Models\Document;
 use App\Models\Group;
+use App\Models\Section;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -20,6 +22,9 @@ class CommodityController extends Controller
     {
         //
         $query = Commodity::query();
+        $sections = Section::get();
+        $documents = Document::get();
+        $groups = Group::get();
         $countData = $query->count();
         $data = Commodity::paginate(10, ['*'], 'page', 1);
         $forGroupId = Group::all();
@@ -34,6 +39,9 @@ class CommodityController extends Controller
             'pageTitle' => 'Master Komoditas',
             'breadcrumbItems' => $breadcrumbsItems,
             'data' => $data,
+            'sections' => $sections,
+            'documents' => $documents,
+            'groups' => $groups,
             'countData' => $countData,
             'forGroupId' => $forGroupId,
         ]);
@@ -107,20 +115,39 @@ class CommodityController extends Controller
     public function search(Request $request)
     {
         $query = Commodity::query();
-        // dd($request);
         if ($request->paginated) $paginated = $request->paginated;
         else $paginated = 10;
         if ($request->currentPage) $currentPage = $request->currentPage;
         else $currentPage = 1;
-        // dd($paginated, $currentPage);
-
-        if (!empty($request->value)) {
-            $filter = $request->value;
-            $query->orWhere('commodities.name', 'like', '%' . $filter . '%');
-            $query->orWhere('code', 'like', '%' . $filter . '%');
-            $query->join('groups', 'groups.id', '=', 'commodities.group_id');
-            $query->orWhere('groups.name', 'like', '%' . $filter . '%');
-            $query->orWhere('commodities.updated_at', 'like', '%' . $filter . '%');
+        if ($request->ArrayFilter) {
+            $filter = $request->ArrayFilter;
+            if (!empty($filter['document_id']) || !empty($filter['section_id']) || !empty($filter['kelompok_komoditas'])) {
+                $query->join('groups', 'groups.id', '=', 'commodities.group_id')
+                      ->join('sections', 'sections.id', '=', 'groups.section_id');
+            }
+            if (!empty($filter['document_id'])) {
+                $query->join('documents', 'documents.id', '=', 'sections.document_id');
+                $query->where('documents.id',$filter['document_id']);
+            }
+            if (!empty($filter['section_id'])) {
+                $query->where('sections.id', $filter['section_id'] );
+            }
+            if (!empty($filter['group_id'])) {
+                $query->where('commodities.group_id', $filter['group_id']);
+            }
+            if (!empty($filter['nama_komoditas'])) {
+                $query->where('commodities.name', 'like', '%' . $filter['nama_komoditas'] . '%');
+            }
+            if (!empty($filter['kode_komoditas'])) {
+                $query->where('commodities.code', 'like', '%' . $filter['kode_komoditas'] . '%');
+            }
+            if (!empty($filter['kelompok_komoditas'])) {
+                $query->join('groups', 'groups.id', '=', 'commodities.group_id');
+                $query->where('groups.name', 'like', '%' . $filter['kelompok_komoditas'] . '%');
+            }
+            if (!empty($filter['updated_at'])) {
+                $query->where('commodities.updated_at', 'like', '%' . $filter['updated_at'] . '%');
+            }
         }
         $countData = $query->count();
         $query->select(['commodities.*']);
