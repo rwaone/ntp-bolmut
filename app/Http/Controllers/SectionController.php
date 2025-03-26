@@ -51,6 +51,7 @@ class SectionController extends Controller
      */
     public function store(StoreSectionRequest $request)
     {        
+        // dd($request);
         $validated = $request->validate($request->rules());
         if(Section::create($validated)){
             return redirect('sections')->with('notif',  'Data telah berhasil disimpan!');

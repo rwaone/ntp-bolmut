@@ -25,6 +25,7 @@ class StoreSectionRequest extends FormRequest
     {
         return [
             'document_id' => ['required'],
+            'title' => ['required'],
             'name' => ['required'],
         ];
     }

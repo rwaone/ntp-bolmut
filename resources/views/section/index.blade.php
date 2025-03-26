@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -44,41 +44,46 @@
     </div>
 
     @push('scripts')
-    @endpush
-    <script type="text/javascript">
-        $('#button-create').on('click', (e) => {
-            e.preventDefault();
-            let data = $('#form-create').serialize();
-            $.ajax({
-                type: 'POST',
-                url: 'komoditas/store',
-                data: data,
-                success: (result) => {
-                    $('#data-table-komoditas').html(result.html)
-                    $('#form-create')[0].reset();
-                    $('[data-bs-dismiss="modal"]').click();
-                },
-                error: (error) => {
-                    console.error(error)
-                }
-            })
-        })
-        const update = (value) => {
-            $.ajax({
-                type: 'GET',
-                url: 'sections/' + value + '/edit',
-                success: (result) => {
-                    $('#form-update').attr('action', 'sections/' + value);
-                    $('#update_name').val(result.name);
-                    $('#update_document_id').val(result.document_id);
-                },
-                error: (error) => {
-                    console.error(error)
-                }
-            })
-        }
-        function deleteConfirm(value) {
+        <script type="text/javascript">
+            function update(value) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'sections/' + value + '/edit',
+                    success: (result) => {
+                        $('#form-update').attr('action', 'sections/' + value);
+                        $('#update_name').val(result.name);
+                        $('#update_title').val(result.title);
+                        $('#update_document_id').val(result.document_id);
+                    },
+                    error: (error) => {
+                        console.error(error)
+                    }
+                })
+            }
+
+            function deleteConfirm(value) {
                 $('#form-delete').attr('action', 'sections/' + value);
             }
-    </script>
+
+            document.addEventListener('DOMContentLoaded', () => {
+                $('#button-create').on('click', (e) => {
+                    e.preventDefault();
+                    let data = $('#form-create').serialize();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'komoditas/store',
+                        data: data,
+                        success: (result) => {
+                            $('#data-table-komoditas').html(result.html)
+                            $('#form-create')[0].reset();
+                            $('[data-bs-dismiss="modal"]').click();
+                        },
+                        error: (error) => {
+                            console.error(error)
+                        }
+                    })
+                })
+            })
+        </script>
+    @endpush
 </x-app-layout>

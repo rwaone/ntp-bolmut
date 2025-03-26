@@ -40,9 +40,14 @@
                             </select>
                         </div>
                         <div class="label-area mb-3">
-                            <label for="name" class="form-label">Nama Bagian</label>
+                            <label for="title" class="form-label">Nomor BLOK</label>
+                            <input id="title" name="title" type="text" class="form-control"
+                                placeholder="Contoh: BLOK IV.">
+                        </div>
+                        <div class="label-area mb-3">
+                            <label for="name" class="form-label">Nama Blok</label>
                             <input id="name" name="name" type="text" class="form-control"
-                                placeholder="Nama Bagian">
+                                placeholder="Nama Blok">
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -98,6 +103,11 @@
                                     <option value="{{ $document->id }}">{{ $document->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="label-area mb-3">
+                            <label for="title" class="form-label">Nomor BLOK</label>
+                            <input id="update_title" name="title" type="text" class="form-control"
+                                placeholder="Contoh: BLOK IV.">
                         </div>
                         <div class="label-area mb-3">
                             <label for="name" class="form-label">Nama Bagian</label>
