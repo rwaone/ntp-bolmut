@@ -35,7 +35,7 @@
                             <select id="section_id" name="section_id" class="form-control select2">
                                 <option disabled selected>-- Pilih Bagian --</option>
                                 @foreach ($sections as $section)
-                                    <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                    <option value="{{ $section->id }}">{{ $section->document->code . ' - ' . $section->name }}</option>
                                 @endforeach
                             </select>
                         </div>

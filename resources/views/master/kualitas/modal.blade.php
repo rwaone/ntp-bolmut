@@ -36,7 +36,9 @@
                             <select id="commodity_id" name="commodity_id" class="form-control select2">
                                 <option disabled selected>-- Pilih Komoditas --</option>
                                 @foreach ($forCommodityId as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->group->section->document->code . ' - ' . $item->group->section->title . ' - ' . $item->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             <div id="error-commodity_id"
@@ -96,10 +98,10 @@
                         </div>
                         <div class="label-area mb-3">
                             <label for="status" class="form-label">Status</label>
-                            <input id="status" name="status" type="text" class="form-control"
-                                placeholder="Status">
-                            <option value="Digunakan">Digunakan</option>
-                            <option value="Tidak Digunakan">Tidak Digunakan</option>
+                            <select id="status" name="status" class="form-control select2">
+                                <option value="Digunakan">Digunakan</option>
+                                <option value="Tidak Digunakan">Tidak Digunakan</option>
+                            </select>
                             <div id="error-status" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
                             </div>
                         </div>

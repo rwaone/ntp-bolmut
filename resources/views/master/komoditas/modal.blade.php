@@ -50,7 +50,7 @@
                             <select id="group_id" name="group_id" class="form-control select2">
                                 <option disabled selected>-- Pilih Kelompok Komoditas --</option>
                                 @foreach ($forGroupId as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->section->document->code . ' - '. $item->section->title. ' - '. $item->name  }}</option>
                                 @endforeach
                             </select>
                             <div id="error-group_id" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
