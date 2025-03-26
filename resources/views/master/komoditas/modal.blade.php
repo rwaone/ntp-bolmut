@@ -32,6 +32,17 @@
                         @csrf
                         <input hidden class="hiddenInput" id="hidden-id" name="id">
                         <div class="label-area mb-3">
+                            <label for="group_id" class="form-label">Kelompok Komoditas</label>
+                            <select id="group_id" name="group_id" class="form-control select2">
+                                <option disabled selected>-- Pilih Kelompok Komoditas --</option>
+                                @foreach ($forGroupId as $item)
+                                    <option value="{{ $item->id }}">{{ $item->section->document->code . ' - '. $item->section->title. ' - '. $item->name  }}</option>
+                                @endforeach
+                            </select>
+                            <div id="error-group_id" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
+                            </div>
+                        </div>
+                        <div class="label-area mb-3">
                             <label for="name" class="form-label">Nama Komoditas</label>
                             <input id="name" name="name" type="text" class="form-control"
                                 placeholder="Nama Komoditas">
@@ -43,17 +54,6 @@
                             <input id="code" name="code" type="text" class="form-control"
                                 placeholder="Kode Komoditas">
                             <div id="error-code" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
-                            </div>
-                        </div>
-                        <div class="label-area mb-3">
-                            <label for="group_id" class="form-label">Kelompok Komoditas</label>
-                            <select id="group_id" name="group_id" class="form-control select2">
-                                <option disabled selected>-- Pilih Kelompok Komoditas --</option>
-                                @foreach ($forGroupId as $item)
-                                    <option value="{{ $item->id }}">{{ $item->section->document->code . ' - '. $item->section->title. ' - '. $item->name  }}</option>
-                                @endforeach
-                            </select>
-                            <div id="error-group_id" class="error-message mt-2 text-sm text-red-600 dark:text-red-500">
                             </div>
                         </div>
 
