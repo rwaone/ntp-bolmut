@@ -175,7 +175,7 @@
                 })
                 paginated = document.getElementById('showData').value
                 let addedData = new URLSearchParams({
-                    value: document.getElementById('komoditas-search').value,
+                    value: document.getElementById('nama_komoditas').value,
                     currentPage: (currentPage) ? currentPage : 1,
                     paginated: paginated,
                 })

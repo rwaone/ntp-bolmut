@@ -208,7 +208,7 @@
                 })
                 paginated = document.getElementById('showData').value
                 let addedData = new URLSearchParams({
-                    value: document.getElementById('kualitas-search').value,
+                    value: document.getElementById('kualitas').value,
                     currentPage: (currentPage) ? currentPage : 1,
                     paginated: paginated,
                 })
