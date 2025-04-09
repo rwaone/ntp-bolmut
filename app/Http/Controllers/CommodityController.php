@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCommodityRequest;
 use App\Http\Requests\UpdateCommodityRequest;
 use App\Models\Document;
 use App\Models\Group;
+use App\Models\Quality;
 use App\Models\Section;
 use Exception;
 use Illuminate\Http\Request;
@@ -214,13 +215,14 @@ class CommodityController extends Controller
     {
         //
         $data = Commodity::find($id);
-        if ($data) {
+        $qualities = Quality::where('commodity_id', $id)->get();
+        if ($qualities->isEmpty()) {
             try {
                 //code...
                 $data->delete();
             } catch (\Throwable $th) {
                 //throw $th;
-                throw new Exception("Gagal Menghapus Data", 500);
+                throw new Exception("Gagal Menghapus Data, masih ada data kualitas di komoditas ini", 500);
             }
         }
         return $this->fetchData($id);

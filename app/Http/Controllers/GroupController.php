@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Section;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
+use App\Models\Commodity;
 
 class GroupController extends Controller
 {
@@ -107,9 +108,13 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        if($group->delete())
+        $commodities = Commodity::where('group_id', $group->id)->get();
+        if($commodities->isEmpty())
         {
+            $group->delete();
             return redirect('groups')->with('notif',  'Data berhasil dihapus!');
+        } else {
+            return redirect('groups')->with('notif',  'Data gagal dihapus, masih ada komoditas di grup ini!');
         }
     }
 }

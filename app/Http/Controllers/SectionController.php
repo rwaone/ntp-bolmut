@@ -108,10 +108,13 @@ class SectionController extends Controller
      */
     public function destroy(Section $section)
     {
-        if($section->delete())
+        $groups = Group::where('section_id', $section->id)->get();
+        if($groups->isEmpty())
         {
+            $section->delete();
             return redirect('sections')->with('notif',  'Data berhasil dihapus!');
+        } else {
+            return redirect('sections')->with('notif',  'Data gagal dihapus, masih ada grup di blok ini!');
         }
-
     }
 }
