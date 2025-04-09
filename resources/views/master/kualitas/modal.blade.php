@@ -35,7 +35,7 @@
                             <label for="commodity_id" class="form-label">Komoditas</label>
                             <select id="commodity_id" name="commodity_id" class="form-control select2">
                                 <option disabled selected>-- Pilih Komoditas --</option>
-                                @foreach ($forCommodityId as $item)
+                                @foreach ($commodites as $item)
                                     <option value="{{ $item->id }}">
                                         {{ $item->group->section->document->code . ' - ' . $item->group->section->title . ' - ' . $item->name }}
                                     </option>
